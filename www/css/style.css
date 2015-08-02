@@ -1,0 +1,733 @@
+html, body{
+    height: 100%;
+}
+
+body{
+    background-image: url('../img/background.jpg');
+    padding-bottom: 25px;
+}
+
+.row{
+    margin: 0;
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6{
+    margin: 0;
+}
+
+p{
+    word-break: break-all;
+}
+
+.container-fluid{
+    padding: 0;
+}
+
+.form-control{
+    border-radius: 10px;
+}
+
+#splashView{
+    background-image:  url('../img/splash.jpg');
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1031;
+    top:0;
+}
+
+#content{
+    display: block;
+    padding: 0 10px;
+    margin-top: 0;
+    height: 100%;
+    /*overflow: auto;*/
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.fullRow{
+    height: 100%;
+}
+
+/* navbar top */
+
+#menuNavBar{
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+}
+
+#menuNavBar img{
+    width: 48px;
+}
+
+#appTile{
+    text-align: left;
+    margin: 0;
+    width: 59%;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 150%;
+}
+
+#menuNavBar .fa, #menuNavBar .icon{
+    font-size: 200%;
+    margin-top: 12px;
+    color: #000;
+}
+
+.btChat{
+    margin-right: 5px;
+}
+
+#backMenuNavBar{
+    background-image:  url('../img/background.jpg');
+}
+
+.dropdown-menu{
+    border: 3px solid #000;
+    border-radius: 20px;
+}
+
+.dropdown-menu li > a{
+    font-family: 'gothamboldregular';
+}
+
+.dropdown-menu li{
+    border-bottom: 1px solid #ccc;
+}
+
+.dropdown-menu li:last-child{
+    border-bottom-style: hidden;
+}
+
+#menuNavBar .dropdown-menu .fa, #menuNavBar .dropdown-menu .icon{
+    margin-top: 0;
+}
+
+.fa-pin{
+    background-image: url('../img/iconPin.png');
+    background-size: 100% 100%;
+}
+
+.fa-pinned{
+    background-image: url('../img/iconPinned.png');
+    background-size: 100% 100%;
+}
+
+.dropdown-menu .fa-pin{
+    width: 18px;
+    height: 28px;
+}
+
+/* home view */
+
+.backgroundLogo{
+    background-image:  url('../img/splash.jpg');
+    background-size: 100% 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 0 15px;
+    position: relative;
+}
+
+.backgroundLogo .btn{
+    font-size: 85%;
+    color: #000000;
+    padding: 6px 6px;
+    font-weight: bold;
+}
+
+.backgroundLogo .btn .icon, .backgroundLogo .btn .fa{
+    font-size: 20px;
+}
+
+.backgroundLogo .btn img{
+    width: 20px;
+}
+
+.backgroundLogo .row{
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+.backgroundLogo .col-xs-4, .backgroundLogo .col-sm-4{
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.backgroundLogo .btn{
+    width: 100%;
+    max-width: 150px;
+}
+
+/* storeListView */
+
+.storeItem{
+    margin-bottom: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 8px;
+}
+
+.aboutStore{
+    font-size: 115%;
+    border: 4px solid red;
+    border-radius: 40px;
+    padding: 5px;
+    font-family: 'gothambookregular';
+    text-align: center
+}
+
+.aboutStore p{
+    margin: 0;
+}
+
+.logoStoreDiv{
+    padding: 0;
+}
+
+.HstoreName{
+    font-family: 'gothammediumregular';
+    font-size: 186%;
+}
+
+.HstoreAddress{
+    font-family: 'gothambookregular';
+    font-size: 125%;
+}
+
+.HstoreAbout{
+    color: red;
+    font-family: 'gothamboldregular';
+}
+
+.storeItem .btn{
+    color: white;
+    font-family: 'gothamboldregular';
+	background-repeat: no-repeat;
+    width: 100%;
+    font-size: 100%;
+    line-height: 2;
+}
+
+.btn-product{
+    background-image: url('../img/product.png');
+    background-size: 100% 100%;
+}
+
+.btn-contact{
+    background-image: url('../img/contact.png');
+    background-size: 100% 100%;
+}
+
+.btn-chat{
+    background-image: url('../img/chat.png');
+    background-size: 100% 100%;
+}
+
+.storeItem .col-xs-12, .storeItem .col-sm-12, .storeItem .col-xs-4, .storeItem .col-sm-4, .storeItem .col-xs-6, .storeItem .col-sm-6{
+    padding: 0;
+}
+
+/* contactView */
+
+.modal-content{
+    border-radius: 30px;
+}
+
+.modal-header{
+    padding-bottom: 5px;
+    padding-top: 15px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.modal-body{
+    padding: 25px;
+}
+
+.modal-footer{
+    margin: 0 25px;
+}
+
+.modal-title{
+    font-family: 'gothamboldregular';
+    color: #000;
+}
+
+.modal-footer .btn-default{
+    background-image: linear-gradient(to bottom, #fff 0%, #3082c1 100%);
+    color: #000;
+    font-family: 'gothamboldregular';
+}
+
+/* chatView */
+
+#msgCount{
+    background-color: red;
+    position: absolute;
+    top: 28%;
+    margin-left: 3px;
+}
+
+#chatList{
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+.chatContent{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    /*height: 75%;*/
+}
+
+.chatContent .row{
+    padding: 10px;
+}
+
+.chatContent .col-xs-5, .chatContent .col-sm-5, .chatContent .col-xs-7, .chatContent .col-sm-7{
+    padding: 0;
+}
+
+.chatContent h3{
+    margin-top: 15%;
+    margin-left: 5px;
+    font-family: 'gothammediumregular';
+}
+.dialogoBox {
+    position: relative;
+    border-radius: 10px;
+    width: 96%;
+    border: #ccc solid 1px;
+    margin-bottom: 5px;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.dialogoBox:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 15px solid;
+    border-top-color: #fff;
+    border-bottom-color: #fff;
+    border-right-color: #fff;
+    top: 100%;
+    left: 50%;
+    margin-left: 0px; /* ajustar pela largura do balão */
+}
+
+.dialogoBox-right:after {
+    border-left-color: #ccc;
+    left: 100%;
+    top: 50%;
+    margin-top: -15px;
+}
+
+.dialogoBox-left:after {
+    border-right-color: #ccc;
+    top: 50%;
+    left: 0;
+    margin-top: -15px;
+    margin-left: -31px;
+    border-left-color: #fff;
+}
+
+.dialogoBox-left{
+    margin-left: 20px;
+    width: 91%;
+}
+
+.dialogoBox hr{
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.dialogoBox small, .dialogoBox .small{
+    font-size: 55%;
+}
+
+#newChatForm .form-control{
+    margin-bottom: 10px;
+}
+
+#newChatForm{
+    margin-bottom: 0;
+}
+
+#navChatFooter{
+    margin-top: 10px;
+    padding: 10px;
+}
+
+#navChatFooter ::-webkit-input-placeholder {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+#navChatFooter :-moz-placeholder {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+#navChatFooter ::-moz-placeholder {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+#navChatFooter :-ms-input-placeholder {  
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+#navChatFooter .input-group-btn:last-child > .btn{
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background-image: linear-gradient(to bottom, #fff 0%, #3082c1 100%);
+    color: #000;
+    font-family: 'gothamboldregular';
+}
+
+#navChatFooter .input-group .form-control{
+    width: 110%;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+/* vMap view */
+
+.mapDiv{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: hidden;
+}
+
+.mapDiv form{
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.mapDiv form ::-webkit-input-placeholder, .mapDiv form select {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+.mapDiv form :-moz-placeholder, .mapDiv form select {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+.mapDiv form ::-moz-placeholder, .mapDiv form select {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+.mapDiv form :-ms-input-placeholder, .mapDiv form select {  
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+/*.mapDiv form input[type="text"], .mapDiv form select{
+    height: 40px;
+}*/
+.mapDiv .form-group {
+    margin-bottom: 7px;
+}
+
+.mapDiv form input[type="radio"]{
+    border: 2px black solid;
+    border-radius: 25px;
+    width: 25px;
+    height: 25px;
+}
+
+.mapDiv .radio-inline{
+    padding-left: 10px;
+}
+
+.mapDiv .radio-inline label{
+    margin-top: 7px;
+    margin-bottom: 0;
+    margin-left: 5px;
+}
+
+.mapDiv .nav-tabs{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.mapDiv .nav-tabs > li.active > a{
+    border-radius: 10px;
+    border-bottom: inset;
+    color: #0950b6;
+}
+
+.mapDiv .nav-tabs > li > a{
+    color: #000;
+    font-family: 'gothamboldregular';
+}
+
+#map_canvas{
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+#tabList{
+    background-image: url('../img/background.jpg');
+    background-position-y: -20px;
+    background-position-x: -1px;
+    padding: 10px;
+}
+
+/*searchView*/
+.contentAjust .breadcrumb{
+    background-color: #fff;
+    border-radius: 30px;
+    font-size: 110%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.contentAjust .breadcrumb > li + li:before{
+    content: '|';
+    color: #000;
+}
+
+.contentAjust .breadcrumb li.active > a{
+    color: #0950b6;
+}
+
+.contentAjust .breadcrumb li > a{
+    color: #000;
+    font-family: 'gothamboldregular';
+}
+
+.contentAjust .list-group-item:first-child{
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+}
+
+.contentAjust .list-group-item:last-child {
+    border-bottom-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+}
+ 
+.contentAjust a.list-group-item{
+    font-family: 'gothamboldregular';
+}
+
+a.list-group-item .depName{
+    display: block;
+    width: 90%;
+}
+
+.icon-right-nav{
+    margin-top: -20px;
+}
+
+.contentAjust .input-group-addon {
+    padding: 4px 6px;
+}
+
+
+.contentAjust ::-webkit-input-placeholder {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+.contentAjust :-moz-placeholder {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+.contentAjust ::-moz-placeholder {
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+.contentAjust :-ms-input-placeholder {  
+   color: #000;
+   font-family: 'gothamboldregular';
+}
+
+/*productViewList*/
+
+#storeProductList ul > li{
+    margin-bottom: 5px;
+}
+
+.divBack{
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    width: 96%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    font-size: 130%;
+    padding: 5px;
+}
+
+.divBack .btn-link{
+    color: #000;
+    font-family: 'gothamboldregular';
+}
+
+#productList{
+    padding: 0;
+}
+
+.baseProduct{
+    width: 45%;
+    max-width: 200px;
+    margin-right: 5px;
+    display: inline-block;
+    border: 2px solid #858585;
+    border-radius: 10px;
+}
+
+.productName{
+    font-weight: bold;
+    font-size: 110%;
+}
+
+.red{
+    color: red;
+    font-size: 100%;
+    text-decoration: line-through;
+}
+
+.green{
+    color: green;
+    font-size: 100%;
+}
+.descriptionProduct{
+    line-height: 1.1;
+    font-size: 80%;
+    word-wrap: break-word;
+    max-width: 200px;
+}
+.productDetail{
+    height: 100%;
+    margin-bottom: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.btPin .fa-pin, .btPin .fa-pinned{
+    width: 18px;
+    height: 28px;
+}
+
+.noProduct{
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+#storeOptions li a{
+    color: black;
+    text-decoration: none;
+    font-size: 130%;
+}
+
+#storeOptions li.active a{
+    font-weight: bold;
+}
+
+/*product views*/
+.catName{
+    font-size: 160%;
+    font-weight: bold;
+}
+
+#catFilterName{
+    border-radius: 30px;
+    padding: 3px;
+    color: #000;
+}
+
+#storeInfo{
+    word-wrap: break-word;
+}
+
+#storeInfo hr{
+    margin-bottom: 5px;
+}
+
+#storeInfo img{
+    width: 38px;
+    float: left;
+    margin-right: 5px;
+}
+
+#storeInfo a{
+    color: #000;
+    text-decoration: none;
+}
+
+/* loadView */
+#loadView{
+    width: 100%;
+    height: 100%;
+    /*display: block;*/
+    position: absolute;
+    z-index: 1030;
+    top:0;
+}
+
+#backLoad{
+    background-color: white;
+    opacity: .5;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+}
+
+#loadView img{
+    width: 48px;
+    height: 48px;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    margin-left: -24px;
+}
+
+//Fix Images in the Product detail view are not top aligned
+.swipe {
+    overflow: hidden;
+    visibility: hidden;
+    position: relative;
+}
+.swipe-wrap {
+    overflow: hidden;
+    position: relative;
+}
+.swipe-wrap > div {
+    float:left;
+    width:100%;
+    position: relative;
+}
+//end
