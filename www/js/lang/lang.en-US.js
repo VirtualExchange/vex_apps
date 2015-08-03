@@ -13,7 +13,10 @@ var lang_enUS = {
             '%In%'      : 'In',
             '%Chat%'    : 'Chat',
             '%Stores%'  : 'Stores',
-            '%Products%': 'Products'
+            '%Products%': 'Products',
+			'%Filter%'  : 'Filter',
+			'%Categories%'  : 'Categories',
+			'%Clear Filter%'  : 'Clear Filter'
         },
         'ProductItem': {
             '%In%' : 'Pinned'
@@ -106,7 +109,9 @@ var lang_enUS = {
         },
         'productListView':{
             '%Filter%' : 'Filter',
-            '%Categories%' : 'Categories'
+            '%Categories%' : 'Categories',
+			'%Products%' : 'Products',
+			'%Clear Filter%' : 'Clear Filter'
         }
     }
 };

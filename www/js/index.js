@@ -36,7 +36,7 @@ var app = {
         $('#appTile').html(app.appName);
         document.title = app.Name;
 
-        $('body').css('padding-top', $('#menuNavBar').height() + 20);
+        //$('body').css('padding-top', $('#menuNavBar').height() + 20);
         
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
@@ -107,6 +107,7 @@ var app = {
 
         console.log(window.localStorage.getItem("token"));
 
+		
         if (!window.localStorage.getItem("token")) {
             console.log('SEM TOKEN');
             app.webservice.registerDevice(
@@ -169,6 +170,7 @@ var app = {
         currentStore: {},
         scrool: 0,
         stores: [],
+		productsDrawn: [],
         backFunction: null,
         loadView: {
             show: function(){
@@ -182,7 +184,7 @@ var app = {
             
             //configurando espaçamento superior do app
             $('#menuNavBar').removeClass('hide');
-            $('body').css('padding-top', $('#menuNavBar').height() + 20);
+            //$('body').css('padding-top', $('#menuNavBar').height() + 20);
             $('#backMenuNavBar').removeClass('hide');
             
             app.views.loadView.hide();
@@ -204,6 +206,7 @@ var app = {
             oStoreDetail: null,
             init: function (e) {
                 console.log('ap.views.home.init()');
+
                 
                 setTimeout(function () {
 
@@ -216,7 +219,8 @@ var app = {
                     $('#optStore').html(app.lang.getStr('%Stores%', 'homeView'));
                     $('#optProduct').html(app.lang.getStr('%Products%', 'aplication'));
 						   
-                    app.views.products.showProductList(e);
+                    //app.views.products.showProductList(e);
+					app.views.home.showStoreList();
                     
                 }, 2000);
                             
@@ -244,7 +248,7 @@ var app = {
 
             },
             showStoreList: function (e) {
-                console.log('app.views.home.showStoreList()');
+                console.log('app.views.home.showStoreList');
                 
                 app.views.setDefaults();
                 
@@ -268,9 +272,9 @@ var app = {
                                 console.log(JSON.stringify(result));
                                 
                                 $('#storeList').html('');
-                                
-                                if (result.stores.length > 1) {
 
+								console.log('app.views.home.showStoreList: stores.length: '+result.stores.length);
+                                if (result.stores.length > 1) {
                                     app.views.stores = new Array();
 
                                     app.views.home.showStores(result);
@@ -295,7 +299,7 @@ var app = {
                                     
                                 } else {
                                     app.views.stores = result.stores;
-//                                    console.log(JSON.stringify(app.views.stores));
+                                    console.log(JSON.stringify(app.views.stores));
                                     $('#rowStoreFilter').hide();
                                     app.views.home.storeDetail();
                                 }
@@ -339,23 +343,16 @@ var app = {
             },
             getStoreDetail: function(store_id, btBack, dadStore){
                 console.log('app.views.home.getStoreDetail()');
-                
                 app.views.loadView.show();
                 
                 app.webservice.get(
                     'stores/' + store_id,
                     {},
                     function (result) {
-                        console.log(result);
-                        
                         app.views.scrool = $(window).scrollTop();
-                
                         app.views.home.oStoreDetail = result;
-                        
                         app.views.home.showStoreDetail(result, btBack, dadStore);
-                        
                         app.views.loadView.hide();
-                        
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
@@ -365,13 +362,24 @@ var app = {
                 );
             },
             showStoreDetail: function(store, btBack, dadStore){
-                console.log('app.views.home.showStoreDetail()');
-                         
+                console.log('app.views.home.showStoreDetail');
+				var aa = -1;
+				var bb = -1;
+				var cc = -1;
+				var aboutStripped;
                 app.webservice.get(
                     'stores/' + store.id + '/categories',
                     {},
                     function (result) {
                         //console.log(JSON.stringify(result));
+						aa = store.about.indexOf('**AA**'); //Members / Featured Members
+						bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
+						cc = store.about.indexOf('**CC**'); //Products / Vendors
+						aboutStripped = store.about;
+						if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
+						if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
+						if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
+
                         app.draw(
                             '#content',
                             '#ProductView',
@@ -383,11 +391,12 @@ var app = {
                                 uf: store.state,
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
-                                about: store.about
+                                about: aboutStripped,
+								dadStore: dadStore
                             },
                             '',
                             function () {
-                                app.views.home.addCategorie(result.categories);
+                                app.views.home.addCategorie2(result.categories);
 
                                 if (app.views.stores.length == 1) {
 
@@ -396,7 +405,7 @@ var app = {
                                 }
                                 console.log(btBack +' || ((' + app.views.home.store_id.length +'== 1) && ' + dadStore+')');
                                 
-                                if(!btBack || ((app.views.home.store_id.length == 1) && (dadStore==true))){
+                                if(!btBack || ((app.views.home.store_id.length == 1) && (dadStore=='true'))){
                                     console.log('hide back button');
                                     $('#divBtBack').addClass('hide');
                                 }
@@ -419,7 +428,7 @@ var app = {
                                     $('.btFavorite').attr('data-callback', 'app.views.home.removeFavorite');
                                 }
                                 
-                                if(!store.about || store.about== '<p></p>'){
+                                if(!aboutStripped || aboutStripped== '<p></p>'){
                                     $('#AboutDetail').addClass('hide');
                                 }
 
@@ -431,7 +440,19 @@ var app = {
                                     
                                     $('#storeOptions').removeClass('hide');
                                     $('#storesListDiv').removeClass('hide');
-                                    
+									
+									if (aa > -1) {
+									    $('#liOptProductLink').text('Members');
+									    $('#liOptStoreLink').text('Featured Members');
+                                    }
+									if (bb > -1) {
+									    $('#liOptProductLink').text('Vendors');
+									    $('#liOptStoreLink').text('Featured Vendors');
+                                    }
+									if (cc > -1) {
+									    $('#liOptProductLink').text('Offers');
+									    $('#liOptStoreLink').text('Vendors');
+                                    }
                                     
                                     $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
                                     $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
@@ -442,28 +463,30 @@ var app = {
                                     
                                     $('#storeOptions').addClass('hide');
                                     $('#productListDiv').removeClass('hide');
-                                    
+                                    //$('#liOptStore').addClass('hide');
+                                    $('#storeTabs').addClass('hide');
                                     $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
+									$('#list-stores').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
+
                         
                                 }
-                                
-                                if(dadStore=='false'){
-                                    
+                                console.log("Back functionality: dadStore:"+dadStore+" app.views.home.oStoreDetail.id:"+app.views.home.oStoreDetail.id);
+                                if(dadStore=='false' && app.views.auxBackFuc!='search'){
                                     app.views.backFunction = app.views.products.backStoreDad;
                                     $('#btBack').attr('dad_id', app.views.home.store_id[app.views.home.store_id.length-1]);
 
-                                }else if(app.views.auxBackFuc==='storesList'){
+                                }else if(app.views.auxBackFuc=='storesList'){
                                     
                                     app.views.backFunction = app.views.products.backHome;
 
-                                }else if(app.views.auxBackFuc==='producs'){
+                                }else if(app.views.auxBackFuc=='producs'){
                                     
                                     app.views.backFunction = app.views.products.returnToProductList;
 
-                                }
-                                
-                                
+                                }else if(app.views.auxBackFuc=='search'){
+                                    app.views.backFunction = app.views.search.init;
 
+                                }
                                 app.views.home.store_id.push(app.views.home.oStoreDetail.id);
                         
                                 app.views.products.showProductStoreList(store.id);
@@ -480,6 +503,7 @@ var app = {
                 );
             },
             getStoresChild: function(store_id){
+                console.log('app.views.home.getStoresChild');
                 
                 app.webservice.get(
                     'stores/'+store_id+'/stores',
@@ -492,7 +516,7 @@ var app = {
                         
                         app.views.home.storesChild = result.stores;
                         
-                        app.views.home.addStore(result.stores, '#list-stores',0, true,false);
+                        app.views.home.addStore(result.stores, '#list-stores',0, true,'false',store_id);
                     },
                     function (err) {
                         console.log(err);
@@ -546,6 +570,37 @@ var app = {
                     );
                 }
             },
+            addCategorie2: function (cats) {
+                console.log('app.views.home.addCategorie2');
+                var countCat = 0;
+                $('#categoryListProductView').html('');
+                $.each(cats, function (index, c) {
+
+                    if (c.count_products != 0) {
+
+                        countCat += 1;
+                        if (c.subcategories.length > 0) {
+							var subCategoryHtml = '';
+							var subIds = '';
+                            $.each(c.subcategories, function (i, sub) {
+								subIds = subIds.concat(sub.id+" ");
+                                if (sub.count_products != 0) {
+									var str = '<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px" id="cat_name">' + sub.name + '</span></a>';
+									subCategoryHtml = subCategoryHtml.concat(str);
+                                }
+                            });
+							$('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span id="cat_name">' + c.name + '</span></a>');
+							$('#categoryListProductView').append(subCategoryHtml);							
+                        } else {
+							$('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'"><span id="cat_name">' + c.name + '</span></a>');
+							
+						}
+                    }
+                });
+                if (countCat == 0) {
+                    $('#filterPanelProductView').addClass('hide');
+                }
+			},
             addCategorie: function (cats) {
                 console.log('app.views.home.addCategorie');
                 $('#storeCategorie').append('<option value="">' + app.lang.getStr('%Categories%', 'aplication') + '</option>');
@@ -578,15 +633,18 @@ var app = {
                 }
             },
             filterByCategory: function (e) {
-
-                var option = {
-                    'category_id': $(e).val()
-                };
-
+				console.log('app.views.home.filterByCategory()');
+				$('#filterModalProductView').modal('hide');
+				
+				var cat_name = $('#cat_name').html();
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
-                
+
+                $('#catFilterNameProductView').html(cat_name);
+                $('#clearFilterProductView').removeClass('hide');
+                $('#catFilterProductView').addClass('hide');
+
                 app.webservice.get(
-                    'stores/' + app.views.home.oStoreDetail.id + '/products/?q[product_category_id_eq]=' + $(e).val(),
+                    'stores/' + app.views.home.oStoreDetail.id + '/products/?q[product_category_id_eq]=' + $(e).attr('cat_id'),
                     {},
                     function (result) {
 //                        console.log(result);
@@ -601,6 +659,25 @@ var app = {
                         app.views.loadView.hide();
                     }
                 );
+            },
+            clearFilter: function(e){
+                console.log('app.views.home.clearFilter()');
+                
+                $('#catFilterNameProductView').html(app.lang.getStr('%Products%', 'ProductView'));
+                $('#clearFilterProductView').removeClass('hide');
+                $('#catFilterProductView').addClass('hide');
+
+                
+                $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
+                
+                //window.localStorage.removeItem("productCatName");
+                //window.localStorage.removeItem("productCat");
+                
+                //app.views.products.showProductList();
+				console.log('app.views.home.oStoreDetail.id'+app.views.home.oStoreDetail.id);
+                app.views.products.showProductStoreList(app.views.home.oStoreDetail.id);
+
+                
             },
             filterByDepartment: function(e){
                 console.log('app.views.home.filterByDepartment()');
@@ -618,9 +695,10 @@ var app = {
                         
                         app.views.stores = new Array();
                         $('#storeList').html('');
-                        
-                        $('#divDepartmentName').removeClass('hide');
-                        $('#divDepartmentName h4 b').html($(e).attr('dep_name'));
+
+                        $('#clearFilter').removeClass('hide');
+                        $('#deptFilter').addClass('hide');
+                        $('#deptFilterName').html($(e).attr('dep_name'));
                         
                         app.views.home.showStores(result, true);
 
@@ -654,6 +732,7 @@ var app = {
                     'departments',
                     {},
                     function (result) {
+						$('#storeDepartmentList').html('');
                         console.log(JSON.stringify(result));
                         $.each(result.departments, function (i, dep) {
                             app.draw(
@@ -693,26 +772,35 @@ var app = {
                 $.each(result.stores, function (i, s) {
                     
                     if (result.stores.length==1 || !s.corporate) {
-
+						console.log(JSON.stringify(s));
                         app.views.stores.push(s);
                     }
                 });
 				
-		if(app.views.stores.length==0){
+				if(app.views.stores.length==0){
 					
-			$('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
+					$('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
 					
-		}else app.views.home.addStore(app.views.stores, '#storeList', i, search, true);
+				}else app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
                 
             },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore){
                 console.log('app.views.home.addStore');
                 
                 var i = arrayIndex;
-                
+				var aa = -1;
+				var bb = -1;
+				var cc = -1;
+				var aboutStripped;
+				
                 $.each(storeArray, function (index, store) {
-//                    console.log(store)
-
+                    aa = store.about.indexOf('**AA**');
+                    bb = store.about.indexOf('**BB**');
+                    cc = store.about.indexOf('**CC**');
+					aboutStripped = store.about;
+					if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
+					if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
+					if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
                     app.draw(
                         divId,
                         '#storeItem',
@@ -722,10 +810,11 @@ var app = {
                             city: store.city,
                             uf: store.state,
                             logo: store.logo,
-                            about: store.about,
+                            about: aboutStripped,
                             featured_product : !store.featured_product ? '' : store.featured_product,
                             id : store.id,
-                            index: i
+                            index: index,
+							dadStore: dadStore
                         },
                         'append',
                         function () {
@@ -733,28 +822,33 @@ var app = {
                             if (store.favorite == true) {
                                 $('#btFav_' + i + ' span').removeClass('icon-star');
                                 $('#btFav_' + i + ' span').addClass('icon-star-filled');
-
                                 $('#btFav_' + i).attr('data-callback', 'app.views.home.removeFavorite');
                             }
                             
-                            if (storeArray.length == 1 && search==false && dadStore) {
-
+                            if (storeArray.length == 1 && search==false && dadStore=='true') {
                                 $('.storeItem').css('height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
-
                             }
 							 
-			    if(!store.about || store.about== '<p></p>'){
-			    	$('#aboutStore_'+i).addClass('hide');
-			    }
+							if(!aboutStripped || aboutStripped== '<p></p>'){
+								$('#aboutStore_'+i).addClass('hide');
+							}
                             
                             if(!store.featured_product || store.featured_product== '<p></p>' || store.featured_product==''){
-			    	$('#featured_'+i).addClass('hide');
-			    }
+								$('#featured_'+i).addClass('hide');
+							}
                             
                             if(store.stores_count>0){
                                 $('#btnProduct_'+i).html(app.lang.getStr('%More%', 'storeItem'))
                             }
-                            
+							if (aa > -1){
+                                $('#btnProduct_'+i).html(app.lang.getStr('Members', 'storeItem'))
+							}
+							if (bb > -1){
+                                $('#btnProduct_'+i).html(app.lang.getStr('Vendors', 'storeItem'))
+							}
+							if (cc > -1){
+                                $('#btnProduct_'+i).html(app.lang.getStr('Offers', 'storeItem'))
+							}
                             if(!dadStore){
                                 $('#btnContact_'+i).attr('dadStore','false');
                                 $('#btnProduct_'+i).attr('dadStore','false');
@@ -767,7 +861,7 @@ var app = {
                 });  
             },
             saveFavorite: function (e) {
-                console.log('saveFavorite');
+                console.log('app.views.home.saveFavorite');
 
                 app.webservice.post(
                     'favorites/',
@@ -796,7 +890,7 @@ var app = {
                 );
             },
             removeFavorite: function (e) {
-                console.log('removeFavorite');
+                console.log('app.views.home.removeFavorite');
 
                 app.webservice.post(
                     'favorites/' + $(e).attr('store_index'),
@@ -822,7 +916,7 @@ var app = {
                 );
             },
             showContact: function (e) {
-                console.log('app.views.home.showContact()');
+                console.log('app.views.home.showContact');
                 console.log($(e).attr('store_index'));
                 console.log($(e).attr('dadStore'));
                 
@@ -900,7 +994,6 @@ var app = {
                             'categories',
                             {},
                             function (result) {
-                                
                                 app.views.products.addCategorieMenu(result.categories);
                                 app.bindEvents();
                                 
@@ -930,32 +1023,35 @@ var app = {
             addCategorieMenu: function(cats){
                 console.log('app.views.products.addCategorieMenu()');
                 var countCat = 0;
-
+                $('#categoryList').html('');
                 $.each(cats, function (index, c) {
-
+					console.log('app.views.products.addCategorieMenu: c.id:'+c.id+' c.name:'+c.name);
                     if (c.count_products != 0) {
 
                         countCat += 1;
-
-                        $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'">' + c.name + '</a>');
-
                         if (c.subcategories.length > 0) {
+							var subCategoryHtml = '';
+							var subIds = '';
                             $.each(c.subcategories, function (i, sub) {
-
+								subIds = subIds.concat(sub.id+" ");
                                 if (sub.count_products != 0) {
-
-                                    $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '" style="padding-left: 5px;">' + sub.name + '</a>');
+									var str = '<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px">' + sub.name + '</span></a>';
+									subCategoryHtml = subCategoryHtml.concat(str);
                                 }
-
                             });
-                        }
-
+							$('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span>' + c.name + '</span></a>');
+							$('#categoryList').append(subCategoryHtml);							
+                        } else {
+							$('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'"><span>' + c.name + '</span></a>');
+							
+						}
                     }
                 });
             },
             filterBycategory: function(e){
                 console.log('app.views.products.filterBycategory()');
-                
+				//console.log('NANCY: sub_ids: '+$(e).attr('sub_ids'));
+				//var subIds = sub_ids.split(" ");
                 $('#filterModal').modal('hide');
                 
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
@@ -966,19 +1062,22 @@ var app = {
                 window.localStorage.setItem("productCat", cat_id);
                 window.localStorage.setItem("productCatName", cat_name);
                 
-                $('#catFilterName .catName').html(cat_name);
-                $('#catFilterName').removeClass('hide');
+                $('#catFilterName').html(cat_name);
+                $('#clearFilter').removeClass('hide');
+                $('#catFilter').addClass('hide');
                 
                 app.webservice.get(
                     'products/?q[product_category_id_eq]=' + cat_id,
                     {},
                     function (result) {
-                        console.log(result);
+                        console.log('app.views.products.filterBycategory:result:'+JSON.stringify(result));
                         
                         app.views.products.addProducts(result.products);
+						JSON.stringify
                         
                     },
                     function (err) {
+						console.log('app.views.products.filterBycategory(9)');
                         console.log(err);
                         app.views.loadView.hide();
                     }
@@ -988,7 +1087,9 @@ var app = {
             clearFilter: function(e){
                 console.log('app.views.products.clearFilter()');
                 
-                $('#catFilterName').addClass('hide');
+                $('#catFilterName').html("All Listings");
+                $('#clearFilter').addClass('hide');
+                $('#catFilter').removeClass('hide');
                 
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
                 
@@ -1022,14 +1123,22 @@ var app = {
                 console.log('app.views.products.addProducts()');
                 console.log('TAM>' + productList.length);
                 if (productList.length == 0) {
-                    $('#productList').html('<li><h3 class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</h3></li>');
+                    $('#productList').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
                     return;
                 }
-                
                 $('#productList').html('');
-                
+				app.views.productsDrawn = new Array();
+
                 $.each(productList, function (index, prod) {
-//                    console.log(prod);
+					duplicate = false;
+					$.each(app.views.productsDrawn, function (i,prodid){
+						if (productList[index].product_id == prodid){
+							duplicate = true;
+						}
+					});
+					
+                    if (!duplicate){
+					app.views.productsDrawn.push(productList[index].product_id);
                     app.draw(
                         '#productList',
                         '#ProductItem',
@@ -1039,17 +1148,26 @@ var app = {
                             name: prod.name,
                             price: prod.price ? prod.price : '',
                             regular_price: prod.regular_price ? prod.regular_price : '',
-                            description: addReadMore(prod.description, prod.store_id, prod.id, app.lang.getStr('%Read More%', 'aplication')),
+                            description: addReadMore2(prod.description, prod.store_id, prod.id, app.lang.getStr('%Read More%', 'aplication')),
                             img: prod.images[0].medium ? prod.images[0].medium : 'img/logo.png',
                             index: index,
                             product_id: prod.product_id,
                             store_id: prod.store_id ? prod.store_id : 0,
                             store_name: prod.store_name,
-                            store_logo: prod.store_logo
+                            store_logo: prod.store_logo,
+							feature_level: prod.feature_level
                         },
                         'append',
                         function () {
 
+							if (prod.feature_level == 3){
+								$('#productItem_'+prod.id).addClass('list-group-item-info');
+							}else if (prod.feature_level == 2){
+								$('#productItem_'+prod.id).addClass('list-group-item-danger');
+							}else if (prod.feature_level == 1){
+								$('#productItem_'+prod.id).addClass('list-group-item-success');
+							}
+							
                             if (prod.pin != false || prod.store_id == 0) {
 
                                 $('#pin_' + prod.id + ' i').removeClass('fa-pin');
@@ -1089,18 +1207,16 @@ var app = {
                             }
                             
                             if(inStore){
-                                
                                 $('#storeInfo').removeClass('hide');
-                                
                             }
-                            
                             app.bindEvents();
-                        }
+					}
                     );
+					}
                 });
             },
             pinFavorite: function (e) {
-                console.log('saveFavorite');
+                console.log('app.views.products.pinFavorite');
 
                 $('#pin_' + $(e).attr('product_id')).attr('data-callback', '');
 
@@ -1127,7 +1243,7 @@ var app = {
                 );
             },
             removePinFavorite: function (e) {
-                console.log('removePinFavorite');
+                console.log('app.views.products.removePinFavorite');
 
                 $('#pin_' + $(e).attr('product_id')).attr('data-callback', '');
 
@@ -1159,9 +1275,13 @@ var app = {
                 );
             },
             productDetail: function (e) {
-                console.log('app.views.products.productDetail()');
+				console.log('app.views.products.productDetail()');
+                //app.views.loadView.show();
+
                 var store_id = $(e).attr('store_id');
+				console.log('app.views.products.productDetail: store_id:'+store_id);
                 var prod_id = $(e).attr('prod_id');
+				console.log('app.views.products.productDetail: prod_id:'+prod_id);
 
                 if (store_id == 0)
                     return;
@@ -1172,21 +1292,25 @@ var app = {
                     function (result) {
                         console.log(JSON.stringify(result));
                         app.views.products.addProductDetail(result, e);
+                        //app.views.loadView.hide();
+
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
-                        app.views.loadView.hide();
+                        //app.views.loadView.hide();
                     }
                 );
             },
             storeDetail: function(e){
                 console.log('app.views.products.storeDetail()');
+
                 
                 app.views.auxBackFuc = 'producs';
                 
-                app.views.home.getStoreDetail($(e).attr('store_id'), true, false);
+                app.views.home.getStoreDetail($(e).attr('store_id'), true, 'false');
             },
             returnToProductList: function(){
+                console.log('app.views.products.returnToProductList');
                 
                 console.log(window.localStorage.getItem("productCat"));
                 if(window.localStorage.getItem("productCat")){
@@ -1290,7 +1414,6 @@ var app = {
                             $('#regular_price').removeClass('red');
                             $('#regular_price').addClass('green');
                         }
-
                         $('#slider .swipe-wrap').html('');
                         $('#pagSlide').html('');
 
@@ -1300,7 +1423,7 @@ var app = {
                             var cl = i == 0 ? ' class="active"' : '';
 
                             $('#slider .swipe-wrap').append('<div id="imgSlide' + i + '" class="itemSlide">' + '<img src="' + img.original + '" alt="" class="img-responsive"/></div>');
-                            $('#pagSlide').append('<li><a id="item' + i + '" href="#" ' + cl + ' data-poss="' + i + '" data-callback="app.views.products.goSlide">' + (i + 1) + '</a></li>');
+                            $('#pagSlide').append('<li ><a id="item' + i + '" href="#" ' + cl + ' data-poss="' + i + '" data-callback="app.views.products.goSlide">' + (i + 1) + '</a></li>');
                         });
 
                         window.mySwipe = null;
@@ -1312,13 +1435,26 @@ var app = {
                                 callback: function (pIndex, element) {
                                     console.log('CALLBACK: ' + pIndex);
                                     console.log(element)
-                                    $('#pagSlide a').removeClass('active');
                                     $('#item' + pIndex).addClass('active');
 
                                 }
                             }).data('Swipe');
                         },500);
-
+						/*
+						$("#myCarousel").carousel("pause").removeData();
+						var content_indi = "";
+						var content_inner = "";
+						$.each(result.images, function (i, img) {
+							content_indi += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
+							content_inner += '<div id="sliderimage" class="item"><img id="productCarouselItemImage" src="' + img.original+'"/></div>';
+						});
+						$('#car_id').html(content_indi);
+						$('#car_inner').html(content_inner);
+						$('#car_inner .item').first().addClass('active');
+						$('#car_indi > li').first().addClass('active');
+						$("#myCarousel").carousel("pause").removeData();
+						$('#myCarousel').carousel(0);
+						*/
                         app.bindEvents();
                     }
                 );
@@ -1363,7 +1499,7 @@ var app = {
                         aux = false;
                 }
                 
-                app.views.home.getStoreDetail(store_id, true, true);
+                app.views.home.getStoreDetail(store_id, true, 'true');
                 
             },
             backProductList: function (e) {
@@ -1505,6 +1641,7 @@ var app = {
                 $('#byName').addClass('hide');
             },
             filterByDepartment: function (e) {
+                console.log('app.views.search.filterByDepartment()');
                 app.webservice.get(
                     'stores/?q[store_departments_id_eq]=' + $(e).attr('dep_id'),
                     {},
@@ -1519,26 +1656,32 @@ var app = {
                             },
                             '',
                             function () {
-                                app.views.stores = new Array();
+                                if (result.stores.length > 1) {
 
-                                app.views.home.showStores(result, true);
+									app.views.stores = new Array();
 
-                                app.views.home.currentPage = 1;
-                                app.views.home.totalPages = result.pages;
+									app.views.home.showStores(result, true);
 
-                                if (app.views.home.totalPages > 1) {
+									app.views.home.currentPage = 1;
+									app.views.home.totalPages = result.pages;
 
-                                    $(window).on("scroll", function () { //pagination
-//                                        console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
-                                        if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
+									if (app.views.home.totalPages > 1) {
 
-                                            app.views.home.paginacao('stores?department=' + $(e).attr('dep_id'), {});
-                                        }
-                                    });
-                                }
+										$(window).on("scroll", function () { //pagination
+//                                  	      console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
+											if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
+
+												app.views.home.paginacao('stores?department=' + $(e).attr('dep_id'), {});
+											}
+										});
+									}
                                 
-                                $(window).scrollTop(0);
-                                
+									$(window).scrollTop(0);
+								}else {
+                                    app.views.stores = result.stores;
+                                    console.log(JSON.stringify(app.views.stores));
+                                    app.views.search.storeDetail(app.views.stores[0].id);
+								}
                                 app.bindEvents();
                             }
                         );
@@ -1584,7 +1727,7 @@ var app = {
                                         city: store.city,
                                         uf: store.state,
                                         logo: store.logo,
-                                        index: i,
+                                        index: index,
                                         about: store.about
                                     },
                                 'append',
@@ -1603,6 +1746,12 @@ var app = {
                         app.views.loadView.hide();
                     }
                 );
+            },
+            storeDetail: function (store_id) {
+                console.log('app.views.search.storeDetail()');
+				app.views.auxBackFuc = 'search';
+                app.views.home.getStoreDetail(store_id, true, 'false');
+                
             }
         },
         vMap: {
@@ -1639,7 +1788,7 @@ var app = {
                 $('#content').html('');
                 
                 app.views.setDefaults();
-                app.views.loadView.show();
+                //app.views.loadView.show();$('#map_load_icon').removeClass('hide');
                 
                 app.draw(
                     '#content',
@@ -1775,7 +1924,7 @@ var app = {
                     // Visible tiles loaded!
                     console.log('LOAD MAPS TOTAL');
 
-                    app.views.loadView.hide();
+                    //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
 
                 });
                 
@@ -1833,14 +1982,14 @@ var app = {
                     
                 }
                 
-                app.views.loadView.show();
+                //app.views.loadView.show();$('#map_load_icon').removeClass('hide');
                 
                 app.webservice.get(
                     'maps',
                     option,
                     function (result) {
                         console.log(JSON.stringify(result));
-                        app.views.loadView.hide();
+                        //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                         
                         $('#storeList').html('');
                         app.views.stores = new Array();
@@ -1852,7 +2001,7 @@ var app = {
                     },
                     function (err) {
                         console.log(JSON.stringify(err));
-                        app.views.loadView.hide();
+                        //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                     }
                 );
             },
@@ -1867,8 +2016,8 @@ var app = {
                         map: app.views.vMap.map,
                         position: new google.maps.LatLng(store.latitude, store.longitude),
                         draggable: false,
-                        clickable: true,
-                        icon: 'img/store5.png'
+                        clickable: true
+                        /*icon: 'img/store5.png'*/
                     });
                     
                     var html = app.views.vMap.buildContactStore(store);
@@ -2029,7 +2178,7 @@ var app = {
                     },
                     function (err) {
                         console.log(JSON.stringify(err));
-                        app.views.loadView.hide();
+                        //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                     }
                 );
             },
@@ -2099,7 +2248,7 @@ var app = {
                     },
                     function (err) {
                         console.log(JSON.stringify(err));
-                        app.views.loadView.hide();
+                        //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                     }
                 );
             },
@@ -2297,7 +2446,7 @@ var app = {
                     },
                     function (err) {
                         console.log(JSON.stringify(err));
-                        app.views.loadView.hide();
+                        //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                     }
                 );
             },
@@ -2331,8 +2480,15 @@ var app = {
             stores  : [],
             init: function(e){
                 console.log('app.views.chat.init()');
-               
-                app.views.chat.openChat(app.views.stores[$(e).attr('store_index')]);
+                console.log('store_index:'+$(e).attr('store_index'));
+				
+                if($(e).attr('dadStore')=='true' && app.views.home.oStoreDetail){
+                    store = app.views.home.oStoreDetail;
+                }else{
+                    store = $(e).attr('dadStore')=='true' ? app.views.stores[$(e).attr('store_index')] : app.views.home.storesChild[$(e).attr('store_index')];
+                }
+					
+                app.views.chat.openChat(store);
                 
             },
             openChat: function(store){
@@ -2349,7 +2505,7 @@ var app = {
                     },
                     '',
                     function () {
-                        
+                        console.log('get message');
                         app.webservice.get(
                             'stores/'+store.id+'/messages',
                             {},
@@ -2376,7 +2532,7 @@ var app = {
                             },
                             function (err) {
                                 console.log(err);
-                                app.views.loadView.hide();
+                                //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                             }
                         );
                         
@@ -2626,7 +2782,7 @@ var app = {
                             console.log(err);
                         }
                     );
-                },15000);
+                },1500000);
             }
         },
         stopCheckUnreadMessage: function(){
@@ -2652,11 +2808,13 @@ $(document).ready(function () {
     console.log('Run app');
     app.initialize();
 });
-
+function addReadMore2(text, store_id, id, readMode) { /* to make sure the script runs after page load */
+	return text;
+}
 function addReadMore(text, store_id, id, readMode) { /* to make sure the script runs after page load */
 
-    var max_length = 50; /* set the max content length before a read more link will be added */
-    var link = '<br/><a href="#" class="read_more readMore toProduct" style="font-size: 130%;" data-callback="app.views.products.productDetail" store_id="' + store_id + '" prod_id="' + id + '" type="description" data-pin="false"> ' + readMode + '</a>';
+    var max_length = 110; /* set the max content length before a read more link will be added */
+    var link = '...<a href="#" class="read_more readMore toProduct" style="font-size: 100%;" data-callback="app.views.products.productDetail" store_id="' + store_id + '" prod_id="' + id + '" type="description" data-pin="false"> ' + readMode + '</a>';
 
     if (text.length > max_length) { /* check for content length */
 
@@ -2689,6 +2847,12 @@ function lineBreak(text) {
         return text;
 }
 
+function strip(html)
+{
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+}
 function findContact(text) {
 
     var reg = /([0-9]{3}) [0-9]{3}-[0-9]{4}/;
