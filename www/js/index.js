@@ -218,9 +218,10 @@ var app = {
                     $('#optVNotification').html(app.lang.getStr('%Notification%', 'aplication'));
                     $('#optStore').html(app.lang.getStr('%Stores%', 'homeView'));
                     $('#optProduct').html(app.lang.getStr('%Products%', 'aplication'));
-						   
+
+                    app.views.generateMenu();
                     //app.views.products.showProductList(e);
-					app.views.home.showStoreList();
+                    app.views.home.showStoreList();
                     
                 }, 2000);
                             
@@ -974,6 +975,36 @@ var app = {
             openSite: function (e) {
                 var ref = window.open('http://' + $(e).attr('data-site'), '_system', 'location=yes');
             }            
+        },
+        generateMenu: function () {
+            console.log('app.views.home.generateMenu()');
+                
+            app.webservice.get(
+                'departments',
+                {},
+                function (result) {
+                    console.log(JSON.stringify(result));
+                    $('#vex-navbar').html('');
+                    $.each(result.departments, function (i, dep) {
+                        app.draw(
+                            '#vex-navbar',
+                            '#menuItem',
+                            'menuItem',
+                            {
+                                name: dep.name,
+                                id: dep.id
+                            },
+                            'append',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
+                    });
+                },
+                function (err) {
+                    console.log(JSON.stringify(err));
+                }
+            );
         },
         products: {
             showProductList: function(e){

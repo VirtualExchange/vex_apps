@@ -564,6 +564,13 @@
                 <img src="img/load_image.gif" style="width: 40px;"/>
             </div>
         </script>
+
+        <script type="text/html" id="menuItem">
+            <li>
+                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartment" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+            </li>
+        </script>        
+
     </head>
     <body>
         <div id="loadView" class="hide">
@@ -600,11 +607,7 @@
 					<a id="appTile" class="navbar-brand" href="#">Title</a>
 				</div>
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-						<li><a id="optProduct" href="#" data-callback="app.views.products.showProductList" data-toggle="collapse" data-target=".navbar-collapse">%Products%</a></li>
-						<li><a id="optSearch"  href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target=".navbar-collapse">%Search%</a></li>
-						<li><a id="optStore"   href="#" data-callback="app.views.home.showStoreList" data-toggle="collapse" data-target=".navbar-collapse">%Stores%</a></li>
-						<!--<li><a id="optVMap"    href="#" data-callback="app.views.vMap.init" data-toggle="collapse" data-target=".navbar-collapse">%VMap%</a></li>-->
+					<ul class="nav navbar-nav" id="vex-navbar">
 					</ul>
 				</div>
 
