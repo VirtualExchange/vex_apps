@@ -172,6 +172,7 @@ var app = {
         stores: [],
 		productsDrawn: [],
         backFunction: null,
+        backStack: [],
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -194,8 +195,19 @@ var app = {
         },
         goBack: function(e){
             console.log('app.views.goBack');
-            
-            app.views.backFunction();
+            app.views.backStack.pop();
+            var length = app.views.backStack.length;
+            var backToStr = app.views.backStack[length-1];
+            var backTo = backToStr.split(":");
+            if (backTo[0] == "StoreList"){
+                app.views.home.showStoreList();
+            } else if (backTo[0] == "StoreDetail"){
+                console.log("backTo[1]:"+backTo[1]);
+                app.views.home.getStoreDetail(backTo[1], true, 'true');
+            } else if (backTo[0] == "StoreListByDept"){
+                app.views.home.storeListByDepartment(backTo[1], backTo[2]);
+            }
+            //app.views.backFunction();
             
         },
         home: {
@@ -250,7 +262,7 @@ var app = {
             },
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
-                
+                app.views.backStack.push("StoreList");
                 app.views.setDefaults();
                 
                 app.draw(
@@ -332,7 +344,8 @@ var app = {
                     store_id = app.views.stores[0].id;
                     
                 }
-                
+                app.views.backStack.push("StoreDetail:"+store_id);
+
                 var btBack = $(e).attr('store_id') ? true : false;
                 
                 if($(e).attr('dadStore')!=='false'){
@@ -406,10 +419,17 @@ var app = {
                                 }
                                 console.log(btBack +' || ((' + app.views.home.store_id.length +'== 1) && ' + dadStore+')');
                                 
-                                if(!btBack || ((app.views.home.store_id.length == 1) && (dadStore=='true'))){
-                                    console.log('hide back button');
+                                if (app.views.backStack.length > 1){
+                                    var ind = app.views.backStack.length-2;
+                                    $('#backStack').html(app.views.backStack[ind]);
+                                }else{
                                     $('#divBtBack').addClass('hide');
                                 }
+                                
+                                //if(!btBack || ((app.views.home.store_id.length == 1) && (dadStore=='true'))){
+                                //    console.log('hide back button');
+                                //    $('#divBtBack').addClass('hide');
+                                //}
                                 
                                 if (store.corporate) {
 
@@ -417,7 +437,7 @@ var app = {
                                     $('#divBtBack').addClass('hide');
                                     $('#btFav_0').addClass('hide');
                                 }
-
+                                
                                 $('#storeCategorie').change(function () {
                                     app.views.home.filterByCategory($('#storeCategorie'));
                                 });
@@ -680,50 +700,77 @@ var app = {
 
                 
             },
+            filterByDepartmentFromMenu: function(e){
+                console.log('app.views.home.filterByDepartmentFromMenu()');
+                app.views.backStack = new Array();
+                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name'));
+                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+            },
             filterByDepartment: function(e){
                 console.log('app.views.home.filterByDepartment()');
-                
-                app.views.loadView.show();
-                
-                app.webservice.get(
-                    'stores/?q[store_departments_id_eq]=' + $(e).attr('dep_id'),
-                    {},
-                    function (result) {
-                        console.log(result);
-                        
-                        app.views.loadView.hide();
-                        $('#filterStoreModal').modal('hide');
-                        
-                        app.views.stores = new Array();
-                        $('#storeList').html('');
-
-                        $('#clearFilter').removeClass('hide');
-                        $('#deptFilter').addClass('hide');
-                        $('#deptFilterName').html($(e).attr('dep_name'));
-                        
-                        app.views.home.showStores(result, true);
-
-                        app.views.home.currentPage = 1;
-                        app.views.home.totalPages = result.pages;
-
-                        if (app.views.home.totalPages > 1) {
-
-                            $(window).on("scroll", function () { //pagination
-//                                        console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
-                                if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
-
-                                    app.views.home.paginacao('stores?department=' + $(e).attr('dep_id'), {});
-                                }
-                            });
-                        }
-
-                        $(window).scrollTop(0);
-
-                        app.bindEvents();
+                app.views.backStack.pop();
+                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name'));
+                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+            },
+            storeListByDepartment: function(dep_id, dep_name){
+                console.log('app.views.home.storeListByDepartment()');
+                //app.views.loadView.show();
+                $('#filterStoreModal').modal('hide');
+                app.draw(
+                    '#content',
+                    '#storeListView',
+                    'storeListView',
+                    {
                     },
-                    function (e) {
-                        console.log(JSON.stringify(e));
-                        app.views.loadView.hide();
+                    '',
+                    function () {
+
+                        //$('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
+
+                
+                        app.webservice.get(
+                            'stores/?q[store_departments_id_eq]=' + dep_id,
+                            {},
+                            function (result) {
+                                console.log(result);
+                        
+                                //app.views.loadView.hide();
+                                //$('#filterStoreModal').modal('hide');
+                        
+                                app.views.stores = new Array();
+                                $('#storeList').html('');
+
+                                $('#clearFilter').removeClass('hide');
+                                $('#deptFilter').addClass('hide');
+                                $('#deptFilterName').html(dep_name);
+                        
+                                app.views.home.showStores(result, true);
+
+                                app.views.home.currentPage = 1;
+                                app.views.home.totalPages = result.pages;
+
+                                if (app.views.home.totalPages > 1) {
+
+                                    $(window).on("scroll", function () { //pagination
+//                                        console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
+                                        if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
+
+                                            app.views.home.paginacao('stores?department=' + dep_id, {});
+                                        }
+                                    });
+                                }
+                                app.bindEvents();
+                                //$(window).scrollTop(0);
+                                console.log($('#content').html());
+
+                            },
+                            function (e) {
+                                console.log(JSON.stringify(e));
+                                //app.views.loadView.hide();
+                            }
+                        );
+                        
+                        app.bindEvents();
                     }
                 );
             },
@@ -1379,7 +1426,7 @@ var app = {
             },
             addProductDetail: function (result, e) {
                 console.log('app.views.products.addProductDetail()');
-
+                app.views.backStack.push("ProductDetail:"+result.id);
                 var effect = $(e).attr('data-pin') == 'true' ? '' : 'addSlide';
                 var back = $(e).attr('data-pin') == 'true' ? 'app.views.pin.init' : 'app.views.products.backProductList';
 
@@ -1396,11 +1443,17 @@ var app = {
                         contact: result.contact_info ? findContact(result.contact_info) : '',
                         payment_option: result.payment_option ? result.payment_option : ''
                     },
-                effect,
+                '',
                     function () {
 //                            $('.productDetail').css('height', $(window).height());
 
-                        $('#btBackProd').attr('data-callback', back);
+                        //$('#btBackProd').attr('data-callback', back);
+                        if (app.views.backStack.length > 1){
+                            var ind = app.views.backStack.length-2;
+                            $('#backStack').html(app.views.backStack[ind]);
+                        }else{
+                            $('#divBtBack').addClass('hide');
+                        }
 
                         if (result.contact_info == '<p></p>') {
                             $('#productContact').addClass('hide');
@@ -1671,10 +1724,20 @@ var app = {
                 $('#byDepartment').removeClass('hide');
                 $('#byName').addClass('hide');
             },
-            filterByDepartment: function (e) {
+            filterByDepartmentFromMenu: function(e){
+                console.log('app.views.search.filterByDepartmentFromMenu()');
+                app.views.backStack = new Array();
+                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name'));
+                app.views.search.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+            },
+            filterByDepartment: function(e){
                 console.log('app.views.search.filterByDepartment()');
+                app.views.search.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+            },
+            storeListByDepartment: function (dep_id, dep_name) {
+                console.log('app.views.search.storeListByDepartment()');
                 app.webservice.get(
-                    'stores/?q[store_departments_id_eq]=' + $(e).attr('dep_id'),
+                    'stores/?q[store_departments_id_eq]=' + dep_id,
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
@@ -1683,7 +1746,7 @@ var app = {
                             '#resultView',
                             'resultView',
                             {
-                                search: $(e).attr('dep_name')
+                                search: dep_name
                             },
                             '',
                             function () {
@@ -1702,7 +1765,7 @@ var app = {
 //                                  	      console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
 											if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
 
-												app.views.home.paginacao('stores?department=' + $(e).attr('dep_id'), {});
+												app.views.home.paginacao('stores?department=' + dep_id, {});
 											}
 										});
 									}

@@ -109,7 +109,7 @@
         </script>
         
         <script type="text/html" id="storeListView">
-            <div id="filterStoreModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filterStoreModal" aria-hidden="true">
+            <div id="filterStoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="filterStoreModal" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -124,19 +124,16 @@
                     </div>
                 </div>
             </div>
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<span id="deptFilterName">%Stores%</span><a href="#" id="deptFilter" class="btn btn-success" data-toggle="modal" data-target="#filterStoreModal">%Filter%</a>
-							<a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.views.home.showStoreList">Clear Filter</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			
-			
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span id="deptFilterName">%Stores%</span><a href="#" id="deptFilter" class="btn btn-success" data-toggle="modal" data-target="#filterStoreModal">%Filter%</a>
+                            <a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.views.home.showStoreList">Clear Filter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="storeList"></div>
         </script>
 
@@ -148,10 +145,10 @@
                     </div>
                     <div class="col-xs-8 col-sm-8" >
                         <h4>{{name}}</h4>
-						<p>{{about}}</p>
+                        <p>{{about}}</p>
                     </div>
                 </div> 
-			</a>
+            </a>
         </script>        
 
         <script type="text/html" id="ProductView">
@@ -171,117 +168,105 @@
                 </div>
             </div>
             <div class="panel panel-default">
-				<div class="panel-body">
-					<div class="row" id="divBtBack">
-						<a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
-							<span class="icon icon-left"></span> %BACK%
-						</a>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="storeItem">
-						<div class="row">
-							<div class="col-xs-4 col-sm-4 logoStoreDiv">
-								<img src="{{logo}}" class="img-responsive img-rounded"/>
-							</div>
-						<div class="col-xs-8 col-sm-8">
-							<h4 class="text-left HstoreAddress">{{name}}</h4>
-							<div class="text-left HstoreAddress">{{city}}, {{uf}}</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<p class="text-left HstoreName">{{about}}</p>
-						</div>
-					</div>
-				
-					<div class="row">
-						<div class="col-xs-4 col-sm-4">
-							<a href="" class="btn btn-primary" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true">%Contact%</a>
-						</div>
-						<div class="col-xs-4 col-sm-4">
-							<a href="" class="btn btn-primary" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true">%Chat%</a>
-						</div>
-						<div class="col-xs-4 col-sm-4">
-                            <button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link" data-callback="app.views.home.saveFavorite">
-                                <span class="icon icon-star"></span>
-                            </button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="productList">
-			<ul class="nav nav-tabs" id="storeTabs">
-				<li class="active" id="liOptStore">
-					<a href="#" data-callback="app.views.home.showStoresChild">%Stores%</a>
-				</li>
-				<li id="liOptProduct">
-					<a href="#" data-callback="app.views.home.showStoresProducts">%Products%</a>
-				</li>
-			</ul>
-            <div id="storesListDiv" class="hide">
-				<div id="list-stores"></div>
+                <div class="panel-body">
+                    <div class="row" id="divBtBack">
+                        <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
+                            <span class="icon icon-left" ></span> %BACK%
+                        </a>
+                        <span id="backStack">Test</span>
+                    </div>
+                </div>
             </div>
-            <div id="productListDiv" class="hide">
-				<!--
-				<div>
-					<select id="storeCategorie" class="form-control" store_index="{{index}}"></select>
-				</div>
-				-->
-				<div class="panel panel-default" id="filterPanelProductView">
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-xs-12 col-sm-12">
-								<span id="catFilterNameProductView">%Products%</span><a href="#" id="catFilterProductView" class="btn btn-success" data-toggle="modal" data-target="#filterModalProductView">%Filter%</a>
-								<a href="#" id="clearFilterProductView" class="btn btn-success hide" data-callback="app.views.home.clearFilter">%Clear Filter%</a>
-							</div>
-						</div>
-					</div>
-				</div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="storeItem">
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 logoStoreDiv">
+                                <img src="{{logo}}" class="img-responsive img-rounded"/>
+                            </div>
+                            <div class="col-xs-8 col-sm-8">
+                                <h4 class="text-left HstoreAddress">{{name}}</h4>
+                                <div class="text-left HstoreAddress">{{city}}, {{uf}}</div>
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12">
+                                <p class="text-left HstoreName">{{about}}</p>
+                            </div>
+                        </div>
 
-				<div id="productList"></div>
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4">
+                                <a href="" class="btn btn-primary" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true">%Contact%</a>
+                            </div>
+                            <div class="col-xs-4 col-sm-4">
+                                <a href="" class="btn btn-primary" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true">%Chat%</a>
+                            </div>
+                            <div class="col-xs-4 col-sm-4">
+                                <button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link" data-callback="app.views.home.saveFavorite">
+                                    <span class="icon icon-star"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="productList">
+                <ul class="nav nav-tabs" id="storeTabs">
+                    <li class="active" id="liOptStore">
+                        <a href="#" data-callback="app.views.home.showStoresChild">%Stores%</a>
+                    </li>
+                    <li id="liOptProduct">
+                        <a href="#" data-callback="app.views.home.showStoresProducts">%Products%</a>
+                    </li>
+                </ul>
+                <div id="storesListDiv" class="hide">
+                    <div id="list-stores"></div>
+                </div>
+                <div id="productListDiv" class="hide">
+                    <div class="panel panel-default" id="filterPanelProductView">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12">
+                                    <span id="catFilterNameProductView">%Products%</span><a href="#" id="catFilterProductView" class="btn btn-success" data-toggle="modal" data-target="#filterModalProductView">%Filter%</a>
+                                    <a href="#" id="clearFilterProductView" class="btn btn-success hide" data-callback="app.views.home.clearFilter">%Clear Filter%</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="productList"></div>
+                </div>
+            </div>
         </script>
+
         <script type="text/html" id="ProductItem">
             <a class="list-group-item toProduct" id="productItem_{{id}}" href="#" data-callback="app.views.products.productDetail" store_id="{{store_id}}" prod_id="{{id}}" data-pin="false">
-				<h4 class="list-group-item-heading">{{name}}</h4>
+                <h4 class="list-group-item-heading">{{name}}</h4>
                 <p class="list-group-item-text red" id="regular_price_{{index}}" >{{regular_price}}</p>
                 <p class="list-group-item-text green" id="sale_price_{{index}}" >{{price}}</p>
-				<p class="list-group-item-text">{{description}}</p>
-			</a>
-
+                <p class="list-group-item-text">{{description}}</p>
+            </a>
+            <!--<a href="#" data-callback="">More from {{store_name}}</a>-->
         </script>        
+
         <script type="text/html" id="ProductDetailView">
-
             <div class="panel panel-default">
-				<div class="panel-body">
-					<div class="row" id="divBtBack">
-						<a href="#" id="btBackProd" class="btn-link" data-callback="app.views.products.backProductList">
-							 <span class="icon icon-left"></span>%BACK%
-						</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- Carousel 
-			<div id="myCarousel" class="carousel slide" data-ride="carousel">
-				<ol class="carousel-indicators" id="car_id"></ol>
-				<div class="carousel-inner slider-size" id="car_inner"></div>
-				<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="icon icon-left"></span></a>
-				<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="icon icon-right"></span></a>
-				
-			</div>-->
-            <div id="slider" class="swipe">
-				<div class="swipe-wrap"></div>
+                <div class="panel-body">
+                    <div class="row" id="divBtBack">
+                        <a href="#" id="btBackProd" class="btn-link" data-callback="app.views.goBack">
+                            <span class="icon icon-left"></span>%BACK%
+                        </a>
+                        <span id="backStack">Test</span>
+                    </div>
+                </div>
             </div>
-			<ul style="margin:0;padding:0" class="pagination" id="pagSlide"></ul>
-			
+
+            <div id="slider" class="swipe">
+                <div class="swipe-wrap"></div>
+            </div>
+            <ul style="margin:0;padding:0" class="pagination" id="pagSlide"></ul>
+
             <div class="row">
 				<div class="col-xs-12 col-sm-12">
 					<div class="productDetail">
@@ -468,7 +453,7 @@
             </div>
         </script>
         <script type="text/html" id="byDepartmentItem">
-            <a href="#" data-callback="app.views.search.filterByDepartment" class="list-group-item" dep_id="{{id}}" dep_name="{{name}}">
+            <a href="#" data-callback="app.views.home.filterByDepartment" class="list-group-item" dep_id="{{id}}" dep_name="{{name}}">
                 <span class="depName">{{name}}</span>
                 <span class="icon icon-right-nav pull-right"></span>
             </a>
@@ -526,6 +511,7 @@
 							<span class="icon icon-left"></span><span>%BACK%</span>
 						</a>
 						<span style="margin-left:10px">{{search}}</span>
+                        <span id="backStack">Test</span>
 					</div>
 				</div>
 			</div>
@@ -567,7 +553,7 @@
 
         <script type="text/html" id="menuItem">
             <li>
-                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartment" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
             </li>
         </script>        
 
