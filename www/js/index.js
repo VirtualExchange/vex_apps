@@ -78,8 +78,8 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         console.log('app.initialize(): app initialization with device ready.');
-		
-		app.deviceReady = true;
+
+        app.deviceReady = true;
 
         document.addEventListener("offline", function () {
             app.offLine = true;
@@ -92,7 +92,7 @@ var app = {
             app.views.home.init();
         }, false);
         
-		//document.addEventListener("backbutton", app.onBackKeyDown, false);
+        //document.addEventListener("backbutton", app.onBackKeyDown, false);
 
         console.log("ANTES: " + window.localStorage.getItem("token"));
 
@@ -107,7 +107,6 @@ var app = {
 
         console.log(window.localStorage.getItem("token"));
 
-		
         if (!window.localStorage.getItem("token")) {
             console.log('SEM TOKEN');
             app.webservice.registerDevice(
@@ -164,13 +163,13 @@ var app = {
 
     },
     onBackKeyDown: function(e){
-    	e.preventDefault();
+        e.preventDefault();
     },
     views: {
         currentStore: {},
         scrool: 0,
         stores: [],
-		productsDrawn: [],
+        productsDrawn: [],
         backFunction: null,
         backStack: [],
         loadView: {
@@ -377,22 +376,22 @@ var app = {
             },
             showStoreDetail: function(store, btBack, dadStore){
                 console.log('app.views.home.showStoreDetail');
-				var aa = -1;
-				var bb = -1;
-				var cc = -1;
-				var aboutStripped;
+                var aa = -1;
+                var bb = -1;
+                var cc = -1;
+                var aboutStripped;
                 app.webservice.get(
                     'stores/' + store.id + '/categories',
                     {},
                     function (result) {
                         //console.log(JSON.stringify(result));
-						aa = store.about.indexOf('**AA**'); //Members / Featured Members
-						bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
-						cc = store.about.indexOf('**CC**'); //Products / Vendors
-						aboutStripped = store.about;
-						if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
-						if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
-						if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
+                        aa = store.about.indexOf('**AA**'); //Members / Featured Members
+                        bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
+                        cc = store.about.indexOf('**CC**'); //Products / Vendors
+                        aboutStripped = store.about;
+                        if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
+                        if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
+                        if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
 
                         app.draw(
                             '#content',
@@ -406,7 +405,7 @@ var app = {
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
                                 about: aboutStripped,
-								dadStore: dadStore
+                                dadStore: dadStore
                             },
                             '',
                             function () {
@@ -461,18 +460,18 @@ var app = {
                                     
                                     $('#storeOptions').removeClass('hide');
                                     $('#storesListDiv').removeClass('hide');
-									
-									if (aa > -1) {
-									    $('#liOptProductLink').text('Members');
-									    $('#liOptStoreLink').text('Featured Members');
+
+                                    if (aa > -1) {
+                                        $('#liOptProductLink').text('Members');
+                                        $('#liOptStoreLink').text('Featured Members');
                                     }
-									if (bb > -1) {
-									    $('#liOptProductLink').text('Vendors');
-									    $('#liOptStoreLink').text('Featured Vendors');
+                                    if (bb > -1) {
+                                        $('#liOptProductLink').text('Vendors');
+                                        $('#liOptStoreLink').text('Featured Vendors');
                                     }
-									if (cc > -1) {
-									    $('#liOptProductLink').text('Offers');
-									    $('#liOptStoreLink').text('Vendors');
+                                    if (cc > -1) {
+                                        $('#liOptProductLink').text('Offers');
+                                        $('#liOptStoreLink').text('Vendors');
                                     }
                                     
                                     $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
@@ -487,8 +486,7 @@ var app = {
                                     //$('#liOptStore').addClass('hide');
                                     $('#storeTabs').addClass('hide');
                                     $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
-									$('#list-stores').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
-
+                                    $('#list-stores').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
                         
                                 }
                                 console.log("Back functionality: dadStore:"+dadStore+" app.views.home.oStoreDetail.id:"+app.views.home.oStoreDetail.id);
@@ -601,27 +599,26 @@ var app = {
 
                         countCat += 1;
                         if (c.subcategories.length > 0) {
-							var subCategoryHtml = '';
-							var subIds = '';
+                            var subCategoryHtml = '';
+                            var subIds = '';
                             $.each(c.subcategories, function (i, sub) {
-								subIds = subIds.concat(sub.id+" ");
+                                subIds = subIds.concat(sub.id+" ");
                                 if (sub.count_products != 0) {
-									var str = '<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px" id="cat_name">' + sub.name + '</span></a>';
-									subCategoryHtml = subCategoryHtml.concat(str);
+                                    var str = '<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px" id="cat_name">' + sub.name + '</span></a>';
+                                    subCategoryHtml = subCategoryHtml.concat(str);
                                 }
                             });
-							$('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span id="cat_name">' + c.name + '</span></a>');
-							$('#categoryListProductView').append(subCategoryHtml);							
+                            $('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span id="cat_name">' + c.name + '</span></a>');
+                            $('#categoryListProductView').append(subCategoryHtml);
                         } else {
-							$('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'"><span id="cat_name">' + c.name + '</span></a>');
-							
-						}
+                            $('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'"><span id="cat_name">' + c.name + '</span></a>');
+                        }
                     }
                 });
                 if (countCat == 0) {
                     $('#filterPanelProductView').addClass('hide');
                 }
-			},
+            },
             addCategorie: function (cats) {
                 console.log('app.views.home.addCategorie');
                 $('#storeCategorie').append('<option value="">' + app.lang.getStr('%Categories%', 'aplication') + '</option>');
@@ -654,10 +651,10 @@ var app = {
                 }
             },
             filterByCategory: function (e) {
-				console.log('app.views.home.filterByCategory()');
-				$('#filterModalProductView').modal('hide');
-				
-				var cat_name = $('#cat_name').html();
+                console.log('app.views.home.filterByCategory()');
+                $('#filterModalProductView').modal('hide');
+
+                var cat_name = $('#cat_name').html();
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
 
                 $('#catFilterNameProductView').html(cat_name);
@@ -695,7 +692,7 @@ var app = {
                 //window.localStorage.removeItem("productCat");
                 
                 //app.views.products.showProductList();
-				console.log('app.views.home.oStoreDetail.id'+app.views.home.oStoreDetail.id);
+                console.log('app.views.home.oStoreDetail.id'+app.views.home.oStoreDetail.id);
                 app.views.products.showProductStoreList(app.views.home.oStoreDetail.id);
 
                 
@@ -780,7 +777,7 @@ var app = {
                     'departments',
                     {},
                     function (result) {
-						$('#storeDepartmentList').html('');
+                        $('#storeDepartmentList').html('');
                         console.log(JSON.stringify(result));
                         $.each(result.departments, function (i, dep) {
                             app.draw(
@@ -820,35 +817,33 @@ var app = {
                 $.each(result.stores, function (i, s) {
                     
                     if (result.stores.length==1 || !s.corporate) {
-						console.log(JSON.stringify(s));
+                        console.log(JSON.stringify(s));
                         app.views.stores.push(s);
                     }
                 });
-				
-				if(app.views.stores.length==0){
-					
-					$('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
-					
-				}else app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
+
+                if(app.views.stores.length==0){
+                    $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
+                }else app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
                 
             },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore){
                 console.log('app.views.home.addStore');
                 
                 var i = arrayIndex;
-				var aa = -1;
-				var bb = -1;
-				var cc = -1;
-				var aboutStripped;
-				
+                var aa = -1;
+                var bb = -1;
+                var cc = -1;
+                var aboutStripped;
+
                 $.each(storeArray, function (index, store) {
                     aa = store.about.indexOf('**AA**');
                     bb = store.about.indexOf('**BB**');
                     cc = store.about.indexOf('**CC**');
-					aboutStripped = store.about;
-					if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
-					if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
-					if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
+                    aboutStripped = store.about;
+                    if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
+                    if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
+                    if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
                     app.draw(
                         divId,
                         '#storeItem',
@@ -862,7 +857,7 @@ var app = {
                             featured_product : !store.featured_product ? '' : store.featured_product,
                             id : store.id,
                             index: index,
-							dadStore: dadStore
+                            dadStore: dadStore
                         },
                         'append',
                         function () {
@@ -876,27 +871,27 @@ var app = {
                             if (storeArray.length == 1 && search==false && dadStore=='true') {
                                 $('.storeItem').css('height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
                             }
-							 
-							if(!aboutStripped || aboutStripped== '<p></p>'){
-								$('#aboutStore_'+i).addClass('hide');
-							}
+
+                            if(!aboutStripped || aboutStripped== '<p></p>'){
+                                $('#aboutStore_'+i).addClass('hide');
+                            }
                             
                             if(!store.featured_product || store.featured_product== '<p></p>' || store.featured_product==''){
-								$('#featured_'+i).addClass('hide');
-							}
+                                $('#featured_'+i).addClass('hide');
+                            }
                             
                             if(store.stores_count>0){
                                 $('#btnProduct_'+i).html(app.lang.getStr('%More%', 'storeItem'))
                             }
-							if (aa > -1){
+                            if (aa > -1){
                                 $('#btnProduct_'+i).html(app.lang.getStr('Members', 'storeItem'))
-							}
-							if (bb > -1){
+                            }
+                            if (bb > -1){
                                 $('#btnProduct_'+i).html(app.lang.getStr('Vendors', 'storeItem'))
-							}
-							if (cc > -1){
+                            }
+                            if (cc > -1){
                                 $('#btnProduct_'+i).html(app.lang.getStr('Offers', 'storeItem'))
-							}
+                            }
                             if(!dadStore){
                                 $('#btnContact_'+i).attr('dadStore','false');
                                 $('#btnProduct_'+i).attr('dadStore','false');
@@ -1103,33 +1098,32 @@ var app = {
                 var countCat = 0;
                 $('#categoryList').html('');
                 $.each(cats, function (index, c) {
-					console.log('app.views.products.addCategorieMenu: c.id:'+c.id+' c.name:'+c.name);
+                    console.log('app.views.products.addCategorieMenu: c.id:'+c.id+' c.name:'+c.name);
                     if (c.count_products != 0) {
 
                         countCat += 1;
                         if (c.subcategories.length > 0) {
-							var subCategoryHtml = '';
-							var subIds = '';
+                            var subCategoryHtml = '';
+                            var subIds = '';
                             $.each(c.subcategories, function (i, sub) {
-								subIds = subIds.concat(sub.id+" ");
+                                subIds = subIds.concat(sub.id+" ");
                                 if (sub.count_products != 0) {
-									var str = '<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px">' + sub.name + '</span></a>';
-									subCategoryHtml = subCategoryHtml.concat(str);
+                                    var str = '<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px">' + sub.name + '</span></a>';
+                                    subCategoryHtml = subCategoryHtml.concat(str);
                                 }
                             });
-							$('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span>' + c.name + '</span></a>');
-							$('#categoryList').append(subCategoryHtml);							
+                            $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span>' + c.name + '</span></a>');
+                            $('#categoryList').append(subCategoryHtml);							
                         } else {
-							$('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'"><span>' + c.name + '</span></a>');
-							
-						}
+                            $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'"><span>' + c.name + '</span></a>');
+                    }
                     }
                 });
             },
             filterBycategory: function(e){
                 console.log('app.views.products.filterBycategory()');
-				//console.log('NANCY: sub_ids: '+$(e).attr('sub_ids'));
-				//var subIds = sub_ids.split(" ");
+                //console.log('NANCY: sub_ids: '+$(e).attr('sub_ids'));
+                //var subIds = sub_ids.split(" ");
                 $('#filterModal').modal('hide');
                 
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
@@ -1149,13 +1143,9 @@ var app = {
                     {},
                     function (result) {
                         console.log('app.views.products.filterBycategory:result:'+JSON.stringify(result));
-                        
                         app.views.products.addProducts(result.products);
-						JSON.stringify
-                        
                     },
                     function (err) {
-						console.log('app.views.products.filterBycategory(9)');
                         console.log(err);
                         app.views.loadView.hide();
                     }
@@ -1205,18 +1195,18 @@ var app = {
                     return;
                 }
                 $('#productList').html('');
-				app.views.productsDrawn = new Array();
+                app.views.productsDrawn = new Array();
 
                 $.each(productList, function (index, prod) {
-					duplicate = false;
-					$.each(app.views.productsDrawn, function (i,prodid){
-						if (productList[index].product_id == prodid){
-							duplicate = true;
-						}
-					});
-					
+                    duplicate = false;
+                    $.each(app.views.productsDrawn, function (i,prodid){
+                        if (productList[index].product_id == prodid){
+                            duplicate = true;
+                        }
+                    });
+
                     if (!duplicate){
-					app.views.productsDrawn.push(productList[index].product_id);
+                    app.views.productsDrawn.push(productList[index].product_id);
                     app.draw(
                         '#productList',
                         '#ProductItem',
@@ -1233,19 +1223,19 @@ var app = {
                             store_id: prod.store_id ? prod.store_id : 0,
                             store_name: prod.store_name,
                             store_logo: prod.store_logo,
-							feature_level: prod.feature_level
+                            feature_level: prod.feature_level
                         },
                         'append',
                         function () {
 
-							if (prod.feature_level == 3){
-								$('#productItem_'+prod.id).addClass('list-group-item-info');
-							}else if (prod.feature_level == 2){
-								$('#productItem_'+prod.id).addClass('list-group-item-danger');
-							}else if (prod.feature_level == 1){
-								$('#productItem_'+prod.id).addClass('list-group-item-success');
-							}
-							
+                            if (prod.feature_level == 3){
+                                $('#productItem_'+prod.id).addClass('list-group-item-info');
+                            }else if (prod.feature_level == 2){
+                                $('#productItem_'+prod.id).addClass('list-group-item-danger');
+                            }else if (prod.feature_level == 1){
+                                $('#productItem_'+prod.id).addClass('list-group-item-success');
+                            }
+
                             if (prod.pin != false || prod.store_id == 0) {
 
                                 $('#pin_' + prod.id + ' i').removeClass('fa-pin');
@@ -1288,9 +1278,8 @@ var app = {
                                 $('#storeInfo').removeClass('hide');
                             }
                             app.bindEvents();
-					}
-                    );
-					}
+                        }
+                    );}
                 });
             },
             pinFavorite: function (e) {
@@ -1353,13 +1342,13 @@ var app = {
                 );
             },
             productDetail: function (e) {
-				console.log('app.views.products.productDetail()');
+                console.log('app.views.products.productDetail()');
                 //app.views.loadView.show();
 
                 var store_id = $(e).attr('store_id');
-				console.log('app.views.products.productDetail: store_id:'+store_id);
+                console.log('app.views.products.productDetail: store_id:'+store_id);
                 var prod_id = $(e).attr('prod_id');
-				console.log('app.views.products.productDetail: prod_id:'+prod_id);
+                console.log('app.views.products.productDetail: prod_id:'+prod_id);
 
                 if (store_id == 0)
                     return;
@@ -1524,21 +1513,6 @@ var app = {
                                 }
                             }).data('Swipe');
                         },500);
-						/*
-						$("#myCarousel").carousel("pause").removeData();
-						var content_indi = "";
-						var content_inner = "";
-						$.each(result.images, function (i, img) {
-							content_indi += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
-							content_inner += '<div id="sliderimage" class="item"><img id="productCarouselItemImage" src="' + img.original+'"/></div>';
-						});
-						$('#car_id').html(content_indi);
-						$('#car_inner').html(content_inner);
-						$('#car_inner .item').first().addClass('active');
-						$('#car_indi > li').first().addClass('active');
-						$("#myCarousel").carousel("pause").removeData();
-						$('#myCarousel').carousel(0);
-						*/
                         app.bindEvents();
                     }
                 );
@@ -1752,30 +1726,29 @@ var app = {
                             function () {
                                 if (result.stores.length > 1) {
 
-									app.views.stores = new Array();
+                                    app.views.stores = new Array();
 
-									app.views.home.showStores(result, true);
+                                    app.views.home.showStores(result, true);
 
-									app.views.home.currentPage = 1;
-									app.views.home.totalPages = result.pages;
+                                    app.views.home.currentPage = 1;
+                                    app.views.home.totalPages = result.pages;
 
-									if (app.views.home.totalPages > 1) {
+                                    if (app.views.home.totalPages > 1) {
 
-										$(window).on("scroll", function () { //pagination
-//                                  	      console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
-											if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
-
-												app.views.home.paginacao('stores?department=' + dep_id, {});
-											}
-										});
-									}
+                                        $(window).on("scroll", function () { //pagination
+//                                          console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
+                                            if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
+                                                app.views.home.paginacao('stores?department=' + dep_id, {});
+                                            }
+                                        });
+                                    }
                                 
-									$(window).scrollTop(0);
-								}else {
+                                    $(window).scrollTop(0);
+                                }else {
                                     app.views.stores = result.stores;
                                     console.log(JSON.stringify(app.views.stores));
                                     app.views.search.storeDetail(app.views.stores[0].id);
-								}
+                                }
                                 app.bindEvents();
                             }
                         );
@@ -1843,7 +1816,7 @@ var app = {
             },
             storeDetail: function (store_id) {
                 console.log('app.views.search.storeDetail()');
-				app.views.auxBackFuc = 'search';
+                app.views.auxBackFuc = 'search';
                 app.views.home.getStoreDetail(store_id, true, 'false');
                 
             }
@@ -1948,7 +1921,7 @@ var app = {
                 );
             },
             getPosition: function(){
-	    	console.log('app.views.vMap.getPosition()');
+                console.log('app.views.vMap.getPosition()');
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
                         console.log('GPS RESULT');
@@ -2003,7 +1976,7 @@ var app = {
             renderMap: function(){
                 console.log('app.views.vMap.renderMap()');
                 //console.log('RENDER MAP DEVICE> ' + app.device.latitude +', ' +app.device.longitude);
-				
+
                 var userLocation = new google.maps.LatLng(app.device.latitude, app.device.longitude);
                 
                 var mapOptions = {
@@ -2033,9 +2006,9 @@ var app = {
             },
             getStores: function () {
                 console.log('app.views.vMap.getStores()');
-		//console.log('DEVICE> ' + app.device.latitude +', ' +app.device.longitude);
-		//console.log('MAP> ' + app.views.vMap.lat +', ' +app.views.vMap.long);
-				
+                //console.log('DEVICE> ' + app.device.latitude +', ' +app.device.longitude);
+                //console.log('MAP> ' + app.views.vMap.lat +', ' +app.views.vMap.long);
+
                 var option = {
                     latitude: !app.views.vMap.lat ? app.device.latitude : app.views.vMap.lat,
                     longitude: !app.views.vMap.long ? app.device.longitude : app.views.vMap.long
@@ -2575,13 +2548,13 @@ var app = {
             init: function(e){
                 console.log('app.views.chat.init()');
                 console.log('store_index:'+$(e).attr('store_index'));
-				
+
                 if($(e).attr('dadStore')=='true' && app.views.home.oStoreDetail){
                     store = app.views.home.oStoreDetail;
                 }else{
                     store = $(e).attr('dadStore')=='true' ? app.views.stores[$(e).attr('store_index')] : app.views.home.storesChild[$(e).attr('store_index')];
                 }
-					
+
                 app.views.chat.openChat(store);
                 
             },

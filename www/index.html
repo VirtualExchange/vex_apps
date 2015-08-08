@@ -268,43 +268,43 @@
             <ul style="margin:0;padding:0" class="pagination" id="pagSlide"></ul>
 
             <div class="row">
-				<div class="col-xs-12 col-sm-12">
-					<div class="productDetail">
-						<ul class="list-unstyled">
-							<li>
-								<h4>{{name}}</h4>
-							</li>
-							<li>
-								<span class="red" id="regular_price">{{regular_price}}</span>
-							</li>
-							<li>
-								<span class="green" id="sale_price">{{price}}</span>
-							</li>
-							<li class="text-left">
-								<a class="btn-link" data-callback="app.views.products.shareProduct">
-									<i class="fa fa-share-alt fa-2x"></i>
-								</a>
-								<button id="pin_{{id}}" remove="false" class="btn-link btPin" product_id="{{id}}" data-callback="app.views.products.pinFavorite">
-									<i class="fa fa-pin"></i>
-								</button>
-							</li>
-							<li>
-								<p id="DatePinDetail_{{id}}" class="hide">
-									%In%: <span>V Chambers</span>
-								</p>
-								{{description}}
-							</li>
-							<li id="paymentOption">
-								<p>%Payment Option%</p>
-								{{payment_option}}
-							</li>
-							<li id="productContact">
-								<p>%Contact%</p>
-								{{contact}}
-							</li>
-						</ul>
-					</div>
-				</div>
+                <div class="col-xs-12 col-sm-12">
+                    <div class="productDetail">
+                        <ul class="list-unstyled">
+                            <li>
+                                <h4>{{name}}</h4>
+                            </li>
+                            <li>
+                                <span class="red" id="regular_price">{{regular_price}}</span>
+                            </li>
+                            <li>
+                                <span class="green" id="sale_price">{{price}}</span>
+                            </li>
+                            <li class="text-left">
+                                <a class="btn-link" data-callback="app.views.products.shareProduct">
+                                    <i class="fa fa-share-alt fa-2x"></i>
+                                </a>
+                                <button id="pin_{{id}}" remove="false" class="btn-link btPin" product_id="{{id}}" data-callback="app.views.products.pinFavorite">
+                                    <i class="fa fa-pin"></i>
+                                </button>
+                            </li>
+                            <li>
+                                <p id="DatePinDetail_{{id}}" class="hide">
+                                    %In%: <span>V Chambers</span>
+                                </p>
+                                {{description}}
+                            </li>
+                            <li id="paymentOption">
+                                <p>%Payment Option%</p>
+                                {{payment_option}}
+                            </li>
+                            <li id="productContact">
+                                <p>%Contact%</p>
+                                {{contact}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </script>
 
@@ -505,16 +505,16 @@
         </script>
         <script type="text/html" id="resultView">
             <div class="panel panel-default">
-				<div class="panel-body">
-					<div class="row" id="divBtBack">
-						<a href="#" id="btBack" class="btn-link" data-callback="app.views.search.init">
-							<span class="icon icon-left"></span><span>%BACK%</span>
-						</a>
-						<span style="margin-left:10px">{{search}}</span>
+                <div class="panel-body">
+                    <div class="row" id="divBtBack">
+                        <a href="#" id="btBack" class="btn-link" data-callback="app.views.search.init">
+                            <span class="icon icon-left"></span><span>%BACK%</span>
+                        </a>
+                        <span style="margin-left:10px">{{search}}</span>
                         <span id="backStack">Test</span>
-					</div>
-				</div>
-			</div>
+                    </div>
+                </div>
+            </div>
 
             <div id="storeList" class="list-group"></div>
         </script>
@@ -535,16 +535,16 @@
                 </div>
             </div>
 
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<span id="catFilterName">%Products%</span><a href="#" id="catFilter" class="btn btn-success" data-toggle="modal" data-target="#filterModal">%Filter%</a>
-							<a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.views.products.clearFilter">%Clear Filter%</a>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span id="catFilterName">%Products%</span><a href="#" id="catFilter" class="btn btn-success" data-toggle="modal" data-target="#filterModal">%Filter%</a>
+                            <a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.views.products.clearFilter">%Clear Filter%</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row" id="productList">
                 <img src="img/load_image.gif" style="width: 40px;"/>
@@ -583,21 +583,20 @@
         
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a id="appTile" class="navbar-brand" href="#">Title</a>
-				</div>
-			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav" id="vex-navbar">
-					</ul>
-				</div>
-
-			</div>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a id="appTile" class="navbar-brand" href="#">Title</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav" id="vex-navbar">
+                    </ul>   
+                </div>
+            </div>
         </nav>
         <div id="content" class="container-fluid"></div>
     </body>
