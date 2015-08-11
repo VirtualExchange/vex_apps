@@ -326,7 +326,7 @@ var app = {
                     function () {
 
                         $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
-                        
+                        $('#storeTitle').addClass('hide');
                         app.views.home.oStoreDetail = null;
                         
                         app.webservice.get(
@@ -788,7 +788,10 @@ var app = {
                                 $('#storeList').html('');
                                 if (hideFilter){
                                     $('#storeFilter').addClass('hide');
+                                    $('#storeTitle').removeClass('hide');
+                                    $('#storeTitleName').html(dep_name);
                                 }else{
+                                    $('#storeTitle').addClass('hide');
                                     $('#clearFilter').removeClass('hide');
                                     $('#deptFilter').addClass('hide');
                                     $('#deptFilterName').html(dep_name);
