@@ -665,7 +665,7 @@ var app = {
                         }
                     }
                 });
-                if (countCat == 0) {
+                if (countCat < 2) {
                     $('#filterPanelProductView').addClass('hide');
                 }
             },
