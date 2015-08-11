@@ -124,7 +124,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
+            <div class="panel panel-default" id="storeFilter">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
@@ -152,7 +152,7 @@
         </script>        
 
         <script type="text/html" id="ProductView">
-            <div id="filterModalProductView" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filterModalProductView" aria-hidden="true">
+            <div id="filterModalProductView" class="modal" tabindex="-1" role="dialog" aria-labelledby="filterModalProductView" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -167,13 +167,13 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
+            <div class="panel panel-default"  id="divBtBack">
                 <div class="panel-body">
-                    <div class="row" id="divBtBack">
+                    <div class="row">
                         <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
                             <span class="icon icon-left" ></span> %BACK%
                         </a>
-                        <span id="backStack">Test</span>
+                        <!--<span id="backStack">Test</span>-->
                     </div>
                 </div>
             </div>
@@ -229,7 +229,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12">
-                                    <span id="catFilterNameProductView">%Products%</span><a href="#" id="catFilterProductView" class="btn btn-success" data-toggle="modal" data-target="#filterModalProductView">%Filter%</a>
+                                    <span id="catFilterNameProductView"></span><a href="#" id="catFilterProductView" class="btn btn-success" data-toggle="modal" data-target="#filterModalProductView">%Filter%</a>
                                     <a href="#" id="clearFilterProductView" class="btn btn-success hide" data-callback="app.views.home.clearFilter">%Clear Filter%</a>
                                 </div>
                             </div>
@@ -251,13 +251,13 @@
         </script>        
 
         <script type="text/html" id="ProductDetailView">
-            <div class="panel panel-default">
+            <div class="panel panel-default"  id="divBtBack">
                 <div class="panel-body">
-                    <div class="row" id="divBtBack">
+                    <div class="row">
                         <a href="#" id="btBackProd" class="btn-link" data-callback="app.views.goBack">
                             <span class="icon icon-left"></span>%BACK%
                         </a>
-                        <span id="backStack">Test</span>
+                        <!--<span id="backStack">Test</span>-->
                     </div>
                 </div>
             </div>
@@ -301,6 +301,9 @@
                             <li id="productContact">
                                 <p>%Contact%</p>
                                 {{contact}}
+                            </li>
+                            <li class="text-left">
+                                <a class="btn btn-success" data-callback="" id="moreFrom">More from...</a>
                             </li>
                         </ul>
                     </div>
@@ -504,14 +507,14 @@
             </div>
         </script>
         <script type="text/html" id="resultView">
-            <div class="panel panel-default">
+            <div class="panel panel-default" id="divBtBack">
                 <div class="panel-body">
-                    <div class="row" id="divBtBack">
+                    <div class="row" >
                         <a href="#" id="btBack" class="btn-link" data-callback="app.views.search.init">
                             <span class="icon icon-left"></span><span>%BACK%</span>
                         </a>
                         <span style="margin-left:10px">{{search}}</span>
-                        <span id="backStack">Test</span>
+                        <!--<span id="backStack">Test</span>-->
                     </div>
                 </div>
             </div>

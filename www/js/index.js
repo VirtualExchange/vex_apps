@@ -172,6 +172,7 @@ var app = {
         productsDrawn: [],
         backFunction: null,
         backStack: [],
+        homeInitCalled: 0,
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -186,7 +187,7 @@ var app = {
             $('#menuNavBar').removeClass('hide');
             //$('body').css('padding-top', $('#menuNavBar').height() + 20);
             $('#backMenuNavBar').removeClass('hide');
-            
+
             app.views.loadView.hide();
             
             //stop geo search
@@ -204,7 +205,10 @@ var app = {
                 console.log("backTo[1]:"+backTo[1]);
                 app.views.home.getStoreDetail(backTo[1], true, 'true');
             } else if (backTo[0] == "StoreListByDept"){
-                app.views.home.storeListByDepartment(backTo[1], backTo[2]);
+                if (backTo[3] == "filter")
+                    app.views.home.storeListByDepartment(backTo[1], backTo[2],true);
+                else if (backTo[3] == "noFilter")
+                    app.views.home.storeListByDepartment(backTo[1], backTo[2],false);
             }
             //app.views.backFunction();
             
@@ -218,7 +222,11 @@ var app = {
             init: function (e) {
                 console.log('ap.views.home.init()');
 
-                
+                if (app.views.homeInitCalled){
+                  return;  
+                } 
+                app.views.homeInitCalled = 1;
+               
                 setTimeout(function () {
 
                     $('#splashView').addClass('hide');
@@ -229,10 +237,13 @@ var app = {
                     $('#optVNotification').html(app.lang.getStr('%Notification%', 'aplication'));
                     $('#optStore').html(app.lang.getStr('%Stores%', 'homeView'));
                     $('#optProduct').html(app.lang.getStr('%Products%', 'aplication'));
-
+                    
+                    backStack = new Array();
+                    
                     app.views.generateMenu();
                     //app.views.products.showProductList(e);
                     app.views.home.showStoreList();
+                    //app.views.home.showStoreListPre();
                     
                 }, 2000);
                             
@@ -259,9 +270,50 @@ var app = {
                 
 
             },
+            showStoreListPre: function (e) {
+                console.log('app.views.home.showStoreListPre');
+                app.views.setDefaults();
+                
+                app.draw(
+                    '#content',
+                    '#storeListView',
+                    'homeView',
+                    {
+                    },
+                    '',
+                    function () {
+
+                        $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
+                        
+                        app.views.home.oStoreDetail = null;
+                        
+                        app.webservice.get(
+                            'stores/?q[id_eq]=165',
+                            {},
+                            function (result) {
+                                console.log(JSON.stringify(result));
+
+                                app.views.stores = result.stores;
+                                console.log(JSON.stringify(app.views.stores));
+                                $('#rowStoreFilter').hide();
+                                app.views.home.storeDetail();
+                            },
+                            function (e) {
+                                console.log('error');
+                                console.log(JSON.stringify(e));
+
+                                app.views.loadView.hide();
+                        
+                            }
+                        );
+
+                        app.bindEvents();
+                    }
+                );
+                
+            },
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
-                app.views.backStack.push("StoreList");
                 app.views.setDefaults();
                 
                 app.draw(
@@ -282,11 +334,11 @@ var app = {
                             {},
                             function (result) {
                                 console.log(JSON.stringify(result));
-                                
+
                                 $('#storeList').html('');
 
-								console.log('app.views.home.showStoreList: stores.length: '+result.stores.length);
                                 if (result.stores.length > 1) {
+                                    app.views.backStack.push("StoreList");
                                     app.views.stores = new Array();
 
                                     app.views.home.showStores(result);
@@ -416,8 +468,6 @@ var app = {
                                     $('#storeProductList').css('min-height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
                                     
                                 }
-                                console.log(btBack +' || ((' + app.views.home.store_id.length +'== 1) && ' + dadStore+')');
-                                
                                 if (app.views.backStack.length > 1){
                                     var ind = app.views.backStack.length-2;
                                     $('#backStack').html(app.views.backStack[ind]);
@@ -604,14 +654,14 @@ var app = {
                             $.each(c.subcategories, function (i, sub) {
                                 subIds = subIds.concat(sub.id+" ");
                                 if (sub.count_products != 0) {
-                                    var str = '<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px" id="cat_name">' + sub.name + '</span></a>';
+                                    var str = '<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="' + sub.id + '" cat_name="'+sub.name+'"><span style="padding-left:10px" id="cat_name">' + sub.name + '</span></a>';
                                     subCategoryHtml = subCategoryHtml.concat(str);
                                 }
                             });
-                            $('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span id="cat_name">' + c.name + '</span></a>');
+                            $('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'" cat_name="'+c.name+'"><span id="cat_name">' + c.name + '</span></a>');
                             $('#categoryListProductView').append(subCategoryHtml);
                         } else {
-                            $('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'"><span id="cat_name">' + c.name + '</span></a>');
+                            $('#categoryListProductView').append('<a href="#" data-callback="app.views.home.filterByCategory" class="list-group-item" cat_id="'+c.id+'" cat_name="'+c.name+'"><span id="cat_name">' + c.name + '</span></a>');
                         }
                     }
                 });
@@ -654,7 +704,7 @@ var app = {
                 console.log('app.views.home.filterByCategory()');
                 $('#filterModalProductView').modal('hide');
 
-                var cat_name = $('#cat_name').html();
+                var cat_name = $(e).attr('cat_name');
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
 
                 $('#catFilterNameProductView').html(cat_name);
@@ -665,7 +715,7 @@ var app = {
                     'stores/' + app.views.home.oStoreDetail.id + '/products/?q[product_category_id_eq]=' + $(e).attr('cat_id'),
                     {},
                     function (result) {
-//                        console.log(result);
+                        //console.log(JSON.stringify(result));
                         $('#productList').html('');
 
                         if (result.products.length > 0)
@@ -673,7 +723,7 @@ var app = {
                         //else 
                     },
                     function (e) {
-                        console.log(JSON.stringify(e));
+                        //console.log(JSON.stringify(e));
                         app.views.loadView.hide();
                     }
                 );
@@ -681,9 +731,9 @@ var app = {
             clearFilter: function(e){
                 console.log('app.views.home.clearFilter()');
                 
-                $('#catFilterNameProductView').html(app.lang.getStr('%Products%', 'ProductView'));
-                $('#clearFilterProductView').removeClass('hide');
-                $('#catFilterProductView').addClass('hide');
+                $('#catFilterNameProductView').html('');
+                $('#clearFilterProductView').addClass('hide');
+                $('#catFilterProductView').removeClass('hide');
 
                 
                 $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
@@ -700,16 +750,16 @@ var app = {
             filterByDepartmentFromMenu: function(e){
                 console.log('app.views.home.filterByDepartmentFromMenu()');
                 app.views.backStack = new Array();
-                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name'));
-                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"filter");
+                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'),true);
             },
             filterByDepartment: function(e){
                 console.log('app.views.home.filterByDepartment()');
                 app.views.backStack.pop();
-                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name'));
-                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"noFilter");
+                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'),false);
             },
-            storeListByDepartment: function(dep_id, dep_name){
+            storeListByDepartment: function(dep_id, dep_name, hideFilter){
                 console.log('app.views.home.storeListByDepartment()');
                 //app.views.loadView.show();
                 $('#filterStoreModal').modal('hide');
@@ -736,10 +786,13 @@ var app = {
                         
                                 app.views.stores = new Array();
                                 $('#storeList').html('');
-
-                                $('#clearFilter').removeClass('hide');
-                                $('#deptFilter').addClass('hide');
-                                $('#deptFilterName').html(dep_name);
+                                if (hideFilter){
+                                    $('#storeFilter').addClass('hide');
+                                }else{
+                                    $('#clearFilter').removeClass('hide');
+                                    $('#deptFilter').addClass('hide');
+                                    $('#deptFilterName').html(dep_name);
+                                }
                         
                                 app.views.home.showStores(result, true);
 
@@ -1108,14 +1161,14 @@ var app = {
                             $.each(c.subcategories, function (i, sub) {
                                 subIds = subIds.concat(sub.id+" ");
                                 if (sub.count_products != 0) {
-                                    var str = '<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '"><span style="padding-left:10px">' + sub.name + '</span></a>';
+                                    var str = '<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '" cat_name="'+sub.name+'"><span style="padding-left:10px">' + sub.name + '</span></a>';
                                     subCategoryHtml = subCategoryHtml.concat(str);
                                 }
                             });
-                            $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'"><span>' + c.name + '</span></a>');
-                            $('#categoryList').append(subCategoryHtml);							
+                            $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'" cat_name="'+c.name+'"><span>' + c.name + '</span></a>');
+                            $('#categoryList').append(subCategoryHtml);
                         } else {
-                            $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'"><span>' + c.name + '</span></a>');
+                            $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" cat_name="'+c.name+'"><span>' + c.name + '</span></a>');
                     }
                     }
                 });
@@ -1487,6 +1540,12 @@ var app = {
                             $('#regular_price').removeClass('red');
                             $('#regular_price').addClass('green');
                         }
+                        if (result.name.indexOf('Harlem') > -1){
+                            $('#moreFrom').html('More from Harlem');
+                        } else if (result.name.indexOf('Upper East Side') > -1){
+                            $('#moreFrom').html('More from Upper East Side');
+                        }
+                        
                         $('#slider .swipe-wrap').html('');
                         $('#pagSlide').html('');
 
