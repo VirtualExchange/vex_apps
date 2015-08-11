@@ -149,7 +149,7 @@
         <script type="text/html" id="storeItem">
             <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.views.home.storeDetail" store_id="{{id}}" dadStore="{{dadStore}}">
                 <div class="row">
-                    <div class="col-xs-4 col-sm-4 logoStoreDiv">
+                    <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{index}}">
                         <img src="{{logo}}" class="img-responsive img-rounded" />
                     </div>
                     <div class="col-xs-8 col-sm-8" >
@@ -190,8 +190,8 @@
                 <div class="panel-body">
                     <div class="storeItem">
                         <div class="row">
-                            <div class="col-xs-4 col-sm-4 logoStoreDiv">
-                                <img src="{{logo}}" class="img-responsive img-rounded"/>
+                            <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImageProductView">
+                                <img src="{{logo}}" class="img-responsive img-rounded" />
                             </div>
                             <div class="col-xs-8 col-sm-8">
                                 <h4 class="text-left HstoreAddress">{{name}}</h4>

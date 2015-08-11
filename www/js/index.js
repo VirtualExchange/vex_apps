@@ -505,6 +505,9 @@ var app = {
                                 if(!store.featured_product || store.featured_product== '<p></p>' || store.featured_product==''){
                                     $('#featuredDetail').addClass('hide');
                                 }
+                                if (store.logo.indexOf('medium.png') > -1){
+                                    $('#storeImageProductView').addClass('hide');
+                                }
                                 
                                 if(store.stores_count>0){
                                     
@@ -586,6 +589,7 @@ var app = {
                         app.views.home.storesChild = result.stores;
                         
                         app.views.home.addStore(result.stores, '#list-stores',0, true,'false',store_id);
+                        
                     },
                     function (err) {
                         console.log(err);
@@ -814,7 +818,6 @@ var app = {
                                 }
                                 app.bindEvents();
                                 //$(window).scrollTop(0);
-                                console.log($('#content').html());
 
                             },
                             function (e) {
@@ -952,7 +955,10 @@ var app = {
                                 $('#btnContact_'+i).attr('dadStore','false');
                                 $('#btnProduct_'+i).attr('dadStore','false');
                             }
-                            
+
+                            if (store.logo.indexOf('medium.png') > -1){
+                                $('#storeImage_'+i).addClass('hide');
+                            }
                             i++;
                             app.bindEvents();
                         }
@@ -1402,9 +1408,7 @@ var app = {
                 //app.views.loadView.show();
 
                 var store_id = $(e).attr('store_id');
-                console.log('app.views.products.productDetail: store_id:'+store_id);
                 var prod_id = $(e).attr('prod_id');
-                console.log('app.views.products.productDetail: prod_id:'+prod_id);
 
                 if (store_id == 0)
                     return;
