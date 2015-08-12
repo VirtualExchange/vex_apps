@@ -1475,6 +1475,7 @@ var app = {
             },
             addProductDetail: function (result, e) {
                 console.log('app.views.products.addProductDetail()');
+                //console.log(JSON.stringify(result));
                 app.views.backStack.push("ProductDetail:"+result.id);
                 var effect = $(e).attr('data-pin') == 'true' ? '' : 'addSlide';
                 var back = $(e).attr('data-pin') == 'true' ? 'app.views.pin.init' : 'app.views.products.backProductList';
@@ -1547,38 +1548,36 @@ var app = {
                             $('#regular_price').removeClass('red');
                             $('#regular_price').addClass('green');
                         }
-                        if (result.name.indexOf('Harlem') > -1){
-                            $('#moreFrom').html('More from Harlem');
-                        } else if (result.name.indexOf('Upper East Side') > -1){
-                            $('#moreFrom').html('More from Upper East Side');
-                        }
+                        $('#moreFrom').html("More from "+result.category);
                         
-                        $('#slider .swipe-wrap').html('');
-                        $('#pagSlide').html('');
+                        if (result.images[0].thumb.indexOf('thumb.png') > -1){
+                            $('#slider').addClass('hide');
+                            $('#pagSlide').addClass('hide');
+                        } else {
+                            $('#slider .swipe-wrap').html('');
+                            $('#pagSlide').html('');
 
-                        $.each(result.images, function (i, img) {
-                            console.log(JSON.stringify(img));
+                            $.each(result.images, function (i, img) {
+                                //console.log(JSON.stringify(img));
 
-                            var cl = i == 0 ? ' class="active"' : '';
+                                var cl = i == 0 ? ' class="active"' : '';
 
-                            $('#slider .swipe-wrap').append('<div id="imgSlide' + i + '" class="itemSlide">' + '<img src="' + img.original + '" alt="" class="img-responsive"/></div>');
-                            $('#pagSlide').append('<li ><a id="item' + i + '" href="#" ' + cl + ' data-poss="' + i + '" data-callback="app.views.products.goSlide">' + (i + 1) + '</a></li>');
-                        });
+                                $('#slider .swipe-wrap').append('<div id="imgSlide' + i + '" class="itemSlide">' + '<img src="' + img.original + '" alt="" class="img-responsive"/></div>');
+                                $('#pagSlide').append('<li ><a id="item' + i + '" href="#" ' + cl + ' data-poss="' + i + '" data-callback="app.views.products.goSlide">' + (i + 1) + '</a></li>');
+                            });
 
-                        window.mySwipe = null;
+                            window.mySwipe = null;
 
-                        console.log('add all');
-                        setTimeout( function(){
-                            window.mySwipe = $('#slider').Swipe({
-                                continuous: false,
-                                callback: function (pIndex, element) {
-                                    console.log('CALLBACK: ' + pIndex);
-                                    console.log(element)
-                                    $('#item' + pIndex).addClass('active');
+                            setTimeout( function(){
+                                window.mySwipe = $('#slider').Swipe({
+                                    continuous: false,
+                                    callback: function (pIndex, element) {
+                                        $('#item' + pIndex).addClass('active');
 
-                                }
-                            }).data('Swipe');
-                        },500);
+                                    }
+                                }).data('Swipe');
+                            },500);
+                        }
                         app.bindEvents();
                     }
                 );
