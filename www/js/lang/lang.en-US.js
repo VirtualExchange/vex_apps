@@ -40,7 +40,8 @@ var lang_enUS = {
             '%BACK%'           : 'BACK',
             '%Contact%'        : 'Contact',
             '%In%'             : 'Pinned',
-            '%Payment Option%' : 'Payment Option'
+            '%Payment Option%' : 'Payment Option',
+            '%More%'           : 'More'
         },
         'searchView' : {
             '%BACK%'                 : 'BACK',

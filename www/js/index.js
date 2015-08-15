@@ -1155,12 +1155,56 @@ var app = {
                     }
                 );
             },
+            showProductListMore: function(e){
+                console.log('app.views.products.showProductListMore');
+                
+                app.draw(
+                    '#content',
+                    '#productListView',
+                    'productListView',
+                    {},
+                    '',
+                    function () {
+                        app.bindEvents();
+                        
+                        app.webservice.get(
+                            'categories',
+                            {},
+                            function (result) {
+                                app.views.products.addCategorieMenu(result.categories);
+                                var cat_name = decodeURI($(e).attr('cat_name'));
+                                var cat_id = getCategoryId(result.categories,cat_name);
+                                app.webservice.get(
+                                    '/products/?q[product_category_id_eq]=' + cat_id,
+                                    {},
+                                    function (result) {
+                                        console.log(result);
+                                        app.views.products.addProducts(result.products);
+                                    },
+                                    function (err) {
+                                        console.log(err);
+                                        app.views.loadView.hide();
+                                    }
+                                );
+                                app.views.loadView.hide();
+                                app.bindEvents();
+                                
+                            },
+                            function (err) {
+                                console.log(err);
+                                app.views.loadView.hide();
+                            }
+                        );
+                        
+                    }
+                );
+            },
             addCategorieMenu: function(cats){
                 console.log('app.views.products.addCategorieMenu()');
                 var countCat = 0;
                 $('#categoryList').html('');
                 $.each(cats, function (index, c) {
-                    console.log('app.views.products.addCategorieMenu: c.id:'+c.id+' c.name:'+c.name);
+                    //console.log('app.views.products.addCategorieMenu: c.id:'+c.id+' c.name:'+c.name);
                     if (c.count_products != 0) {
 
                         countCat += 1;
@@ -1491,7 +1535,8 @@ var app = {
                         price: result.price ? result.price : '',
                         description: result.description,
                         contact: result.contact_info ? findContact(result.contact_info) : '',
-                        payment_option: result.payment_option ? result.payment_option : ''
+                        payment_option: result.payment_option ? result.payment_option : '',
+                        category_name: encodeURI(result.category)
                     },
                 '',
                     function () {
@@ -1548,7 +1593,6 @@ var app = {
                             $('#regular_price').removeClass('red');
                             $('#regular_price').addClass('green');
                         }
-                        $('#moreFrom').html("More from "+result.category);
                         
                         if (result.images[0].thumb.indexOf('thumb.png') > -1){
                             $('#slider').addClass('hide');
@@ -2984,6 +3028,27 @@ function strip(html)
    var tmp = document.createElement("DIV");
    tmp.innerHTML = html;
    return tmp.textContent || tmp.innerText || "";
+}
+function getCategoryId(cats,cat_name){
+    var c_id = 0;
+    $.each(cats, function (index, c) {
+        if (c.count_products != 0) {
+            if (c.subcategories.length > 0) {
+                $.each(c.subcategories, function (i, sub) {
+                    if (sub.name.indexOf(cat_name) == 0  && sub.name.length == cat_name.length){
+                        c_id = sub.id;
+                        return false;
+                    }
+                });
+            } else {
+                if (c.name.indexOf(cat_name) == 0 && c.name.length == cat_name.length){
+                    c_id = c.id;
+                    return false;
+                }
+            }
+        }
+    });
+    return c_id;
 }
 function findContact(text) {
 
