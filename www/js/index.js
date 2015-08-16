@@ -1174,6 +1174,11 @@ var app = {
                                 app.views.products.addCategorieMenu(result.categories);
                                 var cat_name = decodeURI($(e).attr('cat_name'));
                                 var cat_id = getCategoryId(result.categories,cat_name);
+                                
+                                $('#catFilterName').html(cat_name);
+                                $('#clearFilter').removeClass('hide');
+                                $('#catFilter').addClass('hide');
+                                
                                 app.webservice.get(
                                     '/products/?q[product_category_id_eq]=' + cat_id,
                                     {},
