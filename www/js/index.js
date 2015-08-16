@@ -1334,6 +1334,7 @@ var app = {
                         'append',
                         function () {
 
+                        
                             if (prod.feature_level == 3){
                                 $('#productItem_'+prod.id).addClass('list-group-item-info');
                             }else if (prod.feature_level == 2){
@@ -1383,6 +1384,10 @@ var app = {
                             if(inStore){
                                 $('#storeInfo').removeClass('hide');
                             }
+                            if (productList.length > 1) {
+                                $('#productDescription_'+index).ellipsis({row:3});
+                            }
+
                             app.bindEvents();
                         }
                     );}

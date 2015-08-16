@@ -65,6 +65,7 @@
         <script type="text/javascript" src="js/lib/jquery-1.11.1.min.js"></script>
         <script type="text/javascript" src="js/lib/jqueryui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/lib/moment.js"></script>
+        <script type="text/javascript" src="js/lib/jqueryui/jquery.ellipsis.min.js"></script>
         
         <script type="text/javascript"
                 src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD0MK-vC07Kaq32BmUBQG2jkRQp7SVXYOM&sensor=true">
@@ -254,9 +255,8 @@
                 <h4 class="list-group-item-heading">{{name}}</h4>
                 <p class="list-group-item-text red" id="regular_price_{{index}}" >{{regular_price}}</p>
                 <p class="list-group-item-text green" id="sale_price_{{index}}" >{{price}}</p>
-                <p class="list-group-item-text">{{description}}</p>
+                <div id="productDescription_{{index}}" >{{description}}</div>
             </a>
-            <!--<a href="#" data-callback="">More from {{store_name}}</a>-->
         </script>        
 
         <script type="text/html" id="ProductDetailView">
