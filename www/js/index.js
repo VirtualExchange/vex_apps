@@ -197,18 +197,26 @@ var app = {
             console.log('app.views.goBack');
             app.views.backStack.pop();
             var length = app.views.backStack.length;
+            if (length == 0) return;
             var backToStr = app.views.backStack[length-1];
             var backTo = backToStr.split(":");
             if (backTo[0] == "StoreList"){
+                app.views.backStack.pop();
                 app.views.home.showStoreList();
             } else if (backTo[0] == "StoreDetail"){
-                console.log("backTo[1]:"+backTo[1]);
                 app.views.home.getStoreDetail(backTo[1], true, 'true');
             } else if (backTo[0] == "StoreListByDept"){
                 if (backTo[3] == "filter")
                     app.views.home.storeListByDepartment(backTo[1], backTo[2],true);
                 else if (backTo[3] == "noFilter")
                     app.views.home.storeListByDepartment(backTo[1], backTo[2],false);
+            } else if (backTo[0] == "ProductDetail"){
+                app.views.backStack.pop();
+                app.views.products.showProductDetail(backTo[1],backTo[2],backTo[3]);
+            } else if (backTo[0] == "ProductList"){
+                app.views.products.showProductListMore2(backTo[1]);
+            }else {
+                console.log("****ERROR****:Back not recognized");
             }
             //app.views.backFunction();
             
@@ -333,7 +341,7 @@ var app = {
                             'stores/',
                             {},
                             function (result) {
-                                console.log(JSON.stringify(result));
+                                //console.log(JSON.stringify(result));
 
                                 $('#storeList').html('');
 
@@ -837,7 +845,7 @@ var app = {
                     {},
                     function (result) {
                         $('#storeDepartmentList').html('');
-                        console.log(JSON.stringify(result));
+                        //console.log(JSON.stringify(result));
                         $.each(result.departments, function (i, dep) {
                             app.draw(
                                 '#storeDepartmentList',
@@ -876,7 +884,7 @@ var app = {
                 $.each(result.stores, function (i, s) {
                     
                     if (result.stores.length==1 || !s.corporate) {
-                        console.log(JSON.stringify(s));
+                        //console.log(JSON.stringify(s));
                         app.views.stores.push(s);
                     }
                 });
@@ -1157,7 +1165,13 @@ var app = {
             },
             showProductListMore: function(e){
                 console.log('app.views.products.showProductListMore');
-                
+                var cat_name = decodeURI($(e).attr('cat_name'));
+                app.views.backStack.push("ProductList:"+cat_name);
+                app.views.products.showProductListMore2(cat_name);
+            },
+            
+            showProductListMore2: function(cat_name){
+                console.log('app.views.products.showProductListMore2');
                 app.draw(
                     '#content',
                     '#productListView',
@@ -1172,7 +1186,6 @@ var app = {
                             {},
                             function (result) {
                                 app.views.products.addCategorieMenu(result.categories);
-                                var cat_name = decodeURI($(e).attr('cat_name'));
                                 var cat_id = getCategoryId(result.categories,cat_name);
                                 
                                 $('#catFilterName').html(cat_name);
@@ -1266,7 +1279,7 @@ var app = {
             clearFilter: function(e){
                 console.log('app.views.products.clearFilter()');
                 
-                $('#catFilterName').html("All Listings");
+                $('#catFilterName').html("");
                 $('#clearFilter').addClass('hide');
                 $('#catFilter').removeClass('hide');
                 
@@ -1300,7 +1313,6 @@ var app = {
             },
             addProducts: function (productList,inStore) {
                 console.log('app.views.products.addProducts()');
-                console.log('TAM>' + productList.length);
                 if (productList.length == 0) {
                     $('#productList').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
                     return;
@@ -1463,16 +1475,24 @@ var app = {
 
                 var store_id = $(e).attr('store_id');
                 var prod_id = $(e).attr('prod_id');
-
+                var data_pin = $(e).attr('data-pin');
+                app.views.products.showProductDetail(store_id,prod_id,data_pin);
+                
+            },
+            showProductDetail: function (store_id,prod_id,data_pin) {
+                console.log('app.views.products.showProductDetail()');
                 if (store_id == 0)
                     return;
+                var len = app.views.backStack.length - 1;
+                //$('#backStack').html(app.views.backStack[len]);
+                app.views.backStack.push("ProductDetail:"+store_id+":"+prod_id+":"+data_pin);
 
                 app.webservice.get(
                     'stores/' + store_id + '/products/' + prod_id,
                     {},
                     function (result) {
-                        console.log(JSON.stringify(result));
-                        app.views.products.addProductDetail(result, e);
+                        //console.log(JSON.stringify(result));
+                        app.views.products.addProductDetail(result, data_pin);
                         //app.views.loadView.hide();
 
                     },
@@ -1527,12 +1547,12 @@ var app = {
                     );
                 }else app.views.products.showProductList();
             },
-            addProductDetail: function (result, e) {
+            addProductDetail: function (result, data_pin) {
                 console.log('app.views.products.addProductDetail()');
                 //console.log(JSON.stringify(result));
-                app.views.backStack.push("ProductDetail:"+result.id);
-                var effect = $(e).attr('data-pin') == 'true' ? '' : 'addSlide';
-                var back = $(e).attr('data-pin') == 'true' ? 'app.views.pin.init' : 'app.views.products.backProductList';
+                //app.views.backStack.push("ProductDetail:"+result.id);
+                var effect = data_pin == 'true' ? '' : 'addSlide';
+                var back = data_pin == 'true' ? 'app.views.pin.init' : 'app.views.products.backProductList';
 
                 app.draw(
                     '#content',
@@ -1568,7 +1588,7 @@ var app = {
                             $('#paymentOption').addClass('hide');
                         }
 
-                        if (result.pin != false || $(e).attr('data-pin') == 'true') {
+                        if (result.pin != false || data_pin == 'true') {
                             
                             $('#pin_' + result.id + ' i').removeClass('fa-pin');
                             $('#pin_' + result.id + ' i').addClass('fa-pinned');
@@ -3066,27 +3086,18 @@ function findContact(text) {
     var rtn;
 
     if (reg.test(text)) {
-        console.log('tipo 1');
 
         rtn = reg.exec(text);
-        console.log(rtn);
-        console.log('rep1');
-        console.log(rtn[0]);
 
         text = text.replace(rtn[0], '<a href="#" onclick="window.location.href=\'tel:' + rtn[0] + '\';" class="btn btn-link">' + rtn[0] + '</a>');
-        console.log(text);
     }
 
     //email
     reg = /[a-zA-Z0-9][a-zA-Z0-9\._-]+@([a-zA-Z0-9\._-]+\.)([a-zA-Z]{2,6})/;
 
     if (reg.test(text)) {
-        console.log('tipo 2');
 
         rtn = reg.exec(text);
-        console.log(rtn);
-        console.log('rep2');
-        console.log(rtn[0]);
 
         text = text.replace(rtn[0], '<a href="mailto:' + rtn[0] + '" class="btn btn-link">' + rtn[0] + '</a>');
 
@@ -3095,12 +3106,8 @@ function findContact(text) {
     reg = /https?:\/\/(www\.)?([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+([-0-9a-zA-Z]+[.])+([a-zA-Z]{2,6})?(\/[a-z-A-Z0-9+&@#\/%?=~_|!:,.;]*)?/;
 
     if (reg.test(text)) {
-        console.log('tipo 3');
 
         rtn = reg.exec(text);
-        console.log(rtn);
-        console.log('rep3');
-        console.log(rtn[0]);
 
         text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + lineBreak(rtn[0]) + '</a>');
 
@@ -3109,12 +3116,8 @@ function findContact(text) {
         reg = /www?([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+([-0-9a-zA-Z]+[.])+([a-zA-Z]{2,6})?(\/[a-z-A-Z0-9+&@#\/%?=~_|!:,.;]*)?/;
 
         if (reg.test(text)) {
-            console.log('tipo 4');
             //console.log(text);
             rtn = reg.exec(text);
-            console.log(rtn);
-            console.log('rep4');
-            console.log(rtn[0]);
 
             text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + lineBreak(rtn[0]) + '</a>');
 

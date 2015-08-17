@@ -112,7 +112,8 @@ var lang_enUS = {
             '%Filter%' : 'Filter',
             '%Categories%' : 'Categories',
 			'%Products%' : 'Products',
-			'%Clear Filter%' : 'Clear Filter'
+			'%Clear Filter%' : 'Clear Filter',
+            '%BACK%' : 'Back'
         }
     }
 };

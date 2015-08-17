@@ -546,12 +546,22 @@
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default"  id="divBtBack">
+                <div class="panel-body">
+                    <div class="row">
+                        <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
+                            <span class="icon icon-left" ></span> %BACK%
+                        </a>
+                        <!--<span id="backStack">Test</span>-->
+                    </div>
+                </div>
+            </div>
 
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span id="catFilterName">%Products%</span><a href="#" id="catFilter" class="btn btn-success" data-toggle="modal" data-target="#filterModal">%Filter%</a>
+                            <span id="catFilterName"></span><a href="#" id="catFilter" class="btn btn-success" data-toggle="modal" data-target="#filterModal">%Filter%</a>
                             <a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.views.products.clearFilter">%Clear Filter%</a>
                         </div>
                     </div>
