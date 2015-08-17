@@ -891,8 +891,15 @@ var app = {
 
                 if(app.views.stores.length==0){
                     $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
-                }else app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
+                }else if (app.views.stores.length > 1){
+                    app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
+                } else {
                 
+                    app.views.stores = result.stores;
+                    $('#rowStoreFilter').hide();
+                    app.views.backStack.pop();//only if item on top of stack is storelist
+                    app.views.home.storeDetail();
+                }
             },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore){
                 console.log('app.views.home.addStore');
