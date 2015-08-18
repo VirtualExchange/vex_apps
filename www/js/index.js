@@ -214,7 +214,7 @@ var app = {
                 app.views.backStack.pop();
                 app.views.products.showProductDetail(backTo[1],backTo[2],backTo[3]);
             } else if (backTo[0] == "ProductList"){
-                app.views.products.showProductListMore2(backTo[1]);
+                app.views.products.showProductListMore2(backTo[1],backTo[2]);
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -1173,11 +1173,12 @@ var app = {
             showProductListMore: function(e){
                 console.log('app.views.products.showProductListMore');
                 var cat_name = decodeURI($(e).attr('cat_name'));
-                app.views.backStack.push("ProductList:"+cat_name);
-                app.views.products.showProductListMore2(cat_name);
+                var store_id = $(e).attr('store_id');
+                app.views.backStack.push("ProductList:"+cat_name+":"+store_id);
+                app.views.products.showProductListMore2(cat_name,store_id);
             },
             
-            showProductListMore2: function(cat_name){
+            showProductListMore2: function(cat_name,store_id){
                 console.log('app.views.products.showProductListMore2');
                 app.draw(
                     '#content',
@@ -1189,18 +1190,31 @@ var app = {
                         app.bindEvents();
                         
                         app.webservice.get(
-                            'categories',
+                            'stores/' + store_id + '/categories',
                             {},
                             function (result) {
                                 app.views.products.addCategorieMenu(result.categories);
                                 var cat_id = getCategoryId(result.categories,cat_name);
                                 
-                                $('#catFilterName').html(cat_name);
-                                $('#clearFilter').removeClass('hide');
-                                $('#catFilter').addClass('hide');
+                                if (cat_name == "*"){
+                                    $('#catFilterName').html("");
+                                    $('#clearFilter').addClass('hide');
+                                    $('#catFilter').removeClass('hide');
+                                }else {
+                                    $('#catFilterName').html(cat_name);
+                                    $('#clearFilter').removeClass('hide');
+                                    $('#catFilter').addClass('hide');
+                                }
+                                $('#clearFilter').attr('data-callback', 'app.views.products.clearFilterMore');
+                                $('#clearFilter').attr('store_id', store_id);
+                                var query = 'stores/' + store_id + '/products/?q[product_category_id_eq]=' + cat_id;
+                                
+                                if (cat_name=="*"){
+                                    query = 'stores/' + store_id + '/products';
+                                }
                                 
                                 app.webservice.get(
-                                    '/products/?q[product_category_id_eq]=' + cat_id,
+                                    query,
                                     {},
                                     function (result) {
                                         console.log(result);
@@ -1296,6 +1310,18 @@ var app = {
                 window.localStorage.removeItem("productCat");
                 
                 app.views.products.showProductList();
+                
+            },
+            clearFilterMore: function(e){
+                console.log('app.views.products.clearFilterMore()');
+                
+                $('#catFilterName').html("");
+                $('#clearFilter').addClass('hide');
+                $('#catFilter').removeClass('hide');
+                
+                $('#productList').html('<img src="img/load_image.gif" style="width: 40px;"/>');
+                var store_id = $(e).attr('store_id');
+                app.views.products.showProductListMore2("*",store_id);
                 
             },
             showProductStoreList: function (store_id) {
@@ -1498,7 +1524,7 @@ var app = {
                     'stores/' + store_id + '/products/' + prod_id,
                     {},
                     function (result) {
-                        //console.log(JSON.stringify(result));
+                        console.log(JSON.stringify(result));
                         app.views.products.addProductDetail(result, data_pin);
                         //app.views.loadView.hide();
 
@@ -1573,7 +1599,8 @@ var app = {
                         description: result.description,
                         contact: result.contact_info ? findContact(result.contact_info) : '',
                         payment_option: result.payment_option ? result.payment_option : '',
-                        category_name: encodeURI(result.category)
+                        category_name: encodeURI(result.category),
+                        store_id: result.store_id
                     },
                 '',
                     function () {
