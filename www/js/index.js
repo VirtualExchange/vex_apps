@@ -1246,13 +1246,13 @@ var app = {
                     //console.log('app.views.products.addCategorieMenu: c.id:'+c.id+' c.name:'+c.name);
                     if (c.count_products != 0) {
 
-                        countCat += 1;
                         if (c.subcategories.length > 0) {
                             var subCategoryHtml = '';
                             var subIds = '';
                             $.each(c.subcategories, function (i, sub) {
                                 subIds = subIds.concat(sub.id+" ");
                                 if (sub.count_products != 0) {
+                                    countCat += 1;
                                     var str = '<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="' + sub.id + '" cat_name="'+sub.name+'"><span style="padding-left:10px">' + sub.name + '</span></a>';
                                     subCategoryHtml = subCategoryHtml.concat(str);
                                 }
@@ -1260,6 +1260,7 @@ var app = {
                             $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" sub_ids="'+subIds+'" cat_name="'+c.name+'"><span>' + c.name + '</span></a>');
                             $('#categoryList').append(subCategoryHtml);
                         } else {
+                            countCat += 1;
                             $('#categoryList').append('<a href="#" data-callback="app.views.products.filterBycategory" class="list-group-item" cat_id="'+c.id+'" cat_name="'+c.name+'"><span>' + c.name + '</span></a>');
                     }
                     }

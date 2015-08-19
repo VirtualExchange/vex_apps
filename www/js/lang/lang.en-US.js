@@ -41,7 +41,7 @@ var lang_enUS = {
             '%Contact%'        : 'Contact',
             '%In%'             : 'Pinned',
             '%Payment Option%' : 'Payment Option',
-            '%More%'           : 'More'
+            '%More%'           : 'All in this category'
         },
         'searchView' : {
             '%BACK%'                 : 'BACK',
