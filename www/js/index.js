@@ -249,14 +249,45 @@ var app = {
                     backStack = new Array();
                     
                     app.views.generateMenu();
+                    app.views.home.showLandingPage();
                     //app.views.products.showProductList(e);
-                    app.views.home.showStoreList();
+                    //app.views.home.showStoreList();
                     //app.views.home.showStoreListPre();
                     
                 }, 2000);
                             
                 app.bindEvents();
 
+            },
+            showLandingPage: function(e){
+                app.draw(
+                    '#content',
+                    '#landingView',
+                    'landingView',
+                    {},
+                    '',
+                    function () {
+                        $('.carousel').carousel({
+                            interval: 3000
+                        });
+                        app.bindEvents();
+                    }
+                );
+                
+                app.webservice.get(
+                    'products',
+                    {},
+                    function (result) {
+                        console.log(result);
+                        app.views.products.addProducts(result.products);
+                    },
+                    function (err) {
+                        console.log(err);
+                        app.views.loadView.hide();
+                    }
+                );
+                
+                
             },
             backCoverPage: function (e) {
                 console.log('app.views.home.backCoverPage()');
