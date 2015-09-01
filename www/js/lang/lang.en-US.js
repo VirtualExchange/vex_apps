@@ -81,7 +81,7 @@ var lang_enUS = {
         },
         'aplication':{
             '%Categories%'         : 'Categories',
-            '%No products posted%' : 'No products posted',
+            '%No products posted%' : 'No items posted. Please check back later.',
             '%Read More%'          : 'Read More',
             '%Lost connection to the server.\r\nCheck your internet connection and try again.%' : 'Lost connection to the server.\r\nCheck your internet connection and try again.',
             '%Connection Error%' : 'Connection Error',
