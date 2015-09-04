@@ -249,10 +249,10 @@ var app = {
                     backStack = new Array();
                     
                     app.views.generateMenu();
-                    app.views.home.showLandingPage();
+                    //app.views.home.showLandingPage();
                     //app.views.products.showProductList(e);
                     //app.views.home.showStoreList();
-                    //app.views.home.showStoreListPre();
+                    app.views.home.showStoreListPre();
                     
                 }, 2000);
                             
@@ -316,18 +316,21 @@ var app = {
                 app.draw(
                     '#content',
                     '#storeListView',
-                    'homeView',
+                    'storeListView',
                     {
                     },
                     '',
                     function () {
 
                         $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
+                        $('.carousel').carousel({
+                            interval: 3000
+                        });
                         
                         app.views.home.oStoreDetail = null;
                         
                         app.webservice.get(
-                            'stores/?q[id_eq]=165',
+                            'stores/?q[id_eq]=201',
                             {},
                             function (result) {
                                 console.log(JSON.stringify(result));

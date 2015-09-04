@@ -55,3 +55,12 @@
     left: 50%;
     margin-left: -24px;
 }
+.carousel-caption {
+    margin: 0px; 
+    padding: 0px; 
+    background: none;
+    top: 60%;
+    left: 5%;
+    position: absolute;
+    text-align: left;
+}
