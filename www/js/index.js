@@ -221,6 +221,9 @@ var app = {
             //app.views.backFunction();
             
         },
+        showMenu: function(e){
+             $('.navbar-collapse').collapse('show');
+        },
         home: {
             totalPages: 0,
             currentPage: 0,
@@ -312,7 +315,7 @@ var app = {
             showStoreListPre: function (e) {
                 console.log('app.views.home.showStoreListPre');
                 app.views.setDefaults();
-                
+                $('.navbar').addClass('hide');
                 app.draw(
                     '#content',
                     '#storeListView',
