@@ -64,3 +64,8 @@
     position: absolute;
     text-align: left;
 }
+#landingPageMenu{
+    position: absolute;
+    top:48px;
+    right:0;
+}

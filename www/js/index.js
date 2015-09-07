@@ -169,6 +169,7 @@ var app = {
         currentStore: {},
         scrool: 0,
         stores: [],
+        departments: [],
         productsDrawn: [],
         backFunction: null,
         backStack: [],
@@ -315,47 +316,50 @@ var app = {
             showStoreListPre: function (e) {
                 console.log('app.views.home.showStoreListPre');
                 app.views.setDefaults();
+                $('.carousel').removeClass('hide');
                 $('.navbar').addClass('hide');
-                app.draw(
-                    '#content',
-                    '#storeListView',
-                    'storeListView',
-                    {
+                $('#vex-navbar2').html('');
+                $.each(app.views.departments, function (i, dep) {
+                    app.draw(
+                        '#vex-navbar2',
+                        '#menuItem',
+                        'menuItem',
+                        {
+                            name: dep.name,
+                            id: dep.id
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                });
+
+                $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
+                $('.carousel').carousel({
+                    interval: 3000
+                });
+
+
+                app.views.home.oStoreDetail = null;
+                        
+                app.webservice.get(
+                    'stores/?q[id_eq]=201',
+                    {},
+                    function (result) {
+                        console.log(JSON.stringify(result));
+
+                        app.views.stores = result.stores;
+                        app.views.home.storeDetail();
                     },
-                    '',
-                    function () {
-
-                        $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
-                        $('.carousel').carousel({
-                            interval: 3000
-                        });
-                        
-                        app.views.home.oStoreDetail = null;
-                        
-                        app.webservice.get(
-                            'stores/?q[id_eq]=201',
-                            {},
-                            function (result) {
-                                console.log(JSON.stringify(result));
-
-                                app.views.stores = result.stores;
-                                console.log(JSON.stringify(app.views.stores));
-                                $('#rowStoreFilter').hide();
-                                app.views.home.storeDetail();
-                            },
-                            function (e) {
-                                console.log('error');
-                                console.log(JSON.stringify(e));
-
-                                app.views.loadView.hide();
-                        
-                            }
-                        );
-
-                        app.bindEvents();
+                    function (e) {
+                        console.log(JSON.stringify(e));
+                        app.views.loadView.hide();
+                       
                     }
                 );
-                
+
+                app.bindEvents();
             },
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
@@ -611,6 +615,22 @@ var app = {
                                 app.bindEvents();
                             }
                         );
+                $('#vex-navbar2').html('');
+                $.each(app.views.departments, function (i, dep) {
+                    app.draw(
+                        '#vex-navbar2',
+                        '#menuItem2',
+                        'menuItem2',
+                        {
+                            name: dep.name,
+                            id: dep.id
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                });
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
@@ -798,6 +818,8 @@ var app = {
             },
             filterByDepartmentFromMenu: function(e){
                 console.log('app.views.home.filterByDepartmentFromMenu()');
+                $('.carousel').addClass('hide');
+                $('.navbar').removeClass('hide');
                 app.views.backStack = new Array();
                 app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"filter");
                 app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'),true);
@@ -1141,6 +1163,7 @@ var app = {
                 function (result) {
                     console.log(JSON.stringify(result));
                     $('#vex-navbar').html('');
+                    app.views.departments = result.departments; // Cache for later use
                     $.each(result.departments, function (i, dep) {
                         app.draw(
                             '#vex-navbar',
@@ -1543,6 +1566,8 @@ var app = {
             productDetail: function (e) {
                 console.log('app.views.products.productDetail()');
                 //app.views.loadView.show();
+                $('.carousel').addClass('hide');
+                $('.navbar').removeClass('hide');
 
                 var store_id = $(e).attr('store_id');
                 var prod_id = $(e).attr('prod_id');
