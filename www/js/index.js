@@ -205,7 +205,11 @@ var app = {
                 app.views.backStack.pop();
                 app.views.home.showStoreList();
             } else if (backTo[0] == "StoreDetail"){
-                app.views.home.getStoreDetail(backTo[1], true, 'true');
+                if (backTo.length == 3){
+                    app.views.home.showStoreListPre();
+                }else{
+                    app.views.home.getStoreDetail(backTo[1], true, 'true');
+                }
             } else if (backTo[0] == "StoreListByDept"){
                 if (backTo[3] == "filter")
                     app.views.home.storeListByDepartment(backTo[1], backTo[2],true);
@@ -315,6 +319,7 @@ var app = {
             },
             showStoreListPre: function (e) {
                 console.log('app.views.home.showStoreListPre');
+                app.views.backStack = new Array();
                 app.views.setDefaults();
                 $('.carousel').removeClass('hide');
                 $('.navbar').addClass('hide');
@@ -350,6 +355,7 @@ var app = {
                         console.log(JSON.stringify(result));
 
                         app.views.stores = result.stores;
+                        app.views.backStack.push("StoreDetail:"+app.views.stores[0].id+":home");
                         app.views.home.storeDetail();
                     },
                     function (e) {
@@ -364,7 +370,27 @@ var app = {
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
                 app.views.setDefaults();
-                
+                if (!e){
+                $('.carousel').removeClass('hide');
+                $('.navbar').addClass('hide');
+                $('#vex-navbar2').html('');
+                $.each(app.views.departments, function (i, dep) {
+                    app.draw(
+                        '#vex-navbar2',
+                        '#menuItem',
+                        'menuItem',
+                        {
+                            name: dep.name,
+                            id: dep.id
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                });
+                    
+                }
                 app.draw(
                     '#content',
                     '#storeListView',
@@ -390,7 +416,7 @@ var app = {
                                     app.views.backStack.push("StoreList");
                                     app.views.stores = new Array();
 
-                                    app.views.home.showStores(result);
+                                    app.views.home.showStores(result,false);
 
                                     app.views.home.currentPage = 1;
                                     app.views.home.totalPages = result.pages;
@@ -414,6 +440,7 @@ var app = {
                                     app.views.stores = result.stores;
                                     console.log(JSON.stringify(app.views.stores));
                                     $('#rowStoreFilter').hide();
+                                    app.views.backStack.push("StoreDetail:"+app.views.stores[0].id);
                                     app.views.home.storeDetail();
                                 }
                             },
@@ -436,15 +463,18 @@ var app = {
                 var store_id;
 
                 if ($(e).attr('store_id')) {
+                    $('.carousel').addClass('hide');
+                    $('.navbar').removeClass('hide');
                     
                     store_id = $(e).attr('store_id');
+                    app.views.backStack.push("StoreDetail:"+store_id);
                     
                 } else {
                     
                     store_id = app.views.stores[0].id;
                     
                 }
-                app.views.backStack.push("StoreDetail:"+store_id);
+                //app.views.backStack.push("StoreDetail:"+store_id); //Moving to before call
 
                 var btBack = $(e).attr('store_id') ? true : false;
                 
@@ -697,7 +727,7 @@ var app = {
                         options,
                         function (result) {
                             console.log(JSON.stringify(result));
-                            app.views.home.showStores(result);
+                            app.views.home.showStores(result,false);
                         },
                         function (err) {
                             console.log(err);
@@ -868,7 +898,7 @@ var app = {
                                     $('#deptFilterName').html(dep_name);
                                 }
                         
-                                app.views.home.showStores(result, true);
+                                app.views.home.showStores(result, true, hideFilter);
 
                                 app.views.home.currentPage = 1;
                                 app.views.home.totalPages = result.pages;
@@ -932,7 +962,7 @@ var app = {
                     }
                 );
             },
-            showStores: function (result, search) {
+            showStores: function (result, search, hideFilter) {
                 console.log('app.views.home.showStores');
                 
                 search = !search ? false : true;
@@ -950,13 +980,15 @@ var app = {
 
                 if(app.views.stores.length==0){
                     $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
-                }else if (app.views.stores.length > 1){
+                }else if (app.views.stores.length > 1 || hideFilter==false){
                     app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
                 } else {
                 
                     app.views.stores = result.stores;
                     $('#rowStoreFilter').hide();
-                    app.views.backStack.pop();//only if item on top of stack is storelist
+                    if (app.views.backStack[0].indexOf("StoreList") == 0)
+                        app.views.backStack.pop();//only if item on top of stack is storelist
+                    app.views.backStack.push("StoreDetail:"+app.views.stores[0].id);
                     app.views.home.storeDetail();
                 }
             },
