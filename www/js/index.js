@@ -257,10 +257,6 @@ var app = {
                     backStack = new Array();
                     
                     app.views.generateMenu();
-                    //app.views.home.showLandingPage();
-                    //app.views.products.showProductList(e);
-                    //app.views.home.showStoreList();
-                    app.views.home.showStoreListPre();
                     
                 }, 2000);
                             
@@ -327,8 +323,8 @@ var app = {
                 $.each(app.views.departments, function (i, dep) {
                     app.draw(
                         '#vex-navbar2',
-                        '#menuItem',
-                        'menuItem',
+                        '#menuItem2',
+                        'menuItem2',
                         {
                             name: dep.name,
                             id: dep.id
@@ -377,8 +373,8 @@ var app = {
                 $.each(app.views.departments, function (i, dep) {
                     app.draw(
                         '#vex-navbar2',
-                        '#menuItem',
-                        'menuItem',
+                        '#menuItem2',
+                        'menuItem2',
                         {
                             name: dep.name,
                             id: dep.id
@@ -391,6 +387,10 @@ var app = {
                 });
                     
                 }
+                $('.carousel').carousel({
+                    interval: 3000
+                });
+                
                 app.draw(
                     '#content',
                     '#storeListView',
@@ -1211,6 +1211,9 @@ var app = {
                             }
                         );
                     });
+                    //app.views.products.showProductList(e);
+                    app.views.home.showStoreList();
+                    //app.views.home.showStoreListPre();
                 },
                 function (err) {
                     console.log(JSON.stringify(err));
