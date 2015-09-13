@@ -318,6 +318,7 @@ var app = {
                 app.views.backStack = new Array();
                 app.views.setDefaults();
                 $('.carousel').removeClass('hide');
+                $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
                 $('#vex-navbar2').html('');
                 $.each(app.views.departments, function (i, dep) {
@@ -368,6 +369,7 @@ var app = {
                 app.views.setDefaults();
                 if (!e){
                 $('.carousel').removeClass('hide');
+                $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
                 $('#vex-navbar2').html('');
                 $.each(app.views.departments, function (i, dep) {
@@ -464,6 +466,7 @@ var app = {
 
                 if ($(e).attr('store_id')) {
                     $('.carousel').addClass('hide');
+                    $('#menubutton').addClass('hide');
                     $('.navbar').removeClass('hide');
                     
                     store_id = $(e).attr('store_id');
@@ -849,6 +852,7 @@ var app = {
             filterByDepartmentFromMenu: function(e){
                 console.log('app.views.home.filterByDepartmentFromMenu()');
                 $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
                 $('.navbar').removeClass('hide');
                 app.views.backStack = new Array();
                 app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"filter");
@@ -1602,6 +1606,7 @@ var app = {
                 console.log('app.views.products.productDetail()');
                 //app.views.loadView.show();
                 $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
                 $('.navbar').removeClass('hide');
 
                 var store_id = $(e).attr('store_id');

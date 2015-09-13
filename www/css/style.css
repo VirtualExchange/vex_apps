@@ -70,3 +70,12 @@
     right:0;
     z-index: 1000;
 }
+#menubutton > .navbar-toggle > .icon-bar{
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}
+
+#menubutton { position: absolute; right: 5px; top: 5px; }
