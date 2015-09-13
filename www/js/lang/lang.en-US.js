@@ -96,7 +96,8 @@ var lang_enUS = {
             '%Close%'            : 'Close',
             '%No store found%'   : 'No store found',
             '%Products%'         : 'Products',
-            '%You are offline! Please connect to internet%' : 'You are offline! Please connect to internet.'
+            '%You are offline! Please connect to internet%' : 'You are offline! Please connect to internet.',
+            '%Home%'             : 'Home'        
         },
         'chatView':{
             '%SEND%' : 'SEND',

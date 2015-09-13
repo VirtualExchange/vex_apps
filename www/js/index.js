@@ -194,6 +194,11 @@ var app = {
             //stop geo search
             app.geolocation.close();
         },
+        goHome: function(e){
+            //app.views.products.showProductList(e);
+            //app.views.home.showStoreList();
+            app.views.home.showStoreListPre();
+        },
         goBack: function(e){
             console.log('app.views.goBack');
             app.views.backStack.pop();
@@ -855,8 +860,12 @@ var app = {
                 $('#menubutton').addClass('hide');
                 $('.navbar').removeClass('hide');
                 app.views.backStack = new Array();
-                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"filter");
-                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'),true);
+                if ($(e).attr('dep_id') == '0') {
+                    app.views.goHome();
+                }else{
+                    app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"filter");
+                    app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'),true);
+                }
             },
             filterByDepartment: function(e){
                 console.log('app.views.home.filterByDepartment()');
@@ -928,7 +937,7 @@ var app = {
                         );
                         
                         app.bindEvents();
-                    }
+                }
                 );
             },
             getDepartment: function(){
@@ -1192,13 +1201,26 @@ var app = {
         },
         generateMenu: function () {
             console.log('app.views.home.generateMenu()');
-                
+            $('#vex-navbar').html('');
+            app.draw(
+                '#vex-navbar',
+                '#menuItem',
+                'menuItem',
+                {
+                    name: app.lang.getStr('%Home%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+
             app.webservice.get(
                 'departments',
                 {},
                 function (result) {
                     console.log(JSON.stringify(result));
-                    $('#vex-navbar').html('');
                     app.views.departments = result.departments; // Cache for later use
                     $.each(result.departments, function (i, dep) {
                         app.draw(
@@ -1215,9 +1237,7 @@ var app = {
                             }
                         );
                     });
-                    //app.views.products.showProductList(e);
-                    app.views.home.showStoreList();
-                    //app.views.home.showStoreListPre();
+                    app.views.goHome();
                 },
                 function (err) {
                     console.log(JSON.stringify(err));
