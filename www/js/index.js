@@ -196,8 +196,8 @@ var app = {
         },
         goHome: function(e){
             //app.views.products.showProductList(e);
-            //app.views.home.showStoreList();
-            app.views.home.showStoreListPre();
+            app.views.home.showStoreList();
+            //app.views.home.showStoreListPre();
         },
         goBack: function(e){
             console.log('app.views.goBack');
