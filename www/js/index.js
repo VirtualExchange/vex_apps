@@ -332,7 +332,7 @@ var app = {
                         '#menuItem2',
                         'menuItem2',
                         {
-                            name: dep.name,
+                            name: stripLeadingTag(dep.name),
                             id: dep.id
                         },
                         'append',
@@ -383,7 +383,7 @@ var app = {
                         '#menuItem2',
                         'menuItem2',
                         {
-                            name: dep.name,
+                            name: stripLeadingTag(dep.name),
                             id: dep.id
                         },
                         'append',
@@ -660,7 +660,7 @@ var app = {
                         '#menuItem2',
                         'menuItem2',
                         {
-                            name: dep.name,
+                            name: stripLeadingTag(dep.name),
                             id: dep.id
                         },
                         'append',
@@ -955,7 +955,7 @@ var app = {
                                 'byDepartmentItem',
                                 {
                                     id: dep.id,
-                                    name: dep.name
+                                    name: stripLeadingTag(dep.name)
                                 },
                                 'append',
                                 function () {
@@ -1228,7 +1228,7 @@ var app = {
                             '#menuItem',
                             'menuItem',
                             {
-                                name: dep.name,
+                                name: stripLeadingTag(dep.name),
                                 id: dep.id
                             },
                             'append',
@@ -1960,7 +1960,7 @@ var app = {
                                         'byDepartmentItem',
                                         {
                                             id: dep.id,
-                                            name: dep.name
+                                            name: stripLeadingTag(dep.name)
                                         },
                                     'append',
                                         function () {
@@ -2599,7 +2599,7 @@ var app = {
                                 'vMap',
                                 {
                                     id: dep.id,
-                                    name: dep.name
+                                    name: stripLeadingTag(dep.name)
                                 },
                             'append',
                                 function () {
@@ -2790,7 +2790,7 @@ var app = {
                                 'notification',
                                 {
                                     id: dep.id,
-                                    name: dep.name
+                                    name: stripLeadingTag(dep.name)
                                 },
                                 'append',
                                 function () {
@@ -3171,6 +3171,13 @@ $(document).ready(function () {
     console.log('Run app');
     app.initialize();
 });
+function stripLeadingTag(inputText){
+    var strArray;
+    strArray = inputText.split("**");
+    var len = strArray.length;
+    if (len > 0) return strArray[len-1];
+    else return inputText;
+}
 function addReadMore2(text, store_id, id, readMode) { /* to make sure the script runs after page load */
 	return text;
 }
