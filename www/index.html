@@ -328,17 +328,11 @@
         <script id="contactView" type="text/html">
             <div class="contactModel">
                 <dl>
-                    <dt class="contactAdress">
-                    %Address%
-                    </dt>
-                    <dd class="contactAdress">
-                        {{address}}, {{city}}, {{state}} {{zip}}
-                    </dd>
                     <dt class="contactPhone">
                     %Telephone%
                     </dt>
                     <dd class="contactPhone">
-                        %CALL NOW%:<a href="#" onclick="window.location.href='tel:{{phone}}';" class="btn btn-link">{{phone}}</a>
+                        <a href="#" onclick="window.location.href='tel:{{phone}}';" class="btn btn-link">{{phone}}</a>
                     </dd>
                     <dt class="contactEmail">
                     %Email%
