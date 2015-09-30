@@ -257,10 +257,18 @@
 
         <script type="text/html" id="ProductItem">
             <a class="list-group-item toProduct" id="productItem_{{id}}" href="#" data-callback="app.views.products.productDetail" store_id="{{store_id}}" prod_id="{{id}}" data-pin="false">
-                <h4 class="list-group-item-heading">{{name}}</h4>
-                <p class="list-group-item-text red" id="regular_price_{{index}}" >{{regular_price}}</p>
-                <p class="list-group-item-text green" id="sale_price_{{index}}" >{{price}}</p>
-                <div id="productDescription_{{index}}" >{{description}}</div>
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4" id="productImage_{{index}}">
+                        <img src="{{img}}" class="img-responsive img-rounded" />
+                    </div>
+                    <div class="col-xs-8 col-sm-8" id="productDetail_{{index}}">
+                        <h4 class="list-group-item-heading">{{name}}</h4>
+                        <p class="list-group-item-text red" id="regular_price_{{index}}" >{{regular_price}}</p>
+                        <p class="list-group-item-text green" id="sale_price_{{index}}" >{{price}}</p>
+                        <div id="productDescription_{{index}}" >{{description}}</div>
+                        <div id="readMore_{{index}}" class="readmore">Read More</div>
+                    </div>
+                </div>
             </a>
         </script>        
 
@@ -698,8 +706,8 @@
                         <a class="" data-toggle="collapse" href="#landingPageMenu" aria-expanded="false" aria-controls="landingPageMenu">
                             <img src="./img/LandingImage.png">
                             <div class="carousel-caption" >
-                                <h2>Zabari Group</h2>
-                                <b>EZ NYC Realty</b>
+                                <h2>Flea Market Heading</h2>
+                                <b>Flea Market Sub Heading</b>
                             </div>               
                         </a>
                     

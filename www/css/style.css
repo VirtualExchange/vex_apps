@@ -90,3 +90,9 @@
     color: green;
     font-size: 100%;
 }
+
+.readmore{
+    color: blue;
+    font-size: 100%;
+    text-decoration: underline;
+}

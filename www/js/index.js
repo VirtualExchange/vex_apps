@@ -1557,6 +1557,12 @@ var app = {
                             if (productList.length > 1) {
                                 $('#productDescription_'+index).ellipsis({row:3});
                             }
+                            if (prod.images[0].medium && prod.images[0].medium.indexOf('/medium.png') > -1){
+                                $('#productImage_'+index).addClass('hide');
+                                $('#productDetail_'+index).addClass('col-xs-12 col-sm-12');
+                                $('#readMore_'+index).addClass('hide');
+                                $('#productItem_'+prod.id).attr('data-callback', '');
+                            }
 
                             app.bindEvents();
                         }
