@@ -79,3 +79,14 @@
 }
 
 #menubutton { position: absolute; right: 5px; top: 5px; }
+
+.red{
+    color: red;
+    font-size: 100%;
+    text-decoration: line-through;
+}
+
+.green{
+    color: green;
+    font-size: 100%;
+}
