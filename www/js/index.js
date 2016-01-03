@@ -174,6 +174,7 @@ var app = {
         backFunction: null,
         backStack: [],
         homeInitCalled: 0,
+        scrollPending: 0,
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -423,7 +424,7 @@ var app = {
                                     app.views.backStack.push("StoreList");
                                     app.views.stores = new Array();
 
-                                    app.views.home.showStores(result,false);
+                                    app.views.home.showStores(result,false,false,1);
 
                                     app.views.home.currentPage = 1;
                                     app.views.home.totalPages = result.pages;
@@ -433,10 +434,11 @@ var app = {
                                         $(window).unbind('scroll');
 
                                         $(window).on("scroll", function () { //pagination
-//                                            console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
-                                            if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
-
-                                                app.views.home.paginacao('stores/', {});
+                                            if (($(this).scrollTop() + $(this).height())*app.views.home.currentPage >= $('#storeList').parent().height()) {
+                                                if (app.views.scrollPending == 0) {
+                                                    app.views.scrollPending = 1;
+                                                    app.views.home.paginacao('stores/', {});
+                                                }
                                             }
                                         });
                                     }
@@ -691,7 +693,7 @@ var app = {
                         
                         app.views.home.storesChild = result.stores;
                         
-                        app.views.home.addStore(result.stores, '#list-stores',0, true,'false',store_id);
+                        app.views.home.addStore(result.stores, '#list-stores',0, true,'false',1);
                         
                     },
                     function (err) {
@@ -727,15 +729,14 @@ var app = {
                 if (app.views.home.totalPages > app.views.home.currentPage) {
 
                     app.views.home.currentPage += 1;
-
                     options['page'] = app.views.home.currentPage;
-
                     app.webservice.get(
                         url,
                         options,
                         function (result) {
                             console.log(JSON.stringify(result));
-                            app.views.home.showStores(result,false);
+                            app.views.home.showStores(result,false,false,app.views.home.currentPage);
+                            app.views.scrollPending = 0;
                         },
                         function (err) {
                             console.log(err);
@@ -911,7 +912,7 @@ var app = {
                                     $('#deptFilterName').html(dep_name);
                                 }
                         
-                                app.views.home.showStores(result, true, hideFilter);
+                                app.views.home.showStores(result, true, hideFilter,1);
 
                                 app.views.home.currentPage = 1;
                                 app.views.home.totalPages = result.pages;
@@ -975,7 +976,7 @@ var app = {
                     }
                 );
             },
-            showStores: function (result, search, hideFilter) {
+            showStores: function (result, search, hideFilter,currentPage) {
                 console.log('app.views.home.showStores');
                 
                 search = !search ? false : true;
@@ -994,7 +995,7 @@ var app = {
                 if(app.views.stores.length==0){
                     $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
                 }else if (app.views.stores.length > 1 || hideFilter==false){
-                    app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true');
+                    app.views.home.addStore(app.views.stores, '#storeList', i, search, 'true',currentPage);
                 } else {
                 
                     app.views.stores = result.stores;
@@ -1005,10 +1006,8 @@ var app = {
                     app.views.home.storeDetail();
                 }
             },
-            addStore: function(storeArray, divId, arrayIndex, search, dadStore){
-                console.log('app.views.home.addStore');
-                
-                var i = arrayIndex;
+            addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
+                var i = arrayIndex*currentPage;
                 var aa = -1;
                 var bb = -1;
                 var cc = -1;
@@ -1034,7 +1033,7 @@ var app = {
                             about: aboutStripped,
                             featured_product : !store.featured_product ? '' : store.featured_product,
                             id : store.id,
-                            index: index,
+                            index: i,
                             dadStore: dadStore
                         },
                         'append',
@@ -1077,11 +1076,10 @@ var app = {
                                 $('#btnContact_'+i).attr('dadStore','false');
                                 $('#btnProduct_'+i).attr('dadStore','false');
                             }
-
                             if (store.logo.indexOf('medium.png') > -1){
                                 $('#storeImage_'+i).addClass('hide');
-                                $('#storeDetail_'+index).addClass('col-xs-12 col-sm-12');
-                                $('#readMore_'+index).addClass('hide');
+                                $('#storeDetail_'+i).addClass('col-xs-12 col-sm-12');
+                                $('#readMore_'+i).addClass('hide');
                                 $('#storeItem_'+store.id).attr('data-callback', '');
                             }
                             i++;
@@ -1486,7 +1484,6 @@ var app = {
                             duplicate = true;
                         }
                     });
-
                     if (!duplicate){
                     app.views.productsDrawn.push(productList[index].product_id);
                     app.draw(
@@ -1495,7 +1492,7 @@ var app = {
                         'ProductItem',
                         {
                             id: prod.id,
-                            name: prod.name,
+                            name: stripLeadingTag(prod.name),
                             price: prod.price ? prod.price : '',
                             regular_price: prod.regular_price ? prod.regular_price : '',
                             description: addReadMore2(prod.description, prod.store_id, prod.id, app.lang.getStr('%Read More%', 'aplication')),
@@ -1566,10 +1563,12 @@ var app = {
                             if (prod.images[0].medium && prod.images[0].medium.indexOf('/medium.png') > -1){
                                 $('#productImage_'+index).addClass('hide');
                                 $('#productDetail_'+index).addClass('col-xs-12 col-sm-12');
-                                $('#readMore_'+index).addClass('hide');
-                                //$('#productItem_'+prod.id).attr('data-callback', '');
                             }
-
+                            if (prod.name.indexOf('**banner**') == 0) {
+                                $('#productItem_'+prod.id).attr('data-callback', '');
+                            } else {
+                                $('#readMore_'+index).removeClass('hide');
+                            }
                             app.bindEvents();
                         }
                     );}
@@ -2036,7 +2035,7 @@ var app = {
 
                                     app.views.stores = new Array();
 
-                                    app.views.home.showStores(result, true);
+                                    app.views.home.showStores(result, true,false,1);
 
                                     app.views.home.currentPage = 1;
                                     app.views.home.totalPages = result.pages;
@@ -2044,9 +2043,11 @@ var app = {
                                     if (app.views.home.totalPages > 1) {
 
                                         $(window).on("scroll", function () { //pagination
-//                                          console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
                                             if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
-                                                app.views.home.paginacao('stores?department=' + dep_id, {});
+                                                if (app.views.home.scrollPending == 0) {
+                                                    app.views.home.scrollPending = 1;
+                                                    app.views.home.paginacao('stores?department=' + dep_id, {});
+                                                }
                                             }
                                         });
                                     }
@@ -2369,7 +2370,7 @@ var app = {
                         $('#storeList').html('');
                         app.views.stores = new Array();
                         
-                        app.views.home.showStores(result, true);
+                        app.views.home.showStores(result, true,false,1);
                         
                         app.views.vMap.showStores();
                         

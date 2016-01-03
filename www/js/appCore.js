@@ -11,7 +11,7 @@ var appCore = {
 //    url      : 'http://api.vexapps.com/api/devices/',
     host     : 'http://ve-api-staging.herokuapp.com/',
     url      : 'http://ve-api-staging.herokuapp.com/api/devices/',
-    token    : 'SA-DyCZSQfMXrBT2f7Pnjg',
+    token    : 'RgDWBnKI9heQgp3Mdtq0ig',
     appName  : 'Virtual Exchange',
     senderID : "727346400787",
     lastGeoDate : null,

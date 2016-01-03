@@ -74,7 +74,7 @@
   display: block;
   width: 22px;
   height: 2px;
-  background-color: #cccccc;
+  background-color: #ffffff;
   border-radius: 1px;
 }
 
@@ -90,8 +90,7 @@
     color: green;
     font-size: 100%;
 }
-
-.readmore{
+div[id^="readMore"]{
     color: blue;
     font-size: 100%;
     text-decoration: underline;
