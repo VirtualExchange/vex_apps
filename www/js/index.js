@@ -1702,7 +1702,7 @@ var app = {
                         price: result.price ? result.price : '',
                         description: result.description,
                         contact: result.contact_info ? findContact(result.contact_info) : '',
-                        payment_option: result.payment_option ? result.payment_option : '',
+                        payment_option: result.payment_option ? findContact(result.payment_option) : '',
                         category_name: encodeURI(result.category),
                         store_id: result.store_id
                     },
