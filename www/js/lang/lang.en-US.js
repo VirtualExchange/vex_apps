@@ -107,7 +107,8 @@ var lang_enUS = {
             '%The field <b>Name</b> is mandatory%' : 'The field <b>Name</b> is mandatory',
             '%The field <b>Email</b> is mandatory%' : 'The field <b>Email</b> is mandatory',
             '%The field <b>Message</b> is mandatory%' : 'The field <b>Message</b> is mandatory',
-            '%No chat is initialized%'  : 'No message history'
+            '%No chat is initialized%'  : 'No message history',
+            '%BACK%' : 'Back'
         },
         'productListView':{
             '%Filter%' : 'Filter',

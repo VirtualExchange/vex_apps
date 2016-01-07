@@ -2858,14 +2858,18 @@ var app = {
                             function (result) {
                                 console.log(JSON.stringify(result));
                                 console.log('DEVICE EMAIL>>>' + app.device.email)
+                                app.views.backStack.push("ChatView");
                                 if(!app.device.email){
                                     $('#newChatForm').removeClass('hide');
                                     app.views.chat.start = false;
                                 }
 
-                                $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').height()+$('#navChatFooter').height()+66)));
-
-                                $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height() - 25) + 'px');
+                                console.log("window:"+$(window).height());
+                                console.log("menuNavBar:"+$('#menuNavBar').outerHeight(true));
+                                console.log("divBtBack:"+$('#divBtBack').outerHeight(true));
+                                console.log("navChatFooter:"+$('#navChatFooter').outerHeight(true));
+                                $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                                $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
 
                                 $.each(result.messages, function (index, item) {
                                     app.views.chat.addMessage(item);
@@ -2892,6 +2896,12 @@ var app = {
 //                console.log(item);
                 var created_at = moment(item.created_at);
 //                console.log('ADD MESSAGE: ' + app.lang.date.pattern);
+                var name = '';
+                if (item.kind == 1){ 
+                    name = "Me";
+                }else {
+                    name="Vex Travel";
+                }
                 app.draw(
                     '#chatList',
                     '#chatItem',
@@ -2899,20 +2909,12 @@ var app = {
                     {
                         id      : item.id,
                         message : item.message,
-                        msgDate : created_at.format(app.lang.date.pattern)
+                        msgDate : created_at.format(app.lang.date.pattern),
+                        email   : name,
+                        kind    : name
                     },
                     'append',
                     function () {
-                        if(item.kind==1){
-
-                            $('#msg_'+item.id).addClass('dialogoBox-right');
-
-                        }else {
-
-                            $('#msg_'+item.id).addClass('dialogoBox-left');
-
-                        }
-
                         app.bindEvents();
                     }
                 );
@@ -2992,8 +2994,8 @@ var app = {
                         $('#chatUserName').focus();
                         
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').height()+$('#navChatFooter').height()+66)));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height() - 25) + 'px');
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
 
                         return;
                     }
@@ -3003,8 +3005,8 @@ var app = {
                         $('.alert-danger').removeClass('hide');
                         $('#chatUserMessage').focus();
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').height()+$('#navChatFooter').height()+66)));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height() - 25) + 'px');
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
 
                         return;
                     }
@@ -3034,9 +3036,8 @@ var app = {
                         $('.alert-danger').addClass('hide');
                         
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').height()+$('#navChatFooter').height()+46)));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height() - 25) + 'px');
-                        $("#chatList").animate({scrollTop: $('#chatList').prop("scrollHeight")}, 500); 
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
                         
                         $('#chatUserMessage').val('');
                         

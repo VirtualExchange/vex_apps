@@ -95,3 +95,19 @@ div[id^="readMore"]{
     font-size: 100%;
     text-decoration: underline;
 }
+/* Chat View */
+#chatList{
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0 5px;
+}
+#chatMessage{
+    margin-bottom: 10px;
+}
+#chatName{
+    text-align:left;
+    font-weight: bold;
+}
+#chatDate{
+    text-align: right;
+}
