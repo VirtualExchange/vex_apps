@@ -510,7 +510,7 @@ var app = {
                             'ProductView',
                             {
                                 index: store.id,
-                                name: store.name,
+                                name: stripLeadingTag(store.name),
                                 city: store.city,
                                 uf: store.state,
                                 logo: store.logo,
@@ -996,7 +996,7 @@ var app = {
                         '#storeItem',
                         'storeItem',
                         {
-                            name: store.name,
+                            name: stripLeadingTag(store.name),
                             city: store.city,
                             uf: store.state,
                             logo: store.logo,
@@ -1130,7 +1130,7 @@ var app = {
                     
                 }
                                 
-                $('#modalContact .modal-title').html(store.name + ' - ' + app.lang.getStr('%Contact%', 'contactView'));
+                $('#modalContact .modal-title').html(stripLeadingTag(store.name) + ' - ' + app.lang.getStr('%Contact%', 'contactView'));
 
                 $('#btContactClose').html(app.lang.getStr('%Close%', 'contactView'));
 
@@ -2069,7 +2069,7 @@ var app = {
                                     '#storeItem',
                                     'storeItem',
                                     {
-                                        name: store.name,
+                                        name: stripLeadingTag(store.name),
                                         city: store.city,
                                         uf: store.state,
                                         logo: store.logo,
@@ -2433,7 +2433,7 @@ var app = {
                 html +=         '        <img src="'+store.logo+'" class="img-responsive img-rounded" style="max-width: 100%;" store_index="{{index}}" onclick="app.views.home.storeDetail(this);"/>';
                 html +=             '</div>';
                 html +=         '    <div class="col-xs-8 col-sm-8">';
-                html +=         '        <h5 class="text-left">' + store.name + '</h5>';
+                html +=         '        <h5 class="text-left">' + stripLeadingTag(store.name) + '</h5>';
                 html +=         '        <h6 class="text-left HstoreAbout">' + store.about + '</h6>';
                 html +=         '    </div>';
                 html +=         '</div>';
@@ -2846,7 +2846,7 @@ var app = {
                     'chatView',
                     {
                         storeLogo : store.logo,
-                        storeName : store.name,
+                        storeName : stripLeadingTag(store.name),
                         store_id  : store.id
                     },
                     '',
