@@ -196,12 +196,14 @@ var app = {
             app.geolocation.close();
         },
         goHome: function(e){
+            $('#landingPageMenu').removeClass('hide');
             //app.views.products.showProductList(e);
             app.views.home.showStoreList();
             //app.views.home.showStoreListPre();
         },
         goBack: function(e){
             console.log('app.views.goBack');
+            $('#landingPageMenu').removeClass('hide');
             app.views.backStack.pop();
             var length = app.views.backStack.length;
             if (length == 0) return;
@@ -444,6 +446,7 @@ var app = {
                 if ($(e).attr('store_id')) {
                     $('.carousel').addClass('hide');
                     $('#menubutton').addClass('hide');
+                    $('#landingPageMenu').addClass('hide');
                     $('.navbar').removeClass('hide');
                     
                     store_id = $(e).attr('store_id');
