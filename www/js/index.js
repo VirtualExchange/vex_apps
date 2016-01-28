@@ -409,7 +409,7 @@ var app = {
                                             if (($(this).scrollTop() + $(this).height())*app.views.home.currentPage >= $('#storeList').parent().height()) {
                                                 if (app.views.scrollPending == 0) {
                                                     app.views.scrollPending = 1;
-                                                    app.views.home.paginacao('stores/', {});
+                                                    app.views.home.paginacao('stores/', {},'stores');
                                                 }
                                             }
                                         });
@@ -593,6 +593,7 @@ var app = {
                                     $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
                                     
                                     app.views.home.getStoresChild(store.id);
+
                                     
                                 }else{
                                     
@@ -667,7 +668,17 @@ var app = {
                         app.views.home.storesChild = result.stores;
                         
                         app.views.home.addStore(result.stores, '#list-stores',0, true,'false',1);
-                        
+                        app.views.home.currentPage = 1;
+                        app.views.home.totalPages = result.pages;
+                                    
+                        $(window).on("scroll", function () {
+                            if (($(this).scrollTop() + $(this).height())*app.views.home.currentPage >= $('#list-stores').parent().height()) {
+                                if (app.views.scrollPending == 0) {
+                                    app.views.scrollPending = 1;
+                                    app.views.home.paginacao('stores/'+store_id+'/stores', {},'storeschild');
+                                }
+                            }
+                        });
                     },
                     function (err) {
                         console.log(err);
@@ -697,8 +708,7 @@ var app = {
                 $('#storesListDiv').addClass('hide');
                 
             },
-            paginacao: function (url, options) {
-
+            paginacao: function (url, options,type) {
                 if (app.views.home.totalPages > app.views.home.currentPage) {
 
                     app.views.home.currentPage += 1;
@@ -708,7 +718,11 @@ var app = {
                         options,
                         function (result) {
                             console.log(JSON.stringify(result));
-                            app.views.home.showStores(result,false,false,app.views.home.currentPage);
+                            if (type.indexOf('storeschild') == 0) {
+                                app.views.home.addStore(result.stores, '#list-stores',0, true,'false',app.views.home.currentPage);
+                            }else{
+                                app.views.home.showStores(result,false,false,app.views.home.currentPage);
+                            }
                             app.views.scrollPending = 0;
                         },
                         function (err) {
@@ -896,7 +910,7 @@ var app = {
 //                                        console.log(($(this).scrollTop() + $(this).height()) +' >= ' + $('#storeList').parent().height());
                                         if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
 
-                                            app.views.home.paginacao('stores?department=' + dep_id, {});
+                                            app.views.home.paginacao('stores?department=' + dep_id, {},'stores');
                                         }
                                     });
                                 }
@@ -980,6 +994,7 @@ var app = {
                 }
             },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
+                console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
                 var aa = -1;
                 var bb = -1;
@@ -2019,7 +2034,7 @@ var app = {
                                             if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
                                                 if (app.views.home.scrollPending == 0) {
                                                     app.views.home.scrollPending = 1;
-                                                    app.views.home.paginacao('stores?department=' + dep_id, {});
+                                                    app.views.home.paginacao('stores?department=' + dep_id, {},'stores');
                                                 }
                                             }
                                         });
