@@ -518,7 +518,7 @@ var app = {
                                 uf: store.state,
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
-                                about: aboutStripped,
+                                about: findContact(aboutStripped),
                                 dadStore: dadStore
                             },
                             '',
@@ -1160,7 +1160,7 @@ var app = {
                         phone: store.phone ? store.phone : '',
                         email: store.email,
                         website: store.website ? store.website : '',
-                        websiteView: store.website ? lineBreak(store.website) : '',
+                        websiteView: store.website,
                         address: store.address,
                         city: store.city,
                         state: store.state,
@@ -1188,7 +1188,12 @@ var app = {
                 );
             },
             openSite: function (e) {
-                var ref = window.open('http://' + $(e).attr('data-site'), '_system', 'location=yes');
+                var ref;
+                var url = $(e).attr('data-site');
+                if (url.indexOf('http') == 0)
+                    ref = window.open($(e).attr('data-site'), '_system', 'location=yes'); 
+                else
+                    ref = window.open('http://' + $(e).attr('data-site'), '_system', 'location=yes');   
             }            
         },
         generateMenu: function () {
@@ -1718,7 +1723,7 @@ var app = {
                         name: result.name,
                         regular_price: result.regular_price ? result.regular_price : '',
                         price: result.price ? result.price : '',
-                        description: result.description,
+                        description: findContact(result.description),
                         contact: result.contact_info ? findContact(result.contact_info) : '',
                         payment_option: result.payment_option ? findContact(result.payment_option) : '',
                         category_name: encodeURI(result.category),
@@ -3269,13 +3274,21 @@ function findContact(text) {
 
     }
     //sites
-    reg = /https?:\/\/(www\.)?([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+([-0-9a-zA-Z]+[.])+([a-zA-Z]{2,6})?(\/[a-z-A-Z0-9+&@#\/%?=~_|!:,.;]*)?/;
+    reg = /http?:\/\/(www\.)?([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+([-0-9a-zA-Z]+[.])+([a-zA-Z]{2,6})?(\/[a-z-A-Z0-9+&@#\/%?=~_|!:,.;]*)?/;
+    reg1 = /https?:\/\/(www\.)?([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+([-0-9a-zA-Z]+[.])+([a-zA-Z]{2,6})?(\/[a-z-A-Z0-9+&@#\/%?=~_|!:,.;]*)?/;
 
     if (reg.test(text)) {
 
         rtn = reg.exec(text);
 
-        text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + lineBreak(rtn[0]) + '</a>');
+        text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + rtn[0] + '</a>');
+
+    }
+    else if (reg1.test(text)) {
+
+        rtn = reg1.exec(text);
+
+        text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + rtn[0] + '</a>');
 
     } else {
         //sites
@@ -3285,7 +3298,7 @@ function findContact(text) {
             //console.log(text);
             rtn = reg.exec(text);
 
-            text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + lineBreak(rtn[0]) + '</a>');
+            text = text.replace(rtn[0], '<a href="#" data-callback="app.views.home.openSite" data-site="' + rtn[0] + '" class="btn btn-link">' + rtn[0] + '</a>');
 
         }
     }
