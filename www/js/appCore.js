@@ -10,7 +10,7 @@ var appCore = {
 //    host     : 'http://api.vexapps.com/',
 //    url      : 'http://api.vexapps.com/api/devices/',
     host     : 'http://ve-api-staging.herokuapp.com/',
-    url      : 'http://ve-api-staging.herokuapp.com/api/devices/',
+    url      : 'http://ve-api-staging.herokuapp.com/api/',
     token    : 'RgDWBnKI9heQgp3Mdtq0ig',
     appName  : 'Virtual Exchange',
     senderID : "727346400787",
@@ -382,11 +382,12 @@ var appCore = {
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
-                url: app.url + window.localStorage.getItem("token") + '/' + path,
+                url: app.url + path,
                 data: args,
 //                crossDomain: true,
                 headers: {
-                    "Authorization": "Token token=" + app.token
+                    "Authorization": "Token token=" + app.token,
+                    'X-Device-Token': window.localStorage.getItem("token")
                 },
                 success: function(data) {
                     successCB(data);
@@ -416,14 +417,15 @@ var appCore = {
             $.ajax({
                 type: type,
                 dataType: 'json',
-                url: app.url + window.localStorage.getItem("token") + '/' + path,
+                url: app.url + path,
                 crossDomain: true,
                 data: args,
                 //		processData: false,
                 //		async: true,
                 headers: {
                     "Authorization": "Token token=" + app.token,
-                    "contentType": "application/json"
+                    "contentType": "application/json",
+                    'X-Device-Token': window.localStorage.getItem("token")
                 },
                 success: function(data) {
                     successCB(data);
@@ -448,7 +450,7 @@ var appCore = {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                url: app.url,
+                url: app.url + 'device/',
                 crossDomain: true,
                 data: args,
                 //		processData: false,

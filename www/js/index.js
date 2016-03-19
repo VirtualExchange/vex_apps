@@ -49,7 +49,7 @@ var app = {
                 app.lang.config(function () {
                     app.views.home.init();
                     app.webservice.get(
-                        '',
+                        'device',
                         {},
                         function (r) {
                             console.log('RESULT DE REGISTRO');
@@ -139,7 +139,7 @@ var app = {
             app.lang.config(function () {
                 app.views.home.init();
                 app.webservice.get(
-                    '',
+                    'device',
                     {},
                     function (r) {
                         console.log('RESULT DE REGISTRO');
