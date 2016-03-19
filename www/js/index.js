@@ -729,10 +729,14 @@ var app = {
                             console.log(err);
 
                             app.views.loadView.hide();
+                            app.views.scrollPending = 0;
 
                         }
                     );
+                } else {
+                    app.views.scrollPending = 0;
                 }
+                
             },
             addCategorie2: function (cats) {
                 console.log('app.views.home.addCategorie2');
