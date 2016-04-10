@@ -1217,20 +1217,6 @@ var app = {
         },
         generateMenu: function () {
             console.log('app.views.home.generateMenu()');
-            $('#vex-navbar').html('');
-            app.draw(
-                '#vex-navbar',
-                '#menuItem',
-                'menuItem',
-                {
-                    name: app.lang.getStr('%Home%', 'aplication'),
-                    id: 0
-                },
-                'append',
-                function () {
-                    app.bindEvents();
-                }
-            );
 
             app.webservice.get(
                 'departments',
@@ -1238,7 +1224,26 @@ var app = {
                 function (result) {
                     console.log(JSON.stringify(result));
                     app.views.departments = result.departments; // Cache for later use
-                    $.each(result.departments, function (i, dep) {
+                    var homeText = app.lang.getStr('%Home%', 'aplication');
+                    $.each(app.views.departments, function (i, dep) {
+                        if (isHome(dep.name)) homeText = stripLeadingTag(dep.name);
+                    });
+                    $('#vex-navbar').html('');
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItem',
+                        'menuItem',
+                        {
+                            name: homeText,
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+
+                    $.each(app.views.departments, function (i, dep) {
                         if (isHome(dep.name) == false ){
                             app.draw(
                                 '#vex-navbar',
@@ -1261,6 +1266,7 @@ var app = {
                     console.log(JSON.stringify(err));
                 }
             );
+            
         },
         products: {
             showProductList: function(e){
