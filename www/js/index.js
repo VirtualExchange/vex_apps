@@ -352,7 +352,7 @@ var app = {
                 $('.navbar').addClass('hide');
                 $('#vex-navbar2').html('');
                 $.each(app.views.departments, function (i, dep) {
-                    if (dep.name.indexOf('Home') > -1) {
+                    if (isHome(dep.name)) {
                         homeDeptId = dep.id;
                     } else {
                         app.draw(
@@ -644,19 +644,21 @@ var app = {
                         );
                 $('#vex-navbar2').html('');
                 $.each(app.views.departments, function (i, dep) {
-                    app.draw(
-                        '#vex-navbar2',
-                        '#menuItem2',
-                        'menuItem2',
-                        {
-                            name: stripLeadingTag(dep.name),
-                            id: dep.id
-                        },
-                        'append',
-                        function () {
-                            app.bindEvents();
-                        }
-                    );
+                    if (isHome(dep.name) == false) {
+                        app.draw(
+                            '#vex-navbar2',
+                            '#menuItem2',
+                            'menuItem2',
+                            {
+                                name: stripLeadingTag(dep.name),
+                                id: dep.id
+                            },
+                            'append',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
+                    }
                 });
                     },
                     function (e) {
@@ -1237,7 +1239,7 @@ var app = {
                     console.log(JSON.stringify(result));
                     app.views.departments = result.departments; // Cache for later use
                     $.each(result.departments, function (i, dep) {
-                        if (dep.name.indexOf('Home') == -1 ){
+                        if (isHome(dep.name) == false ){
                             app.draw(
                                 '#vex-navbar',
                                 '#menuItem',
@@ -3203,6 +3205,15 @@ function stripLeadingTag(inputText){
     var len = strArray.length;
     if (len > 0) return strArray[len-1];
     else return inputText;
+}
+function isHome(inputText){
+    var strArray;
+    strArray = inputText.split("**");
+    var len = strArray.length;
+    if (len >= 2){
+        if (strArray[1].indexOf('Home') > -1){ return true;}
+    }
+    return false;
 }
 function addReadMore2(text, store_id, id, readMode) { /* to make sure the script runs after page load */
 	return text;
