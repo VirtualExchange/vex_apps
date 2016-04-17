@@ -345,32 +345,42 @@ var app = {
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
                 app.views.setDefaults();
+                var homeDeptId = -1;
                 if (!e){
                 $('.carousel').removeClass('hide');
                 $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
                 $('#vex-navbar2').html('');
                 $.each(app.views.departments, function (i, dep) {
-                    app.draw(
-                        '#vex-navbar2',
-                        '#menuItem2',
-                        'menuItem2',
-                        {
-                            name: stripLeadingTag(dep.name),
-                            id: dep.id
-                        },
-                        'append',
-                        function () {
-                            app.bindEvents();
-                        }
-                    );
+                    if (isHome(dep.name)) {
+                        homeDeptId = dep.id;
+                    } else {
+                        app.draw(
+                            '#vex-navbar2',
+                            '#menuItem2',
+                            'menuItem2',
+                            {
+                                name: stripLeadingTag(dep.name),
+                                id: dep.id
+                            },
+                            'append',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
+                    }
                 });
                     
                 }
                 $('.carousel').carousel({
                     interval: 3000
                 });
-                
+                if (homeDeptId > -1){
+                    req = 'stores/?q[store_departments_id_eq]=' + homeDeptId;
+                } else {
+                    req = 'stores/';
+                    
+                }
                 app.draw(
                     '#content',
                     '#storeListView',
@@ -385,7 +395,7 @@ var app = {
                         app.views.home.oStoreDetail = null;
                         
                         app.webservice.get(
-                            'stores/',
+                            req,
                             {},
                             function (result) {
                                 //console.log(JSON.stringify(result));
@@ -416,6 +426,9 @@ var app = {
                                     }
                                     
                                     app.views.home.getDepartment();
+                                    if (homeDeptId > -1){
+                                        $('#storeFilter').addClass('hide');
+                                    }
                                     
                                 } else {
                                     app.views.stores = result.stores;
@@ -631,19 +644,21 @@ var app = {
                         );
                 $('#vex-navbar2').html('');
                 $.each(app.views.departments, function (i, dep) {
-                    app.draw(
-                        '#vex-navbar2',
-                        '#menuItem2',
-                        'menuItem2',
-                        {
-                            name: stripLeadingTag(dep.name),
-                            id: dep.id
-                        },
-                        'append',
-                        function () {
-                            app.bindEvents();
-                        }
-                    );
+                    if (isHome(dep.name) == false) {
+                        app.draw(
+                            '#vex-navbar2',
+                            '#menuItem2',
+                            'menuItem2',
+                            {
+                                name: stripLeadingTag(dep.name),
+                                id: dep.id
+                            },
+                            'append',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
+                    }
                 });
                     },
                     function (e) {
@@ -1202,20 +1217,6 @@ var app = {
         },
         generateMenu: function () {
             console.log('app.views.home.generateMenu()');
-            $('#vex-navbar').html('');
-            app.draw(
-                '#vex-navbar',
-                '#menuItem',
-                'menuItem',
-                {
-                    name: app.lang.getStr('%Home%', 'aplication'),
-                    id: 0
-                },
-                'append',
-                function () {
-                    app.bindEvents();
-                }
-            );
 
             app.webservice.get(
                 'departments',
@@ -1223,20 +1224,41 @@ var app = {
                 function (result) {
                     console.log(JSON.stringify(result));
                     app.views.departments = result.departments; // Cache for later use
-                    $.each(result.departments, function (i, dep) {
-                        app.draw(
-                            '#vex-navbar',
-                            '#menuItem',
-                            'menuItem',
-                            {
-                                name: stripLeadingTag(dep.name),
-                                id: dep.id
-                            },
-                            'append',
-                            function () {
-                                app.bindEvents();
-                            }
-                        );
+                    var homeText = app.lang.getStr('%Home%', 'aplication');
+                    $.each(app.views.departments, function (i, dep) {
+                        if (isHome(dep.name)) homeText = stripLeadingTag(dep.name);
+                    });
+                    $('#vex-navbar').html('');
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItem',
+                        'menuItem',
+                        {
+                            name: homeText,
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+
+                    $.each(app.views.departments, function (i, dep) {
+                        if (isHome(dep.name) == false ){
+                            app.draw(
+                                '#vex-navbar',
+                                '#menuItem',
+                                'menuItem',
+                                {
+                                    name: stripLeadingTag(dep.name),
+                                    id: dep.id
+                                },
+                                'append',
+                                function () {
+                                    app.bindEvents();
+                                }
+                            );
+                        }
                     });
                     app.views.goHome();
                 },
@@ -1244,6 +1266,7 @@ var app = {
                     console.log(JSON.stringify(err));
                 }
             );
+            
         },
         products: {
             showProductList: function(e){
@@ -3188,6 +3211,15 @@ function stripLeadingTag(inputText){
     var len = strArray.length;
     if (len > 0) return strArray[len-1];
     else return inputText;
+}
+function isHome(inputText){
+    var strArray;
+    strArray = inputText.split("**");
+    var len = strArray.length;
+    if (len >= 2){
+        if (strArray[1].indexOf('Home') > -1){ return true;}
+    }
+    return false;
 }
 function addReadMore2(text, store_id, id, readMode) { /* to make sure the script runs after page load */
 	return text;
