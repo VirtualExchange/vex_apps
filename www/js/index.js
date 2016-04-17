@@ -531,7 +531,7 @@ var app = {
                                 uf: store.state,
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
-                                about: findContact(aboutStripped),
+                                about: convertLinks(aboutStripped),
                                 dadStore: dadStore
                             },
                             '',
@@ -1750,7 +1750,7 @@ var app = {
                         name: result.name,
                         regular_price: result.regular_price ? result.regular_price : '',
                         price: result.price ? result.price : '',
-                        description: findContact(result.description),
+                        description: convertLinks(result.description),
                         contact: result.contact_info ? findContact(result.contact_info) : '',
                         payment_option: result.payment_option ? findContact(result.payment_option) : '',
                         category_name: encodeURI(result.category),
@@ -3286,6 +3286,18 @@ function getCategoryId(cats,cat_name){
         }
     });
     return c_id;
+}
+function convertLinks(text) {
+    links = linkify.find(text);
+    console.log("links.length"+links.length);
+    for (j=0; j<links.length; j++){
+        console.log("links.href: "+links[j].href);
+        if (links[j].type.indexOf('url') > -1){
+            text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + links[j].href + '</a>');
+        }
+    }
+    console.log("text: "+text);
+    return text;
 }
 function findContact(text) {
 
