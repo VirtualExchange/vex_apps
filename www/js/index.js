@@ -637,7 +637,7 @@ var app = {
                                 }
                                 app.views.home.store_id.push(app.views.home.oStoreDetail.id);
                         
-                                app.views.products.showProductStoreList(store.id);
+                                app.views.products.showProductStoreList(store.id,store.stores_count);
 
                                 app.bindEvents();
                             }
@@ -857,7 +857,7 @@ var app = {
                 
                 //app.views.products.showProductList();
                 console.log('app.views.home.oStoreDetail.id'+app.views.home.oStoreDetail.id);
-                app.views.products.showProductStoreList(app.views.home.oStoreDetail.id);
+                app.views.products.showProductStoreList(app.views.home.oStoreDetail.id,app.views.home.stores_count);
 
                 
             },
@@ -1468,7 +1468,7 @@ var app = {
                 app.views.products.showProductListMore2("*",store_id);
                 
             },
-            showProductStoreList: function (store_id) {
+            showProductStoreList: function (store_id,store_count) {
                 console.log('app.views.products.showProductStoreList');
 
                 $(window).unbind('scroll');
@@ -1482,7 +1482,7 @@ var app = {
 //                        console.log(JSON.stringify(result));
                         app.views.products.addProducts(result.products);
                         console.log("result.products.length: "+result.products.length);
-                        if (result.products.length > 0){
+                        if (result.products.length > 0 && store_count > 0){
                             $('#storeTabs').removeClass('hide');
                         }
                     },
