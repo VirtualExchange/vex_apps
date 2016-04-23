@@ -1481,6 +1481,10 @@ var app = {
                     function (result) {
 //                        console.log(JSON.stringify(result));
                         app.views.products.addProducts(result.products);
+                        console.log("result.products.length: "+result.products.length);
+                        if (result.products.length > 0){
+                            $('#storeTabs').removeClass('hide');
+                        }
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
