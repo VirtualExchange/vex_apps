@@ -47,7 +47,8 @@ var app = {
                 window.localStorage.setItem("token", 83);
                 app.deviceReady = true;
                 app.lang.config(function () {
-                    app.views.login.init();
+                    //app.views.login.init();
+                    app.views.home.init();
                     app.webservice.get(
                         'device',
                         {},
@@ -99,7 +100,8 @@ var app = {
 
             } else{
 
-                app.views.login.init();
+                //app.views.login.init();
+                app.views.home.init();
 
             }
         }, false);
@@ -149,7 +151,8 @@ var app = {
         } else {
             console.log('com TOKEN');
             app.lang.config(function () {
-                app.views.login.init();
+                //app.views.login.init();
+                app.views.home.init();
 
                 app.userToken = window.localStorage.getItem("user_token");
 

@@ -16,7 +16,8 @@ var appCore = {
     senderID : "727346400787",
     lastGeoDate : null,
     offLine : false,
-    logged : false,
+//    logged : false,
+    logged : true,
     chatToken : null,
     userToken : '',
     bindEvents: function() {
