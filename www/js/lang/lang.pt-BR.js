@@ -91,7 +91,9 @@ var lang_ptBR = {
             '%Close%'            : 'Fechar',
             '%No store found%'   : 'Nenhuma loja foi encontrada',
             '%Products%'         : 'Produtos',
-            '%You are offline! Please connect to internet%' : 'Você está offline! Por favor conecte a internet.'
+            '%You are offline! Please connect to internet%' : 'Você está offline! Por favor conecte a internet.',
+            '%Home%'             : 'Home',
+            '%error_login%'      : 'Email/senha invalido.'
         },
         'chatView':{
             '%SEND%' : 'ENVIAR',
@@ -106,6 +108,10 @@ var lang_ptBR = {
         'productListView':{
             '%Filter%' : 'Filtrar Produtos',
             '%Categories%' : 'Categorias'
+        },
+        'loginView':{
+            '%User%'     : 'Usuário',
+            '%Password%' : 'Senha' 
         }
     }
 };

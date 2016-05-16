@@ -66,14 +66,12 @@
         <script type="text/javascript" src="js/lib/jqueryui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/lib/moment.js"></script>
         <script type="text/javascript" src="js/lib/jqueryui/jquery.ellipsis.min.js"></script>
-        <!--
         <script type="text/javascript"
-                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD0MK-vC07Kaq32BmUBQG2jkRQp7SVXYOM&sensor=true">
+                src="http://maps.google.com/maps/api/js?key=AIzaSyAorPe2UmXmYXWULzhiia9_xxN_HGRiPFo">
         </script>
         
         <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/data.json"></script>
         <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
-        -->
         <script type="text/javascript" src="js/lib/linkify/linkify.min.js"></script>
         <script type="text/javascript" src="js/lib/linkify/linkify-jquery.min.js"></script>
         
@@ -90,6 +88,23 @@
 
         
         <!--VIEWS-->
+        <script id="loginView" type="text/html">
+            <div class="fullRow">
+                <div class="alert alert-danger hidden" role="alert"></div>
+                <form>
+                    <div class="form-group">
+                        <label for="login_user">%User%</label>
+                        <input type="text" class="form-control" id="login_user" placeholder="%User%"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="login_password">%Password%</label>
+                        <input type="password" class="form-control" id="login_password" placeholder="%Password%"/>
+                    </div>
+                    <a href="javascript:void(0)" data-callback="app.views.login.register" class="btn btn-default">Submit</a>
+                </form>
+            </div>
+        </script>
+
         <script id="homeView" type="text/html">
             <div class="backgroundLogo fullRow">
                 <div class="row">

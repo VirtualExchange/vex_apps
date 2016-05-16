@@ -97,7 +97,8 @@ var lang_enUS = {
             '%No store found%'   : 'No store found',
             '%Products%'         : 'Products',
             '%You are offline! Please connect to internet%' : 'You are offline! Please connect to internet.',
-            '%Home%'             : 'Home'        
+            '%Home%'             : 'Home',
+            '%error_login%'      : 'Invalid email or password.'
         },
         'chatView':{
             '%SEND%' : 'SEND',
@@ -116,6 +117,10 @@ var lang_enUS = {
 			'%Products%' : 'Products',
 			'%Clear Filter%' : 'Clear Filter',
             '%BACK%' : 'Back'
+        },
+        'loginView':{
+            '%User%'     : 'User name',
+            '%Password%' : 'Password' 
         }
     }
 };

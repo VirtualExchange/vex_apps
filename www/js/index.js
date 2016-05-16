@@ -47,7 +47,7 @@ var app = {
                 window.localStorage.setItem("token", 83);
                 app.deviceReady = true;
                 app.lang.config(function () {
-                    app.views.home.init();
+                    app.views.login.init();
                     app.webservice.get(
                         'device',
                         {},
@@ -82,14 +82,26 @@ var app = {
         app.deviceReady = true;
 
         document.addEventListener("offline", function () {
-            app.offLine = true;
-            navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
-            }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+            if(!app.offLine){
+
+                app.offLine = true;
+                navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
+                }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+            }
         }, false);
         
         document.addEventListener("online", function () {
             app.offLine = false;
-            app.views.home.init();
+
+            if(app.logged){
+
+                app.views.home.init();
+
+            } else{
+
+                app.views.login.init();
+
+            }
         }, false);
         
         //document.addEventListener("backbutton", app.onBackKeyDown, false);
@@ -123,10 +135,10 @@ var app = {
                 console.log(JSON.stringify(r));
                 window.localStorage.setItem("token", r.token);
                 app.lang.config(function () {
-                    app.views.home.init();
+                    app.views.login.init();
                     app.push.register();
                     //app.geolocation.start();
-                    app.views.chat.checkUnreadMessage();
+                    //app.views.chat.checkUnreadMessage();
                 });
             }, function (e) {
                 console.log('RESULT ERROR DE REGISTRO');
@@ -137,7 +149,10 @@ var app = {
         } else {
             console.log('com TOKEN');
             app.lang.config(function () {
-                app.views.home.init();
+                app.views.login.init();
+
+                app.userToken = window.localStorage.getItem("user_token");
+
                 app.webservice.get(
                     'device',
                     {},
@@ -237,6 +252,60 @@ var app = {
         showMenu: function(e){
              $('.navbar-collapse').collapse('show');
         },
+        login: {
+            init: function(){
+                $('.navbar-toggle').hide();
+                app.draw(
+                    '#content',
+                    '#loginView',
+                    'loginView',
+                    {},
+                    '',
+                    function () {
+
+                        app.bindEvents();
+                    }
+                );
+            },
+            register: function(e){
+                console.log(app.url + 'session');
+                console.log($('#login_user').val() + " > " +$('#login_password').val());
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: app.url + 'session',
+                    crossDomain: true,
+                    data: {
+                        username: $('#login_user').val(),
+                        password: $('#login_password').val()
+                    },
+                    headers: {
+                        "Authorization": "Token token=" + app.token,
+                        "contentType": "application/json"
+                    },
+                    success: function(data) {
+                        console.log(JSON.stringify(data));
+                        if(data.success){
+                            app.logged = true;
+                            window.localStorage.setItem("user_token", data.token);
+                            app.userToken = data.token;
+                            app.views.home.init();
+                        }
+                    },
+                    error: function(a, b, c) {
+                        var err = {
+                            a: a,
+                            msg: b,
+                            message: 'Webservice Error: '+c
+                        };
+                        console.log(JSON.stringify(err));
+                        $('.alert-danger').removeClass('hidden');
+                        $('.alert-danger').html(app.lang.getStr('%error_login%', 'aplication'));
+                    }
+                });
+            }
+        },
         home: {
             totalPages: 0,
             currentPage: 0,
@@ -245,6 +314,8 @@ var app = {
             oStoreDetail: null,
             init: function (e) {
                 console.log('ap.views.home.init()');
+
+                $('.navbar-toggle').show();
 
                 if (app.views.homeInitCalled){
                   return;  

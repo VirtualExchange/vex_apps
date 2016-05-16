@@ -16,7 +16,9 @@ var appCore = {
     senderID : "727346400787",
     lastGeoDate : null,
     offLine : false,
+    logged : false,
     chatToken : null,
+    userToken : '',
     bindEvents: function() {
 
         $('a[data-callback]').unbind('click');
@@ -373,7 +375,7 @@ var appCore = {
     /*! WEBSERVICE */
     webservice: {
         get: function(path, args, successCB, errorCB) {
-            console.log('app.webservice.get(): ' + app.url + window.localStorage.getItem("token") + '/' + path, JSON.stringify(args));
+            console.log('app.webservice.get(): ' + app.url + path, JSON.stringify(args));
 
             if(!app.checkConnection()){
                 return;
@@ -387,6 +389,7 @@ var appCore = {
 //                crossDomain: true,
                 headers: {
                     "Authorization": "Token token=" + app.token,
+                    'X-Access-Token': app.userToken,
                     'X-Device-Token': window.localStorage.getItem("token")
                 },
                 success: function(data) {
@@ -408,7 +411,7 @@ var appCore = {
             });
         },
         post: function(path, type, args, successCB, errorCB) {
-            console.log('app.webservice.post(): ' + (app.url + window.localStorage.getItem("token") + '/' + path), JSON.stringify(args));
+            console.log('app.webservice.post(): ' + (app.url  + '/' + path), JSON.stringify(args));
 
             if(!app.checkConnection()){
                 return;
@@ -423,9 +426,10 @@ var appCore = {
                 //		processData: false,
                 //		async: true,
                 headers: {
-                    "Authorization": "Token token=" + app.token,
-                    "contentType": "application/json",
-                    'X-Device-Token': window.localStorage.getItem("token")
+                  "Authorization": "Token token=" + app.token,
+                  'X-Access-Token': app.userToken,
+                  'X-Device-Token': window.localStorage.getItem("token"),
+                  "contentType": "application/json"
                 },
                 success: function(data) {
                     successCB(data);
@@ -443,7 +447,7 @@ var appCore = {
         registerDevice: function(args,successCB,errorCB){
             console.log('app.webservice.registerDevice(): ' + app.url +' > ' + app.token);
             console.log(JSON.stringify(args));
-            if(!app.checkConnection()){
+            if(app.offLine){
                 return;
             }
             
@@ -475,19 +479,11 @@ var appCore = {
     },
     checkConnection: function(){
 
-//        if(!navigator.connection || app.offLine){
-//            app.views.loadView.hide();
-//            $('#content').html('<h3 style="color: #fff;">' + app.lang.getStr('%You are offline! Please connect to internet%', 'aplication') + '</h3>');
-//            return true;
-//        }
-//
-//        var networkState = navigator.connection.type;
-//        
-//        if(networkState==Connection.NONE){
-//            
-//            navigator.notification.alert(app.lang.getStr('You are offline! Please connect to internet.', 'aplication'), function(){}, app.lang.getStr('Connection Error', 'aplication'), app.lang.getStr('Try again', 'aplication'));
-//            return false;
-//        }
+        if(app.logged && !app.offLine)
+
+            return true;
+
+        else return false;
         
         return true;
         
