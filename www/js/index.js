@@ -1110,7 +1110,7 @@ var app = {
                             city: store.city,
                             uf: store.state,
                             logo: store.logo,
-                            about: aboutStripped,
+                            about: addReadMore2(aboutStripped),
                             featured_product : !store.featured_product ? '' : store.featured_product,
                             id : store.id,
                             index: i,
