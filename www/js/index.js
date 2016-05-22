@@ -593,7 +593,6 @@ var app = {
                         if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                         if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                         if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
-
                         app.draw(
                             '#content',
                             '#ProductView',
@@ -3300,7 +3299,8 @@ function isHome(inputText){
     return false;
 }
 function addReadMore2(text, store_id, id, readMode) { /* to make sure the script runs after page load */
-	return text;
+    var descriptionStr = convertLinks(text);
+    return strip(descriptionStr);
 }
 function addReadMore(text, store_id, id, readMode) { /* to make sure the script runs after page load */
 
@@ -3366,12 +3366,21 @@ function getCategoryId(cats,cat_name){
     return c_id;
 }
 function convertLinks(text) {
-    links = linkify.find(text);
+    
+    var div = document.createElement('div');
+    div.innerHTML = text;
+    var pureText = div.innerText;
+    
+    links = linkify.find(pureText);
     console.log("links.length"+links.length);
     for (j=0; j<links.length; j++){
         console.log("links.href: "+links[j].href);
         if (links[j].type.indexOf('url') > -1){
-            text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + links[j].href + '</a>');
+            if (links[j].href.indexOf('calendar') > -1) {
+                text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + "Calendar" + '</a>');
+            } else {
+                text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + links[j].href + '</a>');
+            }
         }
     }
     console.log("text: "+text);
