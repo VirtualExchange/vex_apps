@@ -115,6 +115,7 @@ var app = {
         if (device && device.platform === 'iOS') {
 
             $('#menuNavBar').css('margin-top','20px');
+            //$('#vexCarousel').css('margin-top','20px');
             $('#content').css('padding-top','10px');
             $('#msgCount').css('margin-left', '-25px');
         }
