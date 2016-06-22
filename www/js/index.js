@@ -138,7 +138,8 @@ var app = {
                 console.log(JSON.stringify(r));
                 window.localStorage.setItem("token", r.token);
                 app.lang.config(function () {
-                    app.views.login.init();
+                    //app.views.login.init();
+                    app.views.home.init();
                     app.push.register();
                     //app.geolocation.start();
                     //app.views.chat.checkUnreadMessage();
@@ -3353,13 +3354,13 @@ function getCategoryId(cats,cat_name){
                 $.each(c.subcategories, function (i, sub) {
                     if (sub.name.indexOf(cat_name) == 0  && sub.name.length == cat_name.length){
                         c_id = sub.id;
-                        return false;
+                        return c_id;
                     }
                 });
             } else {
                 if (c.name.indexOf(cat_name) == 0 && c.name.length == cat_name.length){
                     c_id = c.id;
-                    return false;
+                    return c_id;
                 }
             }
         }
