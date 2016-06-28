@@ -80,6 +80,38 @@
 
 #menubutton { position: absolute; right: 5px; top: 15px; }
 
+.navbar-brand
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 15px;
+    text-align: center;
+    margin: auto;
+    padding:0;
+}
+.navbar-toggle {
+    z-index:1;
+}
+#navbar-backbutton {
+    align-items:center;
+    display:flex;
+    height: 50px;
+}
+#backbutton-text {
+    margin-left: -5px;
+    line-height: 50px;
+    color: #007aff;
+}
+#backbutton-icon {
+    line-height: 50px;
+    vertical-align: middle;
+    color: #007aff;
+}
+#backLink{
+    z-index:1;
+}
+
 .red{
     color: red;
     font-size: 100%;

@@ -105,7 +105,13 @@ var app = {
 
             }
         }, false);
-        
+
+        if (device && device.platform === 'Android') {
+            document.addEventListener("backbutton", function () {
+                app.views.goBack();
+            }, false);
+        }
+
         //document.addEventListener("backbutton", app.onBackKeyDown, false);
 
         console.log("ANTES: " + window.localStorage.getItem("token"));
@@ -226,7 +232,10 @@ var app = {
             $('#landingPageMenu').removeClass('hide');
             app.views.backStack.pop();
             var length = app.views.backStack.length;
-            if (length == 0) return;
+            if (length == 0){
+                navigator.app.exitApp();
+                return;
+            } 
             var backToStr = app.views.backStack[length-1];
             var backTo = backToStr.split(":");
             if (backTo[0] == "StoreList"){

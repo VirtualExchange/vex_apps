@@ -196,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default"  id="divBtBack">
+            <div class="panel panel-default hide"  id="divBtBack">
                 <div class="panel-body">
                     <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
                         <div class="row">
@@ -293,7 +293,7 @@
         </script>        
 
         <script type="text/html" id="ProductDetailView">
-            <div class="panel panel-default"  id="divBtBack">
+            <div class="panel panel-default hide"  id="divBtBack">
                 <div class="panel-body">
                     <a href="#" id="btBackProd" class="btn-link" data-callback="app.views.goBack">
                         <div class="row">
@@ -378,7 +378,7 @@
             </div>
         </script>
         <script id="chatView" type="text/html">
-            <div class="panel panel-default"  id="divBtBack">
+            <div class="panel panel-default hide"  id="divBtBack">
                 <div class="panel-body">
                     <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
                         <div class="row">
@@ -564,7 +564,7 @@
             -->
         </script>
         <script type="text/html" id="resultView">
-            <div class="panel panel-default" id="divBtBack">
+            <div class="panel panel-default hide" id="divBtBack">
                 <div class="panel-body">
                     <a href="#" id="btBack" class="btn-link" data-callback="app.views.search.init">
                         <div class="row" >
@@ -594,7 +594,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default"  id="divBtBack">
+            <div class="panel panel-default hide"  id="divBtBack">
                 <div class="panel-body">
                     <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
                         <div class="row">
@@ -665,7 +665,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a id="appTile" class="navbar-brand" href="#">Title</a>
+                    <div id='navbar-backbutton'>
+                        <a class="btn-link" id="backLink" data-callback="app.views.goBack" >
+                            <span id='backbutton-icon' class='icon icon-2x icon-left'></span>
+                            <span id='backbutton-text'>Back</span>
+                        </a>
+                        <span id="appTile" class="navbar-brand" href="#">Title</span>
+                    </div>                
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav" id="vex-navbar">
