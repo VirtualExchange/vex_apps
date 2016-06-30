@@ -672,7 +672,7 @@ var app = {
                                 if(store.stores_count>0){
                                     
                                     $('#storeOptions').removeClass('hide');
-                                    $('#storesListDiv').removeClass('hide');
+                                    $('#productListDiv').removeClass('hide');
 
                                     if (aa > -1) {
                                         $('#liOptProductLink').text('Members');

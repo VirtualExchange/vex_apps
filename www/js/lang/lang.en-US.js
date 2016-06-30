@@ -3,7 +3,7 @@ var lang_enUS = {
         'homeView':{
             '%Search%' : 'Search',
             '%V-Map%'  : 'V-Map',
-            '%Stores%' : 'Stores',
+            '%Stores%' : 'More',
             '%Filter%' : 'Filter',
             '%Departments%' : 'Departments'
         },
@@ -12,7 +12,7 @@ var lang_enUS = {
             '%BACK%'    : 'BACK',
             '%In%'      : 'In',
             '%Chat%'    : 'Chat',
-            '%Stores%'  : 'Stores',
+            '%Stores%'  : 'More',
             '%Products%': 'Products',
 			'%Filter%'  : 'Filter',
 			'%Categories%'  : 'Categories',
@@ -87,7 +87,7 @@ var lang_enUS = {
             '%Connection Error%' : 'Connection Error',
             '%Try again%'        : 'Try again',
             '%Search%'           : 'Search',
-            '%Stores%'           : 'Stores',
+            '%Stores%'           : 'More',
             '%V-Map%'            : 'V-Map',
             '%Pinned%'           : 'Pinned',
             '%Notification%'     : 'Notification',
