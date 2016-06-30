@@ -600,7 +600,8 @@ var app = {
                         aa = store.about.indexOf('**AA**'); //Members / Featured Members
                         bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
                         cc = store.about.indexOf('**CC**'); //Products / Vendors
-                        aboutStripped = store.about;
+                        aboutStripped = store.about.replace('**hideAddress**','');
+                        
                         if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                         if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                         if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
@@ -1108,7 +1109,8 @@ var app = {
                     aa = store.about.indexOf('**AA**');
                     bb = store.about.indexOf('**BB**');
                     cc = store.about.indexOf('**CC**');
-                    aboutStripped = store.about;
+                    aboutStripped = store.about.replace('**hideAddress**','');
+
                     if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                     if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                     if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
@@ -1284,7 +1286,10 @@ var app = {
                         if (!store.website || store.website == '') {
                             $('.contactWebsite').addClass('hide');
                         }
-
+                        console.log("store.about:"+store.about);
+                        if (store.about.indexOf("**hideAddress") > -1){
+                            $('.contactAddress').addClass('hide');
+                        }
                         app.bindEvents();
 
                     }
