@@ -672,7 +672,6 @@ var app = {
                                 if(store.stores_count>0){
                                     
                                     $('#storeOptions').removeClass('hide');
-                                    $('#productListDiv').removeClass('hide');
 
                                     if (aa > -1) {
                                         $('#liOptProductLink').text('Members');
@@ -1573,6 +1572,13 @@ var app = {
                         console.log("result.products.length: "+result.products.length);
                         if (result.products.length > 0 && store_count > 0){
                             $('#storeTabs').removeClass('hide');
+                            $('#productListDiv').removeClass('hide');
+                        }
+                        if (result.products.length > 0 && store_count == 0){
+                            $('#productListDiv').removeClass('hide');
+                        }
+                        if (result.products.length == 0 && store_count > 0){
+                            $('#storesListDiv').removeClass('hide');
                         }
                     },
                     function (e) {
