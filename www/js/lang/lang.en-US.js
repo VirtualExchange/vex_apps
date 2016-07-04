@@ -98,7 +98,9 @@ var lang_enUS = {
             '%Products%'         : 'Products',
             '%You are offline! Please connect to internet%' : 'You are offline! Please connect to internet.',
             '%Home%'             : 'Home',
-            '%error_login%'      : 'Invalid email or password.'
+            '%error_login%'      : 'Invalid email or password.',
+            '%Favorites%'      : 'Favorites',
+            '%Exit%': 'Exit'
         },
         'chatView':{
             '%SEND%' : 'SEND',
@@ -121,6 +123,9 @@ var lang_enUS = {
         'loginView':{
             '%User%'     : 'User name',
             '%Password%' : 'Password' 
+        },
+        'favoriteView':{
+            '%Favorites%' : 'Favorites'
         }
     }
 };

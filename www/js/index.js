@@ -257,6 +257,8 @@ var app = {
                 app.views.products.showProductDetail(backTo[1],backTo[2],backTo[3]);
             } else if (backTo[0] == "ProductList"){
                 app.views.products.showProductListMore2(backTo[1],backTo[2]);
+            } else if (backTo[0] == "Favorites"){
+                app.views.home.getFavorites();
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -383,22 +385,7 @@ var app = {
                 $('.carousel').removeClass('hide');
                 $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
-                $('#vex-navbar2').html('');
-                $.each(app.views.departments, function (i, dep) {
-                    app.draw(
-                        '#vex-navbar2',
-                        '#menuItem2',
-                        'menuItem2',
-                        {
-                            name: stripLeadingTag(dep.name),
-                            id: dep.id
-                        },
-                        'append',
-                        function () {
-                            app.bindEvents();
-                        }
-                    );
-                });
+                app.views.generateMenu2();
 
                 $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
                 $('.carousel').carousel({
@@ -435,28 +422,8 @@ var app = {
                 $('.carousel').removeClass('hide');
                 $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
-                $('#vex-navbar2').html('');
-                $.each(app.views.departments, function (i, dep) {
-                    if (isHome(dep.name)) {
-                        homeDeptId = dep.id;
-                    } else {
-                        app.draw(
-                            '#vex-navbar2',
-                            '#menuItem2',
-                            'menuItem2',
-                            {
-                                name: stripLeadingTag(dep.name),
-                                id: dep.id
-                            },
-                            'append',
-                            function () {
-                                app.bindEvents();
-                            }
-                        );
-                    }
-                });
+                homeDeptId = app.views.generateMenu2();
                     
-                }
                 $('.carousel').carousel({
                     interval: 3000
                 });
@@ -535,6 +502,7 @@ var app = {
                         app.bindEvents();
                     }
                 );
+                }
             },
             storeDetail: function (e) {
                 console.log('app.views.home.storeDetail()');
@@ -562,11 +530,10 @@ var app = {
                 if($(e).attr('dadStore')!=='false'){
                     app.views.auxBackFuc = 'storesList';
                 }
-                
-                app.views.home.getStoreDetail(store_id, btBack, $(e).attr('dadStore'));
+                app.views.home.getStoreDetail(store_id, btBack, $(e).attr('dadStore'),$(e).attr('favorite'));
                 
             },
-            getStoreDetail: function(store_id, btBack, dadStore){
+            getStoreDetail: function(store_id, btBack, dadStore,favorite){
                 console.log('app.views.home.getStoreDetail()');
                 app.views.loadView.show();
                 
@@ -576,7 +543,7 @@ var app = {
                     function (result) {
                         app.views.scrool = $(window).scrollTop();
                         app.views.home.oStoreDetail = result;
-                        app.views.home.showStoreDetail(result, btBack, dadStore);
+                        app.views.home.showStoreDetail(result, btBack, dadStore, favorite);
                         app.views.loadView.hide();
                     },
                     function (e) {
@@ -586,7 +553,7 @@ var app = {
                     }
                 );
             },
-            showStoreDetail: function(store, btBack, dadStore){
+            showStoreDetail: function(store, btBack, dadStore,favorite){
                 console.log('app.views.home.showStoreDetail');
                 var aa = -1;
                 var bb = -1;
@@ -650,8 +617,7 @@ var app = {
                                 $('#storeCategorie').change(function () {
                                     app.views.home.filterByCategory($('#storeCategorie'));
                                 });
-
-                                if (store.favorite == true) {
+                                if (favorite && favorite.indexOf('true') == 0) {
                                     $('#btFav_' + store.id + ' span').removeClass('icon-star');
                                     $('#btFav_' + store.id + ' span').addClass('icon-star-filled');
 
@@ -726,24 +692,7 @@ var app = {
                                 app.bindEvents();
                             }
                         );
-                $('#vex-navbar2').html('');
-                $.each(app.views.departments, function (i, dep) {
-                    if (isHome(dep.name) == false) {
-                        app.draw(
-                            '#vex-navbar2',
-                            '#menuItem2',
-                            'menuItem2',
-                            {
-                                name: stripLeadingTag(dep.name),
-                                id: dep.id
-                            },
-                            'append',
-                            function () {
-                                app.bindEvents();
-                            }
-                        );
-                    }
-                });
+                        app.views.generateMenu2();
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
@@ -1096,6 +1045,26 @@ var app = {
                     app.views.home.storeDetail();
                 }
             },
+            showFavorites: function (result, search, hideFilter,currentPage) {
+                console.log('app.views.home.showSFavorites');
+                
+                search = !search ? false : true;
+                
+                var i = app.views.stores.length;
+                app.views.stores = new Array();
+
+                $.each(result.favorites, function (i, s) {
+                    if (result.favorites.length==1 || !s.corporate) {
+                        app.views.stores.push(s);
+                    }
+                });
+
+                if(app.views.stores.length==0){
+                    $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
+                }else if (app.views.stores.length > 0 || hideFilter==false){
+                    app.views.home.addFavorite(app.views.stores, '#storeList', i, search, 'true',currentPage);
+                }
+            },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
                 console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
@@ -1113,6 +1082,11 @@ var app = {
                     if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                     if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                     if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
+                    
+                    if (store.favorite == true)
+                        strFavorite = "true";
+                    else
+                        strFavorite = "false";
                     app.draw(
                         divId,
                         '#storeItem',
@@ -1126,11 +1100,12 @@ var app = {
                             featured_product : !store.featured_product ? '' : store.featured_product,
                             id : store.id,
                             index: i,
-                            dadStore: dadStore
+                            dadStore: dadStore,
+                            favorite: strFavorite
                         },
                         'append',
                         function () {
-
+                            //console.log("store from lis: "+JSON.stringify(store));
                             if (store.favorite == true) {
                                 $('#btFav_' + i + ' span').removeClass('icon-star');
                                 $('#btFav_' + i + ' span').addClass('icon-star-filled');
@@ -1174,6 +1149,37 @@ var app = {
                                 $('#readMore_'+i).addClass('hide');
                                 $('#storeItem_'+store.id).attr('data-callback', '');
                             }
+                            i++;
+                            app.bindEvents();
+                        }
+                    );
+                });  
+            },
+            addFavorite: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
+                console.log('app.views.home.addstore');
+                var i = arrayIndex*currentPage;
+                $.each(storeArray, function (index, store) {
+
+                    app.draw(
+                        divId,
+                        '#favoriteItem',
+                        'favoriteItem',
+                        {
+                            name: stripLeadingTag(store.name),
+                            city: store.city,
+                            uf: store.state,
+                            id : store.id,
+                            index: i,
+                            dadStore: dadStore,
+                        },
+                        'append',
+                        function () {
+                            //console.log("store from lis: "+JSON.stringify(store));
+                            
+                            if (storeArray.length == 1 && search==false && dadStore=='true') {
+                                $('.storeItem').css('height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
+                            }
+
                             i++;
                             app.bindEvents();
                         }
@@ -1233,6 +1239,59 @@ var app = {
                     function (e) {
                         console.log(JSON.stringify(e));
                     }
+                );
+            },
+            getFavorites: function(e){
+                console.log('app.views.home.showFavorites()');
+                app.views.backStack.pop();
+
+                app.views.backStack.push("Favorites");
+                    $('.carousel').addClass('hide');
+                    $('#menubutton').addClass('hide');
+                    $('#landingPageMenu').addClass('hide');
+                    $('.navbar').removeClass('hide');
+                
+                app.draw(
+                    '#content',
+                    '#favoriteView',
+                    'favoriteView',
+                    {
+                    },
+                    '',
+                    function () {
+
+                        app.webservice.get(
+                            'favorites',
+                            {},
+                            function (result) {
+                                //console.log(JSON.stringify(result));
+                                app.views.stores = new Array();
+                                $('#storeList').html('');
+                        
+                                app.views.home.showFavorites(result, true, true,1);
+
+                                app.views.home.currentPage = 1;
+                                app.views.home.totalPages = result.pages;
+
+                                if (app.views.home.totalPages > 1) {
+
+                                    $(window).on("scroll", function () { //pagination
+                                        if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
+
+                                            app.views.home.paginacao('favorites', {},'favorites');
+                                        }
+                                    });
+                                }
+                                app.bindEvents();
+
+                            },
+                            function (e) {
+                                //console.log(JSON.stringify(e));
+                            }
+                        );
+                        
+                        app.bindEvents();
+                }
                 );
             },
             showContact: function (e) {
@@ -1303,8 +1362,46 @@ var app = {
                     ref = window.open('http://' + $(e).attr('data-site'), '_system', 'location=yes');   
             }            
         },
+        generateMenu2: function () {
+            console.log('app.views.generateMenu2()');
+            $('#vex-navbar2').html('');
+            var strHome;
+            $.each(app.views.departments, function (i, dep) {
+                if (isHome(dep.name)){
+                    strHome = dep.id;
+                } else {
+                    app.draw(
+                        '#vex-navbar2',
+                        '#menuItem2',
+                        'menuItem2',
+                        {
+                            name: stripLeadingTag(dep.name),
+                            id: dep.id
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }   
+                    );
+                }
+            });
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemFavorite2',
+                'menuItemFavorite2',
+                {
+                    name: app.lang.getStr('%Favorites%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            return strHome;
+        },
         generateMenu: function () {
-            console.log('app.views.home.generateMenu()');
+            console.log('app.views.generateMenu()');
 
             app.webservice.get(
                 'departments',
@@ -1348,6 +1445,20 @@ var app = {
                             );
                         }
                     });
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemFavorite',
+                        'menuItemFavorite',
+                        {
+                            name: app.lang.getStr('%Favorites%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+
                     app.views.goHome();
                 },
                 function (err) {
@@ -3394,9 +3505,7 @@ function convertLinks(text) {
     var pureText = div.innerText;
     
     links = linkify.find(pureText);
-    console.log("links.length"+links.length);
     for (j=0; j<links.length; j++){
-        console.log("links.href: "+links[j].href);
         if (links[j].type.indexOf('url') > -1){
             if (links[j].href.indexOf('calendar') > -1) {
                 text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + "Calendar" + '</a>');
@@ -3405,7 +3514,6 @@ function convertLinks(text) {
             }
         }
     }
-    console.log("text: "+text);
     return text;
 }
 function findContact(text) {

@@ -181,3 +181,7 @@ div[id^="readMore"]{
   		display:block !important;
 	}
 }
+
+.favoriteButton:focus{
+    outline: none;
+}

@@ -93,7 +93,9 @@ var lang_ptBR = {
             '%Products%'         : 'Produtos',
             '%You are offline! Please connect to internet%' : 'Você está offline! Por favor conecte a internet.',
             '%Home%'             : 'Home',
-            '%error_login%'      : 'Email/senha invalido.'
+            '%error_login%'      : 'Email/senha invalido.',
+            '%Favorites%'      : 'Favorites',
+            '%Exit%': 'Exit'
         },
         'chatView':{
             '%SEND%' : 'ENVIAR',
@@ -112,6 +114,9 @@ var lang_ptBR = {
         'loginView':{
             '%User%'     : 'Usuário',
             '%Password%' : 'Senha' 
+        },
+        'favoriteView':{
+            '%Favorites%' : 'Favorites'
         }
     }
 };
