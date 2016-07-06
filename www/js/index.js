@@ -598,6 +598,7 @@ var app = {
                                 if (app.views.backStack.length > 1){
                                     var ind = app.views.backStack.length-2;
                                     $('#backStack').html(app.views.backStack[ind]);
+                                    $('#backLink').removeClass('hide');
                                 }else{
                                     $('#backLink').addClass('hide');
                                 }
@@ -950,7 +951,11 @@ var app = {
                                     $('#deptFilter').addClass('hide');
                                     $('#deptFilterName').html(dep_name);
                                 }
-                                if (app.views.backStack.length < 2) $('#backLink').addClass('hide');                        
+                                if (app.views.backStack.length < 2) {
+                                    $('#backLink').addClass('hide');                        
+                                } else {
+                                    $('#backLink').removeClass('hide');                        
+                                }
                                 app.views.home.showStores(result, true, hideFilter,1);
 
                                 app.views.home.currentPage = 1;
@@ -1974,6 +1979,7 @@ var app = {
                         if (app.views.backStack.length > 1){
                             var ind = app.views.backStack.length-2;
                             $('#backStack').html(app.views.backStack[ind]);
+                            $('#backLink').removeClass('hide');
                         }else{
                             $('#backLink').addClass('hide');
                         }
