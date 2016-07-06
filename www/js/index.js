@@ -169,7 +169,7 @@ var app = {
                     {},
                     function (r) {
                         console.log('RESULT DE REGISTRO');
-                        //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token)
+                        //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token);
                         app.device = r;
 
                         console.log(JSON.stringify(r));
@@ -599,7 +599,7 @@ var app = {
                                     var ind = app.views.backStack.length-2;
                                     $('#backStack').html(app.views.backStack[ind]);
                                 }else{
-                                    $('#divBtBack').addClass('hide');
+                                    $('#backLink').addClass('hide');
                                 }
                                 
                                 //if(!btBack || ((app.views.home.store_id.length == 1) && (dadStore=='true'))){
@@ -610,7 +610,7 @@ var app = {
                                 if (store.corporate) {
 
                                     $('#store_name').addClass('hide');
-                                    $('#divBtBack').addClass('hide');
+                                    $('#backLink').addClass('hide');
                                     $('#btFav_0').addClass('hide');
                                 }
                                 
@@ -950,7 +950,7 @@ var app = {
                                     $('#deptFilter').addClass('hide');
                                     $('#deptFilterName').html(dep_name);
                                 }
-                        
+                                if (app.views.backStack.length < 2) $('#backLink').addClass('hide');                        
                                 app.views.home.showStores(result, true, hideFilter,1);
 
                                 app.views.home.currentPage = 1;
@@ -1975,7 +1975,7 @@ var app = {
                             var ind = app.views.backStack.length-2;
                             $('#backStack').html(app.views.backStack[ind]);
                         }else{
-                            $('#divBtBack').addClass('hide');
+                            $('#backLink').addClass('hide');
                         }
 
                         if (result.contact_info == '<p></p>') {
