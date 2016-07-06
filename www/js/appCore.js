@@ -564,30 +564,13 @@ var appCore = {
         }
     },
     showKeyboard : function(e){
-        console.log('app.controlKeyboard: ' + e.keyboardHeight +' + ' + $('#navChatFooter').height() + ' = ' + (e.keyboardHeight+$('#navChatFooter').height()));
-        $('body').css('padding-bottom',(e.keyboardHeight+$('#navChatFooter').height()) +'px');
-        
-        if($('#chatUserMessage').length){
-            
-            $('#navChatFooter').removeClass('navbar-fixed-bottom');
-            $('#navChatFooter').addClass('navbar-fixed-top');
-            $('#navChatFooter').css('margin-top', ($('#menuNavBar').height()+10) + 'px');
-            $('#navChatFooter').addClass('noProduct');
-        }
-        //navigator.notification.alert('Keyboard-height: ' + e.keyboardHeight + '\r\nchatField-height: ' + $('#navChatFooter').height() + '\r\nchatField-poss: ' + $('#navChatFooter').css('bottom'), function () {}, 'Test', 'OK');
     },
     hideKeyboard : function(e){
-        console.log('app.controlKeyboard: ' + e.keyboardHeight);
-        $('body').css('padding-bottom','0');
         
-        if($('#chatUserMessage').length){
-            
-            $('#navChatFooter').removeClass('navbar-fixed-top');
-            $('#navChatFooter').addClass('navbar-fixed-bottom');
-            $('#navChatFooter').css('margin-top', '0');
-            $('#navChatFooter').css('background-color','none');
-            $('#navChatFooter').removeClass('noProduct');
-        }
+        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+        $("#chatList").scrollTop($('#chatList').prop("scrollHeight")); 
+        
     }
 };
 

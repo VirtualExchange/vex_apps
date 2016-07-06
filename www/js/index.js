@@ -57,7 +57,7 @@ var app = {
                             //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token)
                             //app.geolocation.start();
                             app.device = r;
-                            //console.log(app.device);
+                            //console.log("app.device: ",app.device);
                             app.views.chat.checkUnreadMessage();
                         }, function (e) {
                         console.log('RESULT ERROR DE REGISTRO');
@@ -3160,7 +3160,7 @@ var app = {
                 if (item.kind == 1){ 
                     name = "Me";
                 }else {
-                    name="Vex Travel";
+                    name=app.views.home.oStoreDetail.name;
                 }
                 app.draw(
                     '#chatList',
@@ -3303,7 +3303,7 @@ var app = {
                         
                         if(!app.device.email){
                             app.webservice.post(
-                                '',
+                                'device',
                                 'PUT',
                                 {
                                     device: {
@@ -3354,7 +3354,7 @@ var app = {
                         clearInterval(app.views.chat.chekTime);
                     }
                     
-                },5000);
+                },10000);
             },
             checkUnreadMessage: function(){
                 console.log('app.views.chat.checkUnreadMessage()');
