@@ -1269,7 +1269,7 @@ var app = {
                             'favorites',
                             {},
                             function (result) {
-                                //console.log(JSON.stringify(result));
+                                console.log(JSON.stringify(result));
                                 app.views.stores = new Array();
                                 $('#storeList').html('');
                         
@@ -1326,9 +1326,9 @@ var app = {
                     'contactView',
                     {
                         phone: store.phone ? store.phone : '',
-                        email: store.email,
+                        email: store.email ? store.email : '',
                         website: store.website ? store.website : '',
-                        websiteView: store.website,
+                        websiteView: store.website ? store.website : '',
                         address: store.address,
                         city: store.city,
                         state: store.state,
