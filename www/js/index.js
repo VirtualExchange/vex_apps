@@ -34,6 +34,7 @@ var app = {
 
         console.log('muda o title');
         $('#appTile').html(app.appName);
+        $('#splashViewTitle').html(app.appName);
         document.title = app.Name;
 
         //$('body').css('padding-top', $('#menuNavBar').height() + 20);
@@ -223,6 +224,7 @@ var app = {
         },
         goHome: function(e){
             $('#landingPageMenu').removeClass('hide');
+            $('#loginSpinner').addClass('hide');
             //app.views.products.showProductList(e);
             app.views.home.showStoreList();
             //app.views.home.showStoreListPre();
@@ -278,7 +280,7 @@ var app = {
                     {},
                     '',
                     function () {
-
+                        $('#loginViewTitle').html(app.appName);
                         app.bindEvents();
                     }
                 );
@@ -286,6 +288,7 @@ var app = {
             register: function(e){
                 console.log(app.url + 'session');
                 console.log($('#login_user').val() + " > " +$('#login_password').val());
+                $('#loginSpinner').removeClass('hide');
 
                 $.ajax({
                     type: 'POST',
@@ -316,6 +319,7 @@ var app = {
                             message: 'Webservice Error: '+c
                         };
                         console.log(JSON.stringify(err));
+                        $('#loginSpinner').addClass('hide');
                         $('.alert-danger').removeClass('hidden');
                         $('.alert-danger').html(app.lang.getStr('%error_login%', 'aplication'));
                     }

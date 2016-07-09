@@ -91,6 +91,7 @@
         <script id="loginView" type="text/html">
             <div class="fullRow">
                 <div class="alert alert-danger hidden" role="alert"></div>
+                <h2 id="loginViewTitle" class="text-center">Title</h2>
                 <div class="row">
                     <div class="span4"></div>
                     <div class="span4"><img class="center-block" src="./icon.png" /></div>
@@ -107,6 +108,11 @@
                     </div>
                     <a href="javascript:void(0)" data-callback="app.views.login.register" class="btn btn-default">Submit</a>
                 </form>
+                <div id="loginSpinner" class="row hide">
+                    <div class="span4"></div>
+                    <div class="span4"><img class="center-block" src="img/load_image.gif" /></div>
+                    <div class="span4"></div>
+                </div>
             </div>
         </script>
 
@@ -758,7 +764,7 @@
             </div>
         <div id="content" class="container-fluid">
             <div class="row">
-            <h1 class="text-center">Hello.</h1>
+            <h2 id="splashViewTitle" class="text-center">Welcome</h2>
             </div>
             <div class="row">
                 <div class="span4"></div>
