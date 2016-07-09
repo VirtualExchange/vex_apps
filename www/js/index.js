@@ -3193,30 +3193,36 @@ var app = {
             },
             addMessage: function(item){
                 console.log('app.views.chat.addMessage');
-//                console.log(item);
-                var created_at = moment(item.created_at);
-//                console.log('ADD MESSAGE: ' + app.lang.date.pattern);
                 var name = '';
                 if (item.kind == 1){ 
                     name = "Me";
                 }else {
                     name=app.views.home.oStoreDetail.name;
                 }
-                app.draw(
-                    '#chatList',
-                    '#chatItem',
-                    'chatView',
-                    {
-                        id      : item.id,
-                        message : item.message,
-                        msgDate : created_at.format(app.lang.date.pattern),
-                        email   : name,
-                        kind    : name
+                var dt = new Date(item.created_at);
+                navigator.globalization.dateToString(
+                    dt,
+                    function (date) {
+                        console.log('date:' + date.value);
+                        app.draw(
+                            '#chatList',
+                            '#chatItem',
+                            'chatView',
+                            {
+                                id      : item.id,
+                                message : item.message,
+                                msgDate : date.value,
+                                email   : name,
+                                kind    : name
+                            },
+                            'append',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
                     },
-                    'append',
-                    function () {
-                        app.bindEvents();
-                    }
+                    function () {console.log('Error getting dateString\n');},
+                    {formatLength:'short', selector:'date and time'}
                 );
             },
             list: function(e){
