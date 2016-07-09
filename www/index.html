@@ -677,6 +677,11 @@
                 <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
             </li>
         </script>        
+        <script type="text/html" id="menuItemLogout">
+            <li>
+                <a href="#" data-callback="app.views.home.logout" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+            </li>
+        </script>        
         <script type="text/html" id="menuItem2">
             <li class="list-group-item">
                 <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
@@ -685,6 +690,11 @@
         <script type="text/html" id="menuItemFavorite2">
             <li class="list-group-item">
                 <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemLogout2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.views.home.logout" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
             </li>
         </script>        
 

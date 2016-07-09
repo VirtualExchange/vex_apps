@@ -18,6 +18,7 @@ var appCore = {
     offLine : false,
 //    logged : false,
     logged : true,
+    loginRequired: false,
     chatToken : null,
     userToken : '',
     bindEvents: function() {

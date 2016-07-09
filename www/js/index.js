@@ -145,8 +145,11 @@ var app = {
                 console.log(JSON.stringify(r));
                 window.localStorage.setItem("token", r.token);
                 app.lang.config(function () {
-                    //app.views.login.init();
-                    app.views.home.init();
+                    if (app.loginRequired == true) {
+                        app.views.login.init();
+                    } else {
+                        app.views.home.init();
+                    }
                     app.push.register();
                     //app.geolocation.start();
                     //app.views.chat.checkUnreadMessage();
@@ -160,10 +163,6 @@ var app = {
         } else {
             console.log('com TOKEN');
             app.lang.config(function () {
-                //app.views.login.init();
-                app.views.home.init();
-
-                app.userToken = window.localStorage.getItem("user_token");
 
                 app.webservice.get(
                     'device',
@@ -174,6 +173,12 @@ var app = {
                         app.device = r;
 
                         console.log(JSON.stringify(r));
+                        app.userToken = window.localStorage.getItem("user_token");
+                        if (app.loginRequired == false || (app.loginRequired == true && app.userToken)) {
+                            app.views.home.init();
+                        }else{
+                            app.views.login.init();
+                        }
                     }, function (e) {
                     console.log('RESULT ERROR DE REGISTRO');
 
@@ -272,7 +277,12 @@ var app = {
         },
         login: {
             init: function(){
+                console.log("app.views.login.init()");
                 $('.navbar-toggle').hide();
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                app.views.homeInitCalled = 0;
                 app.draw(
                     '#content',
                     '#loginView',
@@ -286,6 +296,7 @@ var app = {
                 );
             },
             register: function(e){
+                console.log("app.views.register.init()");
                 console.log(app.url + 'session');
                 console.log($('#login_user').val() + " > " +$('#login_password').val());
                 $('#loginSpinner').removeClass('hide');
@@ -333,7 +344,7 @@ var app = {
             storesChild: [],
             oStoreDetail: null,
             init: function (e) {
-                console.log('ap.views.home.init()');
+                console.log('app.views.home.init()');
 
                 $('.navbar-toggle').show();
 
@@ -361,6 +372,10 @@ var app = {
                             
                 app.bindEvents();
 
+            },
+            logout: function (e) {
+                window.localStorage.removeItem("user_token");
+                app.views.login.init();
             },
             backCoverPage: function (e) {
                 console.log('app.views.home.backCoverPage()');
@@ -1407,6 +1422,21 @@ var app = {
                     app.bindEvents();
                 }
             );
+            if (app.loginRequired){
+                app.draw(
+                    '#vex-navbar2',
+                    '#menuItemLogout2',
+                    'menuItemLogout2',
+                    {
+                        name: app.lang.getStr('%Logout%', 'aplication'),
+                        id: 0
+                    },
+                    'append',
+                    function () {
+                        app.bindEvents();
+                    }
+                );
+            }
             return strHome;
         },
         generateMenu: function () {

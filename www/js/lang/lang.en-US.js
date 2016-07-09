@@ -100,7 +100,8 @@ var lang_enUS = {
             '%Home%'             : 'Home',
             '%error_login%'      : 'Invalid email or password.',
             '%Favorites%'      : 'Favorites',
-            '%Exit%': 'Exit'
+            '%Exit%': 'Exit',
+            '%Logout%': 'Logout'
         },
         'chatView':{
             '%SEND%' : 'SEND',

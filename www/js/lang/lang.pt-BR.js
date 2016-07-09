@@ -95,7 +95,8 @@ var lang_ptBR = {
             '%Home%'             : 'Home',
             '%error_login%'      : 'Email/senha invalido.',
             '%Favorites%'      : 'Favorites',
-            '%Exit%': 'Exit'
+            '%Exit%': 'Exit',
+            '%Logout%': 'Logout'
         },
         'chatView':{
             '%SEND%' : 'ENVIAR',
