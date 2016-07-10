@@ -473,8 +473,8 @@ var app = {
 
                                 $('#storeList').html('');
 
+                                app.views.backStack.push("StoreList");
                                 if (result.stores.length > 1) {
-                                    app.views.backStack.push("StoreList");
                                     app.views.stores = new Array();
 
                                     app.views.home.showStores(result,false,false,1);
@@ -496,16 +496,18 @@ var app = {
                                         });
                                     }
                                     
-                                    app.views.home.getDepartment();
                                     if (homeDeptId > -1){
                                         $('#storeFilter').addClass('hide');
+                                        app.views.home.getDepartment(true);
+                                    } else {
+                                        app.views.home.getDepartment(false);
                                     }
                                     
                                 } else {
                                     app.views.stores = result.stores;
                                     console.log(JSON.stringify(app.views.stores));
                                     $('#rowStoreFilter').hide();
-                                    app.views.backStack.push("StoreDetail:"+app.views.stores[0].id);
+                                    //app.views.backStack.push("StoreDetail:"+app.views.stores[0].id);
                                     app.views.home.storeDetail();
                                 }
                             },
@@ -1004,7 +1006,7 @@ var app = {
                 }
                 );
             },
-            getDepartment: function(){
+            getDepartment: function(hideFilter){
                 console.log('app.views.home.getDepartment()');
                 app.webservice.get(
                     'departments',
@@ -1031,6 +1033,11 @@ var app = {
                             $(this).attr('data-callback','app.views.home.filterByDepartment');
                         });
                         
+                        if (result.departments.length == 0 || hideFilter){
+                            $('#storeFilter').addClass('hide');
+                        } else {
+                            $('#storeFilter').removeClass('hide');
+                        }
                         app.bindEvents();
                     },
                     function (err) {
@@ -1292,6 +1299,14 @@ var app = {
                                 app.views.stores = new Array();
                                 $('#storeList').html('');
                         
+                                if (app.views.backStack.length > 1){
+                                    var ind = app.views.backStack.length-2;
+                                    $('#backStack').html(app.views.backStack[ind]);
+                                    $('#backLink').removeClass('hide');
+                                }else{
+                                    $('#backLink').addClass('hide');
+                                }
+                                
                                 app.views.home.showFavorites(result, true, true,1);
 
                                 app.views.home.currentPage = 1;

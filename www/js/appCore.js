@@ -481,7 +481,7 @@ var appCore = {
     },
     checkConnection: function(){
 
-        if(app.logged && !app.offLine)
+        if(!app.offLine)
 
             return true;
 
