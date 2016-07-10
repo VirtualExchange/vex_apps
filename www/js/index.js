@@ -496,12 +496,8 @@ var app = {
                                         });
                                     }
                                     
-                                    if (homeDeptId > -1){
-                                        $('#storeFilter').addClass('hide');
-                                        app.views.home.getDepartment(true);
-                                    } else {
-                                        app.views.home.getDepartment(false);
-                                    }
+                                    // Always hide filter since the departments are on the menu anyway
+                                    app.views.home.getDepartment(true);
                                     
                                 } else {
                                     app.views.stores = result.stores;
