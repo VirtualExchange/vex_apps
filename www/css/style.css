@@ -89,6 +89,7 @@
     text-align: center;
     margin: auto;
     padding:0;
+    pointer-events: none;
 }
 .navbar-toggle {
     z-index:1;
