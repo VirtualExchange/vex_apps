@@ -1183,7 +1183,11 @@ var app = {
                 console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
                 $.each(storeArray, function (index, store) {
-                    aboutStripped = store.about.replace('**hideAddress**','');
+                    if (store.about){
+                        aboutStripped = store.about.replace('**hideAddress**','');
+                    } else {
+                        aboutStripped = "";
+                    }
                     app.draw(
                         divId,
                         '#favoriteItem',
