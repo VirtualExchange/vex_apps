@@ -776,6 +776,7 @@ var app = {
                 
             },
             paginacao: function (url, options,type) {
+                console.log('app.view.home.paginacao');
                 if (app.views.home.totalPages > app.views.home.currentPage) {
 
                     app.views.home.currentPage += 1;
@@ -787,7 +788,10 @@ var app = {
                             console.log(JSON.stringify(result));
                             if (type.indexOf('storeschild') == 0) {
                                 app.views.home.addStore(result.stores, '#list-stores',0, true,'false',app.views.home.currentPage);
+                            }else if(type.indexOf('favorites') == 0){
+                                app.views.home.addFavorite(result.stores, '#favoriteList', 0, true, 'false',app.views.home.currentPage);
                             }else{
+                                    
                                 app.views.home.showStores(result,false,false,app.views.home.currentPage);
                             }
                             app.views.scrollPending = 0;
@@ -1090,7 +1094,7 @@ var app = {
                 if(app.views.stores.length==0){
                     $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
                 }else if (app.views.stores.length > 0 || hideFilter==false){
-                    app.views.home.addFavorite(app.views.stores, '#storeList', i, search, 'true',currentPage);
+                    app.views.home.addFavorite(app.views.stores, '#favoriteList', i, search, 'true',currentPage);
                 }
             },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
@@ -1297,7 +1301,7 @@ var app = {
                             function (result) {
                                 console.log(JSON.stringify(result));
                                 app.views.stores = new Array();
-                                $('#storeList').html('');
+                                $('#favoriteList').html('');
                         
                                 if (app.views.backStack.length > 1){
                                     var ind = app.views.backStack.length-2;
@@ -1315,7 +1319,7 @@ var app = {
                                 if (app.views.home.totalPages > 1) {
 
                                     $(window).on("scroll", function () { //pagination
-                                        if ($(this).scrollTop() + $(this).height() >= $('#storeList').parent().height()) {
+                                        if ($(this).scrollTop() + $(this).height() >= $('#favoriteList').parent().height()) {
 
                                             app.views.home.paginacao('favorites', {},'favorites');
                                         }
