@@ -547,10 +547,10 @@ var app = {
                 if($(e).attr('dadStore')!=='false'){
                     app.views.auxBackFuc = 'storesList';
                 }
-                app.views.home.getStoreDetail(store_id, btBack, $(e).attr('dadStore'),$(e).attr('favorite'));
+                app.views.home.getStoreDetail(store_id, btBack, $(e).attr('dadStore'));
                 
             },
-            getStoreDetail: function(store_id, btBack, dadStore,favorite){
+            getStoreDetail: function(store_id, btBack, dadStore){
                 console.log('app.views.home.getStoreDetail()');
                 app.views.loadView.show();
                 
@@ -560,7 +560,7 @@ var app = {
                     function (result) {
                         app.views.scrool = $(window).scrollTop();
                         app.views.home.oStoreDetail = result;
-                        app.views.home.showStoreDetail(result, btBack, dadStore, favorite);
+                        app.views.home.showStoreDetail(result, btBack, dadStore);
                         app.views.loadView.hide();
                     },
                     function (e) {
@@ -570,7 +570,7 @@ var app = {
                     }
                 );
             },
-            showStoreDetail: function(store, btBack, dadStore,favorite){
+            showStoreDetail: function(store, btBack, dadStore){
                 console.log('app.views.home.showStoreDetail');
                 var aa = -1;
                 var bb = -1;
@@ -601,7 +601,8 @@ var app = {
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
                                 about: convertLinks(aboutStripped),
-                                dadStore: dadStore
+                                dadStore: dadStore,
+                                favorite: store.favorite
                             },
                             '',
                             function () {
@@ -635,7 +636,7 @@ var app = {
                                 $('#storeCategorie').change(function () {
                                     app.views.home.filterByCategory($('#storeCategorie'));
                                 });
-                                if (favorite && favorite.indexOf('true') == 0) {
+                                if (store.favorite) {
                                     $('#btFav_' + store.id + ' span').removeClass('icon-star');
                                     $('#btFav_' + store.id + ' span').addClass('icon-star-filled');
 
@@ -1110,10 +1111,6 @@ var app = {
                     if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                     if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
                     
-                    if (store.favorite == true)
-                        strFavorite = "true";
-                    else
-                        strFavorite = "false";
                     app.draw(
                         divId,
                         '#storeItem',
@@ -1128,7 +1125,7 @@ var app = {
                             id : store.id,
                             index: i,
                             dadStore: dadStore,
-                            favorite: strFavorite
+                            favorite: store.favorite
                         },
                         'append',
                         function () {
@@ -1186,7 +1183,7 @@ var app = {
                 console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
                 $.each(storeArray, function (index, store) {
-
+                    aboutStripped = store.about.replace('**hideAddress**','');
                     app.draw(
                         divId,
                         '#favoriteItem',
@@ -1196,8 +1193,11 @@ var app = {
                             city: store.city,
                             uf: store.state,
                             id : store.id,
+                            about: aboutStripped,
                             index: i,
                             dadStore: dadStore,
+                            logo: store.logo,
+                            favorite : store.favorite
                         },
                         'append',
                         function () {
