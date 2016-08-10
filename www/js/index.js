@@ -174,8 +174,23 @@ var app = {
 
                         console.log(JSON.stringify(r));
                         app.userToken = window.localStorage.getItem("user_token");
-                        if (app.loginRequired == false || (app.loginRequired == true && app.userToken)) {
+
+                        if (app.loginRequired == false ) {
                             app.views.home.init();
+                        /* Attempt to validate the token */
+                        }else if (app.loginRequired == true && app.userToken){
+                            app.webservice.get(
+                                'departments',
+                                {},
+                                function (result) {
+                                    console.log("successCB");
+                                    app.views.home.init();
+                                },
+                                function (err) {
+                                    console.log("errorCB");
+                                    app.views.login.init();
+                                }
+                            );
                         }else{
                             app.views.login.init();
                         }
