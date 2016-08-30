@@ -399,9 +399,12 @@ var appCore = {
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     if(textStatus==="timeout"){
-                        navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
-            }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
-                    }else navigator.notification.alert(textStatus, 'Close');
+                        navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), 
+                            function () {}, 
+                            app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+                    }else{
+                        /*navigator.notification.alert(textStatus, 'Close');*/
+                    } 
                     var err = {
                         a: jqXHR,
                         msg: textStatus,
