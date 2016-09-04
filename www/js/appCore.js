@@ -265,6 +265,80 @@ var appCore = {
         
     },
     push: {
+        init: function() {
+          console.log("app.push.init");
+            var push = PushNotification.init({
+                android: {
+                    senderID: app.senderID
+                },
+                ios: {
+                    alert: "true",
+                    badge: true,
+                    sound: 'false'
+                },
+                windows: {}
+            });
+            push.on('registration', function(data) {
+                console.log("app.push.init.registration");
+                console.log("data.registrationId:"+data.registrationId);
+                if (device && device.platform === 'Android'){
+                    kind = '2';
+                } else if (device && device.platform === 'iOS'){
+                    kind = '1';
+                }
+                app.webservice.post(
+                    'device',
+                    'PUT',
+                    {
+                        device:{
+                            id: window.localStorage.getItem("token"),
+                            push_token  : data.registrationId,
+                            kind        : kind
+                        }
+                    },
+                    function(r){
+                        console.log('RESULT DE REGISTRO');
+                        console.log(JSON.stringify(r));
+                        //window.localStorage.setItem("token", r.id);
+                        //app.push.callback();
+                    }, function(e){
+                        console.log('RESULT ERROR DE REGISTRO');
+                        console.log(JSON.stringify(e));
+                        app.push.callback();
+                    }
+                );
+            });
+
+            push.on('notification', function(data) {
+                console.log("app.push.init.notification");
+                console.log('data.message: '+data.message);
+                console.log('data.title: '+data.title);
+                
+                navigator.notification.alert(
+                    data.message,
+                    function () {}, 
+                    ''
+                );
+                
+                //console.log('data.count: '+data.count);
+                //console.log('data.sound: '+data.sound);
+                //console.log('data.image: '+data.image);
+                //console.log('data.additionalData: '+data.additionalData);
+                //navigator.notification.vibrate(1500);
+                
+                // data.message,
+                // data.title,
+                // data.count,
+                // data.sound,
+                // data.image,
+                // data.additionalData
+            });
+
+            push.on('error', function(e) {
+                console.log("app.push.init.error");
+                // e.message
+            });            
+        },
         callback: function(){},
         register: function() {
             console.log('app.push.register');
@@ -378,6 +452,9 @@ var appCore = {
     webservice: {
         get: function(path, args, successCB, errorCB) {
             console.log('app.webservice.get(): ' + app.url + path, JSON.stringify(args));
+            console.log('app.token: '+app.token);
+            console.log('device.token: '+window.localStorage.getItem("token"));
+            console.log('app.userToken: '+app.userToken);
 
             if(!app.checkConnection()){
                 return;
@@ -411,7 +488,9 @@ var appCore = {
                         message: 'Webservice Error: '+errorThrown
                     };
                     errorCB(err);
-                    console.log(jqXHR.responseText);
+                    console.log("jqXHR.responseText: "+jqXHR.responseText);
+                    console.log("textStatus: "+textStatus);
+                    console.log("errorThrown: "+errorThrown);
                 }
             });
         },

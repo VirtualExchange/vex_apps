@@ -41,6 +41,7 @@ var app = {
         
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
+        /*
         setTimeout(function () {
 
             if (!app.deviceReady) {
@@ -69,6 +70,7 @@ var app = {
                 });
             }
         }, 1000);
+        */
         
         window.addEventListener('native.keyboardshow', app.showKeyboard);
         window.addEventListener('native.keyboardhide', app.hideKeyboard);
@@ -150,14 +152,14 @@ var app = {
                     } else {
                         app.views.home.init();
                     }
-                    app.push.register();
+                    //app.push.register();
                     //app.geolocation.start();
                     //app.views.chat.checkUnreadMessage();
                 });
             }, function (e) {
                 console.log('RESULT ERROR DE REGISTRO');
                 console.log(JSON.stringify(e));
-                app.push.callback();
+                //app.push.callback();
             });
 
         } else {
@@ -202,10 +204,11 @@ var app = {
                 );
 
                 //app.geolocation.start();
-                app.views.chat.checkUnreadMessage();
+                //app.views.chat.checkUnreadMessage();
                 
             });
         }
+        app.push.init();
 
 
     },
