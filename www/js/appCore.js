@@ -299,6 +299,8 @@ var appCore = {
                     function(r){
                         console.log('RESULT DE REGISTRO');
                         console.log(JSON.stringify(r));
+                        app.device.email = r.email;
+                        app.device.name = r.name;
                         //window.localStorage.setItem("token", r.id);
                         //app.push.callback();
                     }, function(e){
@@ -452,9 +454,6 @@ var appCore = {
     webservice: {
         get: function(path, args, successCB, errorCB) {
             console.log('app.webservice.get(): ' + app.url + path, JSON.stringify(args));
-            console.log('app.token: '+app.token);
-            console.log('device.token: '+window.localStorage.getItem("token"));
-            console.log('app.userToken: '+app.userToken);
 
             if(!app.checkConnection()){
                 return;

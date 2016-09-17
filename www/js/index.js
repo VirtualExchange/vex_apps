@@ -3176,6 +3176,11 @@ var app = {
             },
             openChat: function(store){
                 console.log('app.views.chat.openChat');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').removeClass('hide');
                 
                 app.draw(
                     '#content',
@@ -3231,8 +3236,9 @@ var app = {
             addMessage: function(item){
                 console.log('app.views.chat.addMessage');
                 var name = '';
-                if (item.kind == 1){ 
-                    name = "Me";
+                if (item.kind == 1){
+                    if (app.device.name) name = app.device.name;
+                    else name = $('#chatUserName').val();
                 }else {
                     name=app.views.home.oStoreDetail.name;
                 }
@@ -3331,7 +3337,7 @@ var app = {
                 
                 if(!app.views.chat.start){
                     
-                    if($('#chatUserName').val()==''){
+                    if($('#chatUserName').val()=='' && !app.device.name){
                         $('.alert-danger').html(app.lang.getStr('%The field <b>Name</b> is mandatory%','chatView'));
                         $('.alert-danger').removeClass('hide');
                         $('#chatUserName').focus();
@@ -3343,7 +3349,7 @@ var app = {
                         return;
                     }
                     
-                    if($('#chatUserEmail').val()==''){
+                    if($('#chatUserEmail').val()==''&& !app.device.email){
                         $('.alert-danger').html(app.lang.getStr('%The field <b>Email</b> is mandatory%','chatView'));
                         $('.alert-danger').removeClass('hide');
                         $('#chatUserMessage').focus();
@@ -3396,7 +3402,8 @@ var app = {
                                 },
                                 function (result) {
                                     console.log(JSON.stringify(result));
-                                    app.device.email = $('#chatUserEmail').val();
+                                    app.device.name = result.name;
+                                    app.device.email = result.email;
                                     
                                 },
                                 function (err) {
