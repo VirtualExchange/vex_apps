@@ -315,12 +315,13 @@ var appCore = {
                 console.log("app.push.init.notification");
                 console.log('data.message: '+data.message);
                 console.log('data.title: '+data.title);
-                
-                navigator.notification.alert(
-                    data.message,
-                    function () {}, 
-                    ''
-                );
+                if (data.message.indexOf("You have new message") != 0){
+                    navigator.notification.alert(
+                        data.message,
+                        function () {}, 
+                        ''
+                    );
+                }
                 
                 //console.log('data.count: '+data.count);
                 //console.log('data.sound: '+data.sound);
