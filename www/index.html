@@ -417,22 +417,17 @@
             </div>
         </script>
         <script id="chatView" type="text/html">
-            <div class="panel panel-default hide"  id="divBtBack">
-                <div class="panel-body">
-                    <a href="#" id="btBack" class="btn-link" data-callback="app.views.goBack">
-                        <div class="row">
-                            <span class="icon icon-left" ></span> %BACK%
-                            <!--<span id="backStack">Test</span>-->
-                        </div>
-                    </a>
-                </div>
-            </div>
             <div class="chatContent">
-                <div class="row" id="chatStoreInfo">
-                    <div class="col-xs-12 col-sm-12">
-                        <h5>{{storeName}}<h5>
+                <div class="panel panel-default" id="storeTitle" class="hide">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12">
+                                <span id="storeTitleName" store_id={{store_id}}>{{storeName}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div id="chatList"></div>
             </div>
             <div id="navChatFooter" >
@@ -564,55 +559,41 @@
             </div>
         </script>
         <script id="chatListView" type="text/html">
-            <div class="row" style="margin-top: 10px;">
-                <div class="panel">
-                    <div class="panel-heading"></div>
-                    <div class="panel-body">
-                        <ul class="media-list" id="chatStoreList"></ul>
+            <div class="panel panel-default" id="storeTitle" class="hide">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span id="storeTitleName">%Chats%</span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div id="chatStoreList"></div>
         </script>
         <script id="chatStoreItem" type="text/html">
-            <li class="media">
-                <div class="media-body">
-                    <div class="media">
-                        <a href="#" class="btn" data-callback="app.views.chat.loadStoreChat" store_index="{{index}}">
-                            <div class="pull-left">
-                                <img class="media-object img-rounded" style="width: 60px;" src="{{img}}">
-                            </div>
-                            <div class="media-body">
-                                <h4>
-                                    {{storeName}}
-                                    <span class="badge">{{messages_count}}</span>
-                                </h4>
-                            </div>
-                        </a>
-                        <hr/>
+            <a class="list-group-item" store_index="{{index}}" href="#" data-callback="app.views.chat.loadStoreChat"  >
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{index}}">
+                        <img src="{{img}}" class="img-responsive img-rounded" />
                     </div>
-                </div>
-            </li>
+                    <div id="storeDetail_{{index}}" class="col-xs-8 col-sm-8" >
+                        <h4>{{storeName}}<span id="storeBadge_{{id}}" class="badge vex-badge pull-right">{{messages_count}}</span></h4>
+                    </div>
+                </div> 
+            </a>
         </script>
         <script type="text/html" id="chatItem">
-            <div>
-                <div id="chatName" class="col-xs-4 col-sm-4">
+            <div id="chatHeader">
+                <div id="chatName" class="col-xs-6 col-sm-6">
                 {{kind}}
                 </div>
-                <div id="chatDate" class="text-muted col-xs-8 col-sm-8">
+                <div id="chatDate" class="text-muted col-xs-6 col-sm-6">
                 {{msgDate}}
                 </div>
             </div>
             <div id="chatMessage" class="col-xs-12 col-sm-12">
             {{message}}
             </div>
-            <!--
-            <div class="text-left" id="msg_{{id}}">
-                <p id="chatMessage">{{message}}</p>
-                <hr id="chatMessage">
-                <small id="chatMessage" class="text-muted pull-right">{{msgDate}}</small>
-                <br/>
-            </div>
-            -->
         </script>
         <script type="text/html" id="resultView">
             <div class="panel panel-default hide" id="divBtBack">
@@ -682,6 +663,11 @@
                 <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
             </li>
         </script>        
+        <script type="text/html" id="menuItemChats">
+            <li>
+                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target=".navbar-collapse">{{name}}<span id="msgcount3" class="vex-badge badge pull-right"></a>
+            </li>
+        </script>        
         <script type="text/html" id="menuItemLogout">
             <li>
                 <a href="#" data-callback="app.views.home.logout" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
@@ -695,6 +681,11 @@
         <script type="text/html" id="menuItemFavorite2">
             <li class="list-group-item">
                 <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemChats2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target="#landingPageMenu">{{name}}<span id="msgcount4" class="hide vex-badge badge pull-right"></a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout2">
@@ -734,7 +725,7 @@
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span><span id="msgcount1" class="badge badge-notify"></span>
                     </button>
                     <div id='navbar-backbutton'>
                         <a class="btn-link" id="backLink" data-callback="app.views.goBack" >
@@ -770,7 +761,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#landingPageMenu">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span><span id="msgcount2" class="badge badge-notify"></span>
                 </button>            
             </div>            
             <div class="collapse" id="landingPageMenu">

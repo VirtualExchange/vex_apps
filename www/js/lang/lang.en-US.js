@@ -100,6 +100,7 @@ var lang_enUS = {
             '%Home%'             : 'Home',
             '%error_login%'      : 'Invalid email or password.',
             '%Favorites%'      : 'Favorites',
+            '%Chats%'            : 'Chats',
             '%Exit%': 'Exit',
             '%Logout%': 'Logout'
         },
@@ -127,6 +128,9 @@ var lang_enUS = {
         },
         'favoriteView':{
             '%Favorites%' : 'Favorites'
+        },
+        'chatListView':{
+            '%Chats%' : 'Chats'
         }
     }
 };

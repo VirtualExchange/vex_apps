@@ -95,6 +95,7 @@ var lang_ptBR = {
             '%Home%'             : 'Home',
             '%error_login%'      : 'Email/senha invalido.',
             '%Favorites%'      : 'Favorites',
+            '%Chats%'            : 'Chats',
             '%Exit%': 'Exit',
             '%Logout%': 'Logout'
         },
@@ -118,6 +119,9 @@ var lang_ptBR = {
         },
         'favoriteView':{
             '%Favorites%' : 'Favorites'
+        },
+        'chatListView':{
+            '%Chats%' : 'Chats'
         }
     }
 };

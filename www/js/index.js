@@ -84,7 +84,11 @@ var app = {
         console.log('app.initialize(): app initialization with device ready.');
 
         app.deviceReady = true;
-
+        document.addEventListener("resume", function() {
+            console.log("resume");
+            app.views.chat.checkUnreadMessage();
+        }, false);    
+        
         document.addEventListener("offline", function () {
             if(!app.offLine){
 
@@ -159,7 +163,6 @@ var app = {
             }, function (e) {
                 console.log('RESULT ERROR DE REGISTRO');
                 console.log(JSON.stringify(e));
-                //app.push.callback();
             });
 
         } else {
@@ -248,6 +251,7 @@ var app = {
         goHome: function(e){
             $('#landingPageMenu').removeClass('hide');
             $('#loginSpinner').addClass('hide');
+            app.views.chat.checkUnreadMessage();
             //app.views.products.showProductList(e);
             app.views.home.showStoreList();
             //app.views.home.showStoreListPre();
@@ -284,6 +288,9 @@ var app = {
                 app.views.products.showProductListMore2(backTo[1],backTo[2]);
             } else if (backTo[0] == "Favorites"){
                 app.views.home.getFavorites();
+            } else if (backTo[0] == "Chats"){
+                app.views.backStack.pop();
+                app.views.chat.list();
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -1299,10 +1306,10 @@ var app = {
                 app.views.backStack.pop();
 
                 app.views.backStack.push("Favorites");
-                    $('.carousel').addClass('hide');
-                    $('#menubutton').addClass('hide');
-                    $('#landingPageMenu').addClass('hide');
-                    $('.navbar').removeClass('hide');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
                 
                 app.draw(
                     '#content',
@@ -1459,6 +1466,19 @@ var app = {
                     app.bindEvents();
                 }
             );
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemChats2',
+                'menuItemChats2',
+                {
+                    name: app.lang.getStr('%Chats%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
             if (app.loginRequired){
                 app.draw(
                     '#vex-navbar2',
@@ -1535,6 +1555,19 @@ var app = {
                         }
                     );
 
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemChats',
+                        'menuItemChats',
+                        {
+                            name: app.lang.getStr('%Chats%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
                     app.views.goHome();
                 },
                 function (err) {
@@ -3198,33 +3231,28 @@ var app = {
                             'stores/'+store.id+'/messages',
                             {},
                             function (result) {
-                                console.log(JSON.stringify(result));
-                                console.log('DEVICE EMAIL>>>' + app.device.email)
+                                //console.log(JSON.stringify(result));
                                 app.views.backStack.push("ChatView");
                                 if(!app.device.email){
                                     $('#newChatForm').removeClass('hide');
                                     app.views.chat.start = false;
                                 }
 
-                                console.log("window:"+$(window).height());
-                                console.log("menuNavBar:"+$('#menuNavBar').outerHeight(true));
-                                console.log("divBtBack:"+$('#divBtBack').outerHeight(true));
-                                console.log("navChatFooter:"+$('#navChatFooter').outerHeight(true));
-                                $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                                $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                                $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                                $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                                 $.each(result.messages, function (index, item) {
-                                    app.views.chat.addMessage(item);
+                                    app.views.chat.addMessage(item,stripLeadingTag(store.name));
                                 });
-                                
-                                $("#chatList").scrollTop($('#chatList').prop("scrollHeight")); 
-                                
-                                app.views.chat.checkMensage(store.id);
-                                
+                                setTimeout(function(){ 
+                                    $("#chatList").animate({ scrollTop: $('#chatList').prop("scrollHeight")}, 1000);
+                                }, 
+                                500);
+
+                                app.views.chat.checkUnreadMessage();                    
                             },
                             function (err) {
                                 console.log(err);
-                                //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                             }
                         );
                         
@@ -3233,24 +3261,24 @@ var app = {
                     }
                 ); 
             },
-            addMessage: function(item){
+            addMessage: function(item,storeName){
                 console.log('app.views.chat.addMessage');
                 var name = '';
                 if (item.kind == 1){
                     if (app.device.name) name = app.device.name;
                     else name = $('#chatUserName').val();
                 }else {
-                    name=app.views.home.oStoreDetail.name;
+                    if (storeName) name=storeName;
+                    else name=app.views.home.oStoreDetail.name;
                 }
                 var dt = new Date(item.created_at);
                 navigator.globalization.dateToString(
                     dt,
                     function (date) {
-                        console.log('date:' + date.value);
                         app.draw(
                             '#chatList',
                             '#chatItem',
-                            'chatView',
+                            'chatItem',
                             {
                                 id      : item.id,
                                 message : item.message,
@@ -3270,11 +3298,16 @@ var app = {
             },
             list: function(e){
                 console.log('app.views.chat.list()');
-                
+                app.views.backStack.push("Chats");
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+
                 app.draw(
                     '#content',
                     '#chatListView',
-                    'chatView',
+                    'chatListView',
                     {},
                     '',
                     function () {
@@ -3316,18 +3349,27 @@ var app = {
                 
             },
             addStore : function(storeChat,index){
+                console.log('app.views.chat.addStore');
                 app.draw(
                     '#chatStoreList',
                     '#chatStoreItem',
                     'chatView',
                     {
                         index          : index,
+                        id             : storeChat.id,
                         img            : storeChat.logo,
                         storeName      : storeChat.name,
                         messages_count : storeChat.messages_count
                     },
                     'append',
                     function () {
+                        if (storeChat.messages_count == 0){
+                            $("#storeBadge_"+storeChat.id).removeClass('vex-badge');
+                            $("#storeBadge_"+storeChat.id).addClass('gray-badge');
+                        } else {
+                            $("#storeBadge_"+storeChat.id).addClass('vex-badge');
+                            $("#storeBadge_"+storeChat.id).removeClass('gray-badge');
+                        }
                         app.bindEvents();
                     }
                 );
@@ -3343,8 +3385,8 @@ var app = {
                         $('#chatUserName').focus();
                         
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                         return;
                     }
@@ -3354,8 +3396,8 @@ var app = {
                         $('.alert-danger').removeClass('hide');
                         $('#chatUserMessage').focus();
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                         return;
                     }
@@ -3385,8 +3427,8 @@ var app = {
                         $('.alert-danger').addClass('hide');
                         
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
                         
                         $('#chatUserMessage').val('');
                         
@@ -3417,75 +3459,76 @@ var app = {
                     }
                 );
             },
-            checkMensage: function(store_id){
-                console.log('app.views.chat.checkMEnsage()');
+            checkMensage: function(store_id, store_name){
+                console.log('app.views.chat.checkMensage()');
                 
-                app.views.chat.chekTime = setInterval(function(){
-                    
-                    if($('#chatUserMessage').length){
-                        app.webservice.get(
-                            'stores/'+store_id+'/messages/unread',
-                            {},
-                            function (result) {
-                                console.log(result);
-                                $.each(result.messages, function (index, item) {
-                                    app.views.chat.addMessage(item);
-                                });
+                app.webservice.get(
+                    'stores/'+store_id+'/messages/unread',
+                    {},
+                    function (result) {
+                        $.each(result.messages, function (index, item) {
+                            app.views.chat.addMessage(item,store_name);
+                        });
                                 
-                                if(result.messages.length>0){
-                                    $("#chatList").animate({scrollTop: $('#chatList').prop("scrollHeight")}, 500); 
-                                }
-                            },
-                            function (err) {
-                                console.log(err);
-                            }
-                        );
-                    }else{
-                        clearInterval(app.views.chat.chekTime);
+                        if(result.messages.length>0){
+                            setTimeout(function(){ 
+                                $("#chatList").animate({ scrollTop: $('#chatList').prop("scrollHeight")}, 1000);
+                            }, 
+                            500);
+                        }
+                    },
+                    function (err) {
+                        console.log(err);
                     }
-                    
-                },10000);
+                );
             },
             checkUnreadMessage: function(){
                 console.log('app.views.chat.checkUnreadMessage()');
                 
-                app.chatToken = setInterval(function(){
-                    
-                    app.webservice.get(
-                        'messages',
-                        {},
-                        function (result) {
-                            console.log(result);
-                            var count = 0;
-                            $.each(result.stores, function (index, item) {
+                app.webservice.get(
+                    'messages',
+                    {},
+                    function (result) {
+                        console.log(JSON.stringify(result));
+                        var count = 0;
+                        $.each(result.stores, function (index, item) {
+                            if (parseInt(item.id) == parseInt($(storeTitleName).attr('store_id'))){
+                                app.views.chat.checkMensage(item.id,item.name);
+                            } else {
                                 count += item.messages_count;
-                            });
-                            
-                            if(count>0){
-                                $('#msgCount').removeClass('hide');
-                                $('#msgCount').html(count);
-                                
-                                if($('#chatStoreList').length){
-                                    $('#chatStoreList').html('');
-                                    $.each(result.stores, function (index, item) {
-                                        app.views.chat.addStore(item,index);
-                                    });
-                                }
-                            }else{
-                                $('#msgCount').addClass('hide');
                             }
-                        },
-                        function (err) {
-                            console.log(err);
+                            var badge_store_id = "#storeBadge_" + item.id;
+                            if ($(badge_store_id) && item.messages_count > 0){
+                                $(badge_store_id).html(item.messages_count);
+                                $(badge_store_id).addClass('vex-badge');
+                                $(badge_store_id).removeClass('gray-badge');
+                            } else {
+                                $(badge_store_id).html(item.messages_count);
+                                $(badge_store_id).removeClass('vex-badge');
+                                $(badge_store_id).addClass('gray-badge');
+                            }
+                        });
+                        if(count>0){
+                            $("#msgcount1").html(count);
+                            $('#msgcount1').removeClass('hide');
+                            $("#msgcount2").html(count);
+                            $('#msgcount2').removeClass('hide');
+                            $("#msgcount3").html(count);
+                            $('#msgcount3').removeClass('hide');
+                            $("#msgcount4").html(count);
+                            $('#msgcount4').removeClass('hide');
+                        }else{
+                            $('#msgcount1').addClass('hide');
+                            $('#msgcount2').addClass('hide');
+                            $('#msgcount3').addClass('hide');
+                            $('#msgcount4').addClass('hide');
                         }
-                    );
-                },1500000);
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
             }
-        },
-        stopCheckUnreadMessage: function(){
-            console.log('app.views.chat.stopCheckUnreadMessage()');
-            
-            clearInterval(app.chatToken);
         }
     },
     showToken: function () {

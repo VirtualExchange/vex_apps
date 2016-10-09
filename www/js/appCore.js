@@ -302,11 +302,9 @@ var appCore = {
                         app.device.email = r.email;
                         app.device.name = r.name;
                         //window.localStorage.setItem("token", r.id);
-                        //app.push.callback();
                     }, function(e){
                         console.log('RESULT ERROR DE REGISTRO');
                         console.log(JSON.stringify(e));
-                        app.push.callback();
                     }
                 );
             });
@@ -315,7 +313,9 @@ var appCore = {
                 console.log("app.push.init.notification");
                 console.log('data.message: '+data.message);
                 console.log('data.title: '+data.title);
-                if (data.message.indexOf("You have new message") != 0){
+                if (data.message.indexOf("You have new message") == 0){
+                    setTimeout(app.views.chat.checkUnreadMessage,1000);
+                } else {
                     navigator.notification.alert(
                         data.message,
                         function () {}, 
@@ -650,8 +650,8 @@ var appCore = {
     },
     hideKeyboard : function(e){
         
-        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
         $("#chatList").scrollTop($('#chatList').prop("scrollHeight")); 
         
     }

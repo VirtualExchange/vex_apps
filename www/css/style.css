@@ -130,10 +130,9 @@ div[id^="readMore"]{
 }
 /* Chat View */
 #chatList{
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 0 5px;
+    overflow-y: scroll;
 }
+
 #chatMessage{
     margin-bottom: 10px;
 }
@@ -185,4 +184,16 @@ div[id^="readMore"]{
 
 .favoriteButton:focus{
     outline: none;
+}
+.badge-notify{
+   background:red;
+   position:absolute;
+   top: -5px;
+   right: -5px;
+}
+.vex-badge{
+   background:red;
+}
+.gray-badge{
+   background:grey;
 }
