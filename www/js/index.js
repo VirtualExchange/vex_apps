@@ -3492,7 +3492,7 @@ var app = {
                         console.log(JSON.stringify(result));
                         var count = 0;
                         $.each(result.stores, function (index, item) {
-                            if (parseInt(item.id) == parseInt($(storeTitleName).attr('store_id'))){
+                            if (parseInt(item.id) == parseInt($('#storeTitleName').attr('store_id'))){
                                 app.views.chat.checkMensage(item.id,item.name);
                             } else {
                                 count += item.messages_count;
