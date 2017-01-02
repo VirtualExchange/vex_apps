@@ -198,3 +198,4 @@ div[id^="readMore"]{
 .gray-badge{
    background:grey;
 }
+#mapid { height: 380px; }

@@ -36,6 +36,7 @@
 		<icon src="www/res/android/icon-72.png" density="hdpi" />
 		<icon src="www/res/android/96x96.png" density="xhdpi" />
 		<icon src="www/res/android/icon@2x.png" density="xxhdpi" />
+		<icon src="www/res/android/icon@2x.png" density="xxxhdpi" />
 	</platform>
 
     <platform name="android">

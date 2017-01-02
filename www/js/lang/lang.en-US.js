@@ -2,7 +2,7 @@ var lang_enUS = {
     'en-US': {
         'homeView':{
             '%Search%' : 'Search',
-            '%V-Map%'  : 'V-Map',
+            '%V-Map%'  : 'Map',
             '%Stores%' : 'More',
             '%Filter%' : 'Filter',
             '%Departments%' : 'Departments'
@@ -88,7 +88,7 @@ var lang_enUS = {
             '%Try again%'        : 'Try again',
             '%Search%'           : 'Search',
             '%Stores%'           : 'More',
-            '%V-Map%'            : 'V-Map',
+            '%V-Map%'            : 'Map',
             '%Pinned%'           : 'Pinned',
             '%Notification%'     : 'Notification',
             '%Was not possible to pinpoint your location, please call your GPS.%' : 'Was not possible to pinpoint your location, please call your GPS.',

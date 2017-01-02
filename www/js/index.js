@@ -82,7 +82,7 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         console.log('app.initialize(): app initialization with device ready.');
-
+        window.open = cordova.InAppBrowser.open;
         app.deviceReady = true;
         document.addEventListener("resume", function() {
             console.log("resume");
@@ -228,6 +228,7 @@ var app = {
         backStack: [],
         homeInitCalled: 0,
         scrollPending: 0,
+        browserRef: null,
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -614,6 +615,7 @@ var app = {
                         if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                         if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                         if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
+
                         app.draw(
                             '#content',
                             '#ProductView',
@@ -625,7 +627,7 @@ var app = {
                                 uf: store.state,
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
-                                about: convertLinks(aboutStripped),
+                                about: convertLinks2(aboutStripped),
                                 dadStore: dadStore,
                                 favorite: store.favorite
                             },
@@ -1422,13 +1424,28 @@ var app = {
                 );
             },
             openSite: function (e) {
+                console.log("opensite");
                 var ref;
                 var url = $(e).attr('data-site');
-                if (url.indexOf('http') == 0)
-                    ref = window.open($(e).attr('data-site'), '_system', 'location=yes'); 
-                else
-                    ref = window.open('http://' + $(e).attr('data-site'), '_system', 'location=yes');   
-            }            
+                if (url.indexOf('http') == 0) {
+                    console.log("open 1");
+                    ref = cordova.InAppBrowser.open($(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
+                }else{
+                    console.log("open 2");
+                    ref = cordova.InAppBrowser.open('http://' + $(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes');  
+                }
+
+                ref.addEventListener('loadstop', function(event) {
+                    console.log("loadstop");
+                    console.log("event.url:"+event.url);
+                    if (event.url.match("mobile/close")) {
+                        ref.close();
+                    }
+                });
+                //ref.addEventListener('loadstop', loadstopcb);
+                ref.addEventListener('loadstart', loadstartcb);
+                ref.addEventListener('loaderror', loaderrorcb);
+            }
         },
         generateMenu2: function () {
             console.log('app.views.generateMenu2()');
@@ -1472,6 +1489,19 @@ var app = {
                 'menuItemChats2',
                 {
                     name: app.lang.getStr('%Chats%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemMap2',
+                'menuItemMap2',
+                {
+                    name: app.lang.getStr('%V-Map%', 'aplication'),
                     id: 0
                 },
                 'append',
@@ -1561,6 +1591,19 @@ var app = {
                         'menuItemChats',
                         {
                             name: app.lang.getStr('%Chats%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemMap',
+                        'menuItemMap',
+                        {
+                            name: app.lang.getStr('%V-Map%', 'aplication'),
                             id: 0
                         },
                         'append',
@@ -2470,6 +2513,48 @@ var app = {
                 
             }
         },
+        leaflet: {
+            init: function(e) {
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').addClass('hide');
+                app.draw(
+                    '#content',
+                    '#leafletView',
+                    'leafletView',
+                    {},
+                    '',
+                    function () {
+                        var mymap = L.map('mapid').setView([34.0522, -118.2437], 4);
+                        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
+                            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                            maxZoom: 18,
+                            id: 'mapbox.streets',
+                            accessToken: 'pk.eyJ1IjoibmFuY3lwaWVkcmEiLCJhIjoiY2l4ZXA1ejR6MDBnajJ0bnA1M3lzYWtobCJ9.CNGXj48Gw_Gs5moeZqbjyQ'
+                        }).addTo(mymap);
+                        app.webservice.get(
+                            'maps',
+                            {},
+                            function (result) {
+                                console.log(JSON.stringify(result));
+                                $.each(result.stores, function (i, store) {
+                                    console.log("latitude: "+store.latitude);
+                                    console.log("longitude: "+store.longitude);
+                                    if (store.latitude != null && store.longitude != null)
+                                        var marker = L.marker([store.latitude,store.longitude]).addTo(mymap);
+                                });
+                            }
+                        );
+                    },
+                    function (err) {
+                        console.log(JSON.stringify(err));
+                    }
+                );
+
+            }
+        },
         vMap: {
             map: '',
             infoWindow: null,
@@ -2485,6 +2570,12 @@ var app = {
             gpsError: null,
             init: function (e) {
                 console.log('app.views.vMapView.init()');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').removeClass('hide');
+
                 $('#splashView').addClass('hide');
                 $('.navbar-fixed-bottom').addClass('hide');
 
@@ -3548,6 +3639,15 @@ $(document).ready(function () {
     console.log('Run app');
     app.initialize();
 });
+function loadstartcb(event){
+    console.log("loadstart");
+}
+function loadstopcb(event){
+    console.log("loadstop");
+}
+function loaderrorcb(event){
+    console.log("loaderror");
+}
 function stripLeadingTag(inputText){
     var strArray;
     strArray = inputText.split("**");
@@ -3631,12 +3731,24 @@ function getCategoryId(cats,cat_name){
     });
     return c_id;
 }
-function convertLinks(text) {
+function convertLinks2(text) {
+    var div = document.createElement('div');
+    div.innerHTML = text;
+    var a = div.getElementsByTagName("a");
     
+    for (i=0; i<a.length; i++){
+        console.log("href: "+a[i].href);
+        a[i].setAttribute("data-site",a[i].href);
+        a[i].setAttribute("data-callback","app.views.home.openSite");
+        a[i].href = "#"
+    }
+    console.log("innerHTML:"+div.innerHTML);
+    return div.innerHTML;
+}
+function convertLinks(text) {
     var div = document.createElement('div');
     div.innerHTML = text;
     var pureText = div.innerText;
-    
     links = linkify.find(pureText);
     for (j=0; j<links.length; j++){
         if (links[j].type.indexOf('url') > -1){
