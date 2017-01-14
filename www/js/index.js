@@ -150,6 +150,17 @@ var app = {
                 console.log('RESULT DE REGISTRO');
                 console.log(JSON.stringify(r));
                 window.localStorage.setItem("token", r.token);
+                mixpanel.identify(r.id);
+                mixpanel.people.set({
+                    "device_type": device.platform
+                });
+                mixpanel.people.set({
+                    "device_type": device.platform
+                });
+                mixpanel.register({
+                    "app_id": "57",
+                    "app_system" : "staging"
+                });                
                 app.lang.config(function () {
                     if (app.loginRequired == true) {
                         app.views.login.init();
@@ -176,6 +187,11 @@ var app = {
                         console.log('RESULT DE REGISTRO');
                         //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token);
                         app.device = r;
+                        mixpanel.identify(r.id);
+                        mixpanel.register({
+                            "app_id": "57",
+                            "app_system" : "staging"
+                        });                
 
                         console.log(JSON.stringify(r));
                         app.userToken = window.localStorage.getItem("user_token");
@@ -461,6 +477,7 @@ var app = {
             },
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
+                mixpanel.track("Home");
                 app.views.setDefaults();
                 var homeDeptId = -1;
                 if (!e){
@@ -549,7 +566,6 @@ var app = {
             },
             storeDetail: function (e) {
                 console.log('app.views.home.storeDetail()');
-                
                 var store_id;
 
                 if ($(e).attr('store_id')) {
@@ -566,6 +582,7 @@ var app = {
                     store_id = app.views.stores[0].id;
                     
                 }
+                mixpanel.track("Store",{"store_id":store_id });
                 //app.views.backStack.push("StoreDetail:"+store_id); //Moving to before call
 
                 var btBack = $(e).attr('store_id') ? true : false;
