@@ -2604,7 +2604,9 @@ var app = {
                                             var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
                                         else if (hasCode(store.about,"hospitalIcon"))
                                             var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
-                                        
+                                        else
+                                            var marker = L.marker([store.latitude,store.longitude]).addTo(mymap);
+
                                         var domelem = document.createElement('a');
                                         domelem.href = store.id;
                                         domelem.innerHTML = store.name;
