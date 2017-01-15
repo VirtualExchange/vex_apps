@@ -308,6 +308,9 @@ var app = {
             } else if (backTo[0] == "Chats"){
                 app.views.backStack.pop();
                 app.views.chat.list();
+            } else if (backTo[0] == "MapView"){
+                app.views.backStack.pop();
+                app.views.leaflet.showMap(backTo[1],backTo[2]);
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -627,8 +630,7 @@ var app = {
                         aa = store.about.indexOf('**AA**'); //Members / Featured Members
                         bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
                         cc = store.about.indexOf('**CC**'); //Products / Vendors
-                        aboutStripped = store.about.replace('**hideAddress**','');
-                        
+                        aboutStripped = stripAbout(store.about);
                         if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                         if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                         if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
@@ -696,6 +698,15 @@ var app = {
                                 }
                                 if (store.logo.indexOf('medium.png') > -1){
                                     $('#storeImageProductView').addClass('hide');
+                                }
+                                if (hasCode(store.about,"showMapButton")){
+                                    $('#mapButton').removeClass('hide');
+                                }
+                                if (hasCode(store.about,"hideChatButton")){
+                                    $('#chatButton').addClass('hide');
+                                }
+                                if (hasCode(store.about,"hideContactButton")){
+                                    $('#contactButton').addClass('hide');
                                 }
                                 
                                 if(store.stores_count>0){
@@ -1153,7 +1164,7 @@ var app = {
                     aa = store.about.indexOf('**AA**');
                     bb = store.about.indexOf('**BB**');
                     cc = store.about.indexOf('**CC**');
-                    aboutStripped = store.about.replace('**hideAddress**','');
+                    aboutStripped = stripAbout(store.about);
 
                     if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                     if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
@@ -1232,7 +1243,7 @@ var app = {
                 var i = arrayIndex*currentPage;
                 $.each(storeArray, function (index, store) {
                     if (store.about){
-                        aboutStripped = store.about.replace('**hideAddress**','');
+                        aboutStripped = stripAbout(store.about);
                     } else {
                         aboutStripped = "";
                     }
@@ -2531,12 +2542,22 @@ var app = {
             }
         },
         leaflet: {
-            init: function(e) {
+            showMap: function(latitude, longitude) {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
                 $('.navbar').removeClass('hide');
                 $('#backLink').addClass('hide');
+                app.views.backStack.push("MapView:"+latitude+":"+longitude);
+                
+                if (app.views.backStack.length > 1){
+                    var ind = app.views.backStack.length-2;
+                    $('#backStack').html(app.views.backStack[ind]);
+                    $('#backLink').removeClass('hide');
+                }else{
+                    $('#backLink').addClass('hide');
+                }
+                
                 app.draw(
                     '#content',
                     '#leafletView',
@@ -2544,24 +2565,57 @@ var app = {
                     {},
                     '',
                     function () {
-                        var mymap = L.map('mapid').setView([34.0522, -118.2437], 8);
+                        //var mymap = L.map('mapid').setView([app.device.latitude, app.device.longitude], 8);
+                        var mymap = L.map('mapid').setView([latitude,longitude], 13); // Wyoming
                         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
                             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                             maxZoom: 18,
                             id: 'mapbox.streets',
                             accessToken: 'pk.eyJ1IjoibmFuY3lwaWVkcmEiLCJhIjoiY2l4ZXA1ejR6MDBnajJ0bnA1M3lzYWtobCJ9.CNGXj48Gw_Gs5moeZqbjyQ'
                         }).addTo(mymap);
+                        
+                        var option = {
+                            latitude: latitude, 
+                            longitude: longitude,
+                            radius: 50
+                        };
+                        
                         app.webservice.get(
                             'maps',
-                            {},
+                            option,
                             function (result) {
-                                console.log(JSON.stringify(result));
+                                //console.log(JSON.stringify(result));
+                                
+                                var fuelIcon = L.icon({iconUrl: "img/Fuel.png", iconSize: [25,25]})
+                                var foodIcon = L.icon({iconUrl: "img/Food.png", iconSize: [25,25]})
+                                var hotelIcon = L.icon({iconUrl: "img/Hotel.png", iconSize: [25,25]})
+                                var hospitallIcon = L.icon({iconUrl: "img/Hospital.png", iconSize: [25,25]})
+                                var exitIcon = L.icon({iconUrl: "img/Exit.png"})
+                                
                                 $.each(result.stores, function (i, store) {
-                                    console.log("latitude: "+store.latitude);
-                                    console.log("longitude: "+store.longitude);
-                                    if (store.latitude != null && store.longitude != null){
-                                        var marker = L.marker([store.latitude,store.longitude]).addTo(mymap);
-                                        marker.bindPopup("<p>"+store.name+"</p>"+store.about);
+                                    if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap")){
+                                        if (hasCode(store.about,"fuelIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: fuelIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"foodIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: foodIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"exitIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: exitIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"hotelIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"hospitalIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
+                                        
+                                        var domelem = document.createElement('a');
+                                        domelem.href = store.id;
+                                        domelem.innerHTML = store.name;
+                                        domelem.onclick = function() {
+                                            alert(this.href);
+                                            
+                                            // do whatever else you want to do - open accordion etc
+                                        };
+                                        marker.bindPopup('<a href="#" class="btn btn-product" store_id="' + store.id + '" onclick="app.views.home.storeDetail(this);">' + store.name + '</a>');
+                                        //marker.bindPopup(domelem);
+                                        //marker.bindPopup("<p>"+store.name+"</p>"+store.about);
                                     }
                                 });
                             }
@@ -2572,6 +2626,41 @@ var app = {
                     }
                 );
 
+            },
+            getPosition: function (){
+                console.log('app.views.leaflet.getPosition()');
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        console.log('GPS RESULT');
+                        console.log('latitude: '+position.coords.latitude);
+                        console.log('longitude: '+position.coords.longitude);
+
+                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude);
+                    },
+                    function (error) {
+                        console.log('GPS ERROR');
+                        console.log(JSON.stringify(error));
+                    },
+                    {timeout: 10000, enableHighAccuracy: true}
+                );
+                
+            },
+            getStore: function (e){
+                var store_id = $(e).attr('store_index');
+                app.webservice.get(
+                    'maps?q[store_id_eq]='+store_id,
+                    {},
+                    function (result) {
+                        console.log(JSON.stringify(result));
+                        $.each(result.stores, function (i, store) {
+                            console.log("store: "+store.name);
+                            app.views.leaflet.showMap(store.latitude, store.longitude);
+                        });
+                    },
+                    function (err){
+                        console.log(JSON.stringify(err));    
+                    }
+                );
             }
         },
         vMap: {
@@ -3666,6 +3755,35 @@ function loadstopcb(event){
 }
 function loaderrorcb(event){
     console.log("loaderror");
+}
+function stripAbout(about){
+    // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon**
+    aboutStripped = about;
+    var strArray = about.split("**");
+    if (strArray.length > 0){
+        aboutStripped = strArray[strArray.length-1];
+    }else {
+        aboutStripped = about;
+    }
+    //aboutStripped = aboutStripped.replace('**hideAddress**','');
+    //aboutStripped = aboutStripped.replace('**showMap**','');
+    //aboutStripped = aboutStripped.replace('**hideChat**','');
+    return aboutStripped;
+}
+function hasCode(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        console.log("strCodes: "+strCodes);
+        var codeArray = strCodes.split(",");
+        console.log("codeArray.length: "+codeArray.length);
+        for (i=0; i<codeArray.length; i++){
+            if (code.indexOf(codeArray[i]) === 0)
+                return true;
+        }
+    }
+    return false;
 }
 function stripLeadingTag(inputText){
     var strArray;
