@@ -3767,9 +3767,6 @@ function stripAbout(about){
     }else {
         aboutStripped = about;
     }
-    //aboutStripped = aboutStripped.replace('**hideAddress**','');
-    //aboutStripped = aboutStripped.replace('**showMap**','');
-    //aboutStripped = aboutStripped.replace('**hideChat**','');
     return aboutStripped;
 }
 function hasCode(about,code){
@@ -3777,9 +3774,7 @@ function hasCode(about,code){
     var strCodes;
     if (strArray.length > 1){
         strCodes = strArray[1];
-        console.log("strCodes: "+strCodes);
         var codeArray = strCodes.split(",");
-        console.log("codeArray.length: "+codeArray.length);
         for (i=0; i<codeArray.length; i++){
             if (code.indexOf(codeArray[i]) === 0)
                 return true;
