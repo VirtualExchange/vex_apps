@@ -2,8 +2,8 @@ var lang_enUS = {
     'en-US': {
         'homeView':{
             '%Search%' : 'Search',
-            '%V-Map%'  : 'V-Map',
-            '%Stores%' : 'Stores',
+            '%V-Map%'  : 'Map',
+            '%Stores%' : 'More',
             '%Filter%' : 'Filter',
             '%Departments%' : 'Departments'
         },
@@ -12,7 +12,7 @@ var lang_enUS = {
             '%BACK%'    : 'BACK',
             '%In%'      : 'In',
             '%Chat%'    : 'Chat',
-            '%Stores%'  : 'Stores',
+            '%Stores%'  : 'More',
             '%Products%': 'Products',
 			'%Filter%'  : 'Filter',
 			'%Categories%'  : 'Categories',
@@ -87,8 +87,8 @@ var lang_enUS = {
             '%Connection Error%' : 'Connection Error',
             '%Try again%'        : 'Try again',
             '%Search%'           : 'Search',
-            '%Stores%'           : 'Stores',
-            '%V-Map%'            : 'V-Map',
+            '%Stores%'           : 'More',
+            '%V-Map%'            : 'Map',
             '%Pinned%'           : 'Pinned',
             '%Notification%'     : 'Notification',
             '%Was not possible to pinpoint your location, please call your GPS.%' : 'Was not possible to pinpoint your location, please call your GPS.',
@@ -97,7 +97,12 @@ var lang_enUS = {
             '%No store found%'   : 'No store found',
             '%Products%'         : 'Products',
             '%You are offline! Please connect to internet%' : 'You are offline! Please connect to internet.',
-            '%Home%'             : 'Home'        
+            '%Home%'             : 'Home',
+            '%error_login%'      : 'Invalid email or password.',
+            '%Favorites%'      : 'Favorites',
+            '%Chats%'            : 'Chats',
+            '%Exit%': 'Exit',
+            '%Logout%': 'Logout'
         },
         'chatView':{
             '%SEND%' : 'SEND',
@@ -116,6 +121,16 @@ var lang_enUS = {
 			'%Products%' : 'Products',
 			'%Clear Filter%' : 'Clear Filter',
             '%BACK%' : 'Back'
+        },
+        'loginView':{
+            '%User%'     : 'User name',
+            '%Password%' : 'Password' 
+        },
+        'favoriteView':{
+            '%Favorites%' : 'Favorites'
+        },
+        'chatListView':{
+            '%Chats%' : 'Chats'
         }
     }
 };

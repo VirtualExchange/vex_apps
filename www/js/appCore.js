@@ -16,7 +16,11 @@ var appCore = {
     senderID : "727346400787",
     lastGeoDate : null,
     offLine : false,
+//    logged : false,
+    logged : true,
+    loginRequired: false,
     chatToken : null,
+    userToken : '',
     bindEvents: function() {
 
         $('a[data-callback]').unbind('click');
@@ -261,6 +265,83 @@ var appCore = {
         
     },
     push: {
+        init: function() {
+          console.log("app.push.init");
+            var push = PushNotification.init({
+                android: {
+                    senderID: app.senderID
+                },
+                ios: {
+                    alert: "true",
+                    badge: true,
+                    sound: 'false'
+                },
+                windows: {}
+            });
+            push.on('registration', function(data) {
+                console.log("app.push.init.registration");
+                console.log("data.registrationId:"+data.registrationId);
+                if (device && device.platform === 'Android'){
+                    kind = '2';
+                } else if (device && device.platform === 'iOS'){
+                    kind = '1';
+                }
+                app.webservice.post(
+                    'device',
+                    'PUT',
+                    {
+                        device:{
+                            id: window.localStorage.getItem("token"),
+                            push_token  : data.registrationId,
+                            kind        : kind
+                        }
+                    },
+                    function(r){
+                        console.log('RESULT DE REGISTRO');
+                        console.log(JSON.stringify(r));
+                        app.device.email = r.email;
+                        app.device.name = r.name;
+                        //window.localStorage.setItem("token", r.id);
+                    }, function(e){
+                        console.log('RESULT ERROR DE REGISTRO');
+                        console.log(JSON.stringify(e));
+                    }
+                );
+            });
+
+            push.on('notification', function(data) {
+                console.log("app.push.init.notification");
+                console.log('data.message: '+data.message);
+                console.log('data.title: '+data.title);
+                if (data.message.indexOf("You have new message") == 0){
+                    setTimeout(app.views.chat.checkUnreadMessage,1000);
+                } else {
+                    navigator.notification.alert(
+                        data.message,
+                        function () {}, 
+                        ''
+                    );
+                }
+                
+                //console.log('data.count: '+data.count);
+                //console.log('data.sound: '+data.sound);
+                //console.log('data.image: '+data.image);
+                //console.log('data.additionalData: '+data.additionalData);
+                //navigator.notification.vibrate(1500);
+                
+                // data.message,
+                // data.title,
+                // data.count,
+                // data.sound,
+                // data.image,
+                // data.additionalData
+            });
+
+            push.on('error', function(e) {
+                console.log("app.push.init.error");
+                // e.message
+            });            
+        },
         callback: function(){},
         register: function() {
             console.log('app.push.register');
@@ -373,7 +454,7 @@ var appCore = {
     /*! WEBSERVICE */
     webservice: {
         get: function(path, args, successCB, errorCB) {
-            console.log('app.webservice.get(): ' + app.url + window.localStorage.getItem("token") + '/' + path, JSON.stringify(args));
+            console.log('app.webservice.get(): ' + app.url + path, JSON.stringify(args));
 
             if(!app.checkConnection()){
                 return;
@@ -387,6 +468,7 @@ var appCore = {
 //                crossDomain: true,
                 headers: {
                     "Authorization": "Token token=" + app.token,
+                    'X-Access-Token': app.userToken,
                     'X-Device-Token': window.localStorage.getItem("token")
                 },
                 success: function(data) {
@@ -394,21 +476,26 @@ var appCore = {
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     if(textStatus==="timeout"){
-                        navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
-            }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
-                    }else navigator.notification.alert(textStatus, 'Close');
+                        navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), 
+                            function () {}, 
+                            app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+                    }else{
+                        /*navigator.notification.alert(textStatus, 'Close');*/
+                    } 
                     var err = {
                         a: jqXHR,
                         msg: textStatus,
                         message: 'Webservice Error: '+errorThrown
                     };
                     errorCB(err);
-                    console.log(jqXHR.responseText);
+                    console.log("jqXHR.responseText: "+jqXHR.responseText);
+                    console.log("textStatus: "+textStatus);
+                    console.log("errorThrown: "+errorThrown);
                 }
             });
         },
         post: function(path, type, args, successCB, errorCB) {
-            console.log('app.webservice.post(): ' + (app.url + window.localStorage.getItem("token") + '/' + path), JSON.stringify(args));
+            console.log('app.webservice.post(): ' + (app.url  + '/' + path), JSON.stringify(args));
 
             if(!app.checkConnection()){
                 return;
@@ -423,9 +510,10 @@ var appCore = {
                 //		processData: false,
                 //		async: true,
                 headers: {
-                    "Authorization": "Token token=" + app.token,
-                    "contentType": "application/json",
-                    'X-Device-Token': window.localStorage.getItem("token")
+                  "Authorization": "Token token=" + app.token,
+                  'X-Access-Token': app.userToken,
+                  'X-Device-Token': window.localStorage.getItem("token"),
+                  "contentType": "application/json"
                 },
                 success: function(data) {
                     successCB(data);
@@ -443,7 +531,7 @@ var appCore = {
         registerDevice: function(args,successCB,errorCB){
             console.log('app.webservice.registerDevice(): ' + app.url +' > ' + app.token);
             console.log(JSON.stringify(args));
-            if(!app.checkConnection()){
+            if(app.offLine){
                 return;
             }
             
@@ -475,19 +563,11 @@ var appCore = {
     },
     checkConnection: function(){
 
-//        if(!navigator.connection || app.offLine){
-//            app.views.loadView.hide();
-//            $('#content').html('<h3 style="color: #fff;">' + app.lang.getStr('%You are offline! Please connect to internet%', 'aplication') + '</h3>');
-//            return true;
-//        }
-//
-//        var networkState = navigator.connection.type;
-//        
-//        if(networkState==Connection.NONE){
-//            
-//            navigator.notification.alert(app.lang.getStr('You are offline! Please connect to internet.', 'aplication'), function(){}, app.lang.getStr('Connection Error', 'aplication'), app.lang.getStr('Try again', 'aplication'));
-//            return false;
-//        }
+        if(!app.offLine)
+
+            return true;
+
+        else return false;
         
         return true;
         
@@ -567,30 +647,13 @@ var appCore = {
         }
     },
     showKeyboard : function(e){
-        console.log('app.controlKeyboard: ' + e.keyboardHeight +' + ' + $('#navChatFooter').height() + ' = ' + (e.keyboardHeight+$('#navChatFooter').height()));
-        $('body').css('padding-bottom',(e.keyboardHeight+$('#navChatFooter').height()) +'px');
-        
-        if($('#chatUserMessage').length){
-            
-            $('#navChatFooter').removeClass('navbar-fixed-bottom');
-            $('#navChatFooter').addClass('navbar-fixed-top');
-            $('#navChatFooter').css('margin-top', ($('#menuNavBar').height()+10) + 'px');
-            $('#navChatFooter').addClass('noProduct');
-        }
-        //navigator.notification.alert('Keyboard-height: ' + e.keyboardHeight + '\r\nchatField-height: ' + $('#navChatFooter').height() + '\r\nchatField-poss: ' + $('#navChatFooter').css('bottom'), function () {}, 'Test', 'OK');
     },
     hideKeyboard : function(e){
-        console.log('app.controlKeyboard: ' + e.keyboardHeight);
-        $('body').css('padding-bottom','0');
         
-        if($('#chatUserMessage').length){
-            
-            $('#navChatFooter').removeClass('navbar-fixed-top');
-            $('#navChatFooter').addClass('navbar-fixed-bottom');
-            $('#navChatFooter').css('margin-top', '0');
-            $('#navChatFooter').css('background-color','none');
-            $('#navChatFooter').removeClass('noProduct');
-        }
+        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
+        $("#chatList").scrollTop($('#chatList').prop("scrollHeight")); 
+        
     }
 };
 

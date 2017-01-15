@@ -34,12 +34,14 @@ var app = {
 
         console.log('muda o title');
         $('#appTile').html(app.appName);
+        $('#splashViewTitle').html(app.appName);
         document.title = app.Name;
 
         //$('body').css('padding-top', $('#menuNavBar').height() + 20);
         
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
+        /*
         setTimeout(function () {
 
             if (!app.deviceReady) {
@@ -47,6 +49,7 @@ var app = {
                 window.localStorage.setItem("token", 83);
                 app.deviceReady = true;
                 app.lang.config(function () {
+                    //app.views.login.init();
                     app.views.home.init();
                     app.webservice.get(
                         'device',
@@ -56,7 +59,7 @@ var app = {
                             //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token)
                             //app.geolocation.start();
                             app.device = r;
-                            //console.log(app.device);
+                            //console.log("app.device: ",app.device);
                             app.views.chat.checkUnreadMessage();
                         }, function (e) {
                         console.log('RESULT ERROR DE REGISTRO');
@@ -67,6 +70,7 @@ var app = {
                 });
             }
         }, 1000);
+        */
         
         window.addEventListener('native.keyboardshow', app.showKeyboard);
         window.addEventListener('native.keyboardhide', app.hideKeyboard);
@@ -78,20 +82,43 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         console.log('app.initialize(): app initialization with device ready.');
-
+        window.open = cordova.InAppBrowser.open;
         app.deviceReady = true;
-
+        document.addEventListener("resume", function() {
+            console.log("resume");
+            app.views.chat.checkUnreadMessage();
+        }, false);    
+        
         document.addEventListener("offline", function () {
-            app.offLine = true;
-            navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
-            }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+            if(!app.offLine){
+
+                app.offLine = true;
+                navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
+                }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+            }
         }, false);
         
         document.addEventListener("online", function () {
             app.offLine = false;
-            app.views.home.init();
+
+            if(app.logged){
+
+                app.views.home.init();
+
+            } else{
+
+                //app.views.login.init();
+                app.views.home.init();
+
+            }
         }, false);
-        
+
+        if (device && device.platform === 'Android') {
+            document.addEventListener("backbutton", function () {
+                app.views.goBack();
+            }, false);
+        }
+
         //document.addEventListener("backbutton", app.onBackKeyDown, false);
 
         console.log("ANTES: " + window.localStorage.getItem("token"));
@@ -101,6 +128,7 @@ var app = {
         if (device && device.platform === 'iOS') {
 
             $('#menuNavBar').css('margin-top','20px');
+            //$('#vexCarousel').css('margin-top','20px');
             $('#content').css('padding-top','10px');
             $('#msgCount').css('margin-left', '-25px');
         }
@@ -122,31 +150,71 @@ var app = {
                 console.log('RESULT DE REGISTRO');
                 console.log(JSON.stringify(r));
                 window.localStorage.setItem("token", r.token);
+                mixpanel.identify(r.id);
+                mixpanel.people.set({
+                    "device_type": device.platform
+                });
+                mixpanel.people.set({
+                    "device_type": device.platform
+                });
+                mixpanel.register({
+                    "app_id": "57",
+                    "app_system" : "staging"
+                });                
                 app.lang.config(function () {
-                    app.views.home.init();
-                    app.push.register();
+                    if (app.loginRequired == true) {
+                        app.views.login.init();
+                    } else {
+                        app.views.home.init();
+                    }
+                    //app.push.register();
                     //app.geolocation.start();
-                    app.views.chat.checkUnreadMessage();
+                    //app.views.chat.checkUnreadMessage();
                 });
             }, function (e) {
                 console.log('RESULT ERROR DE REGISTRO');
                 console.log(JSON.stringify(e));
-                app.push.callback();
             });
 
         } else {
             console.log('com TOKEN');
             app.lang.config(function () {
-                app.views.home.init();
+
                 app.webservice.get(
                     'device',
                     {},
                     function (r) {
                         console.log('RESULT DE REGISTRO');
-                        //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token)
+                        //$('#splashView').html('<br/><br/><br/><br/>' + r.push_token);
                         app.device = r;
+                        mixpanel.identify(r.id);
+                        mixpanel.register({
+                            "app_id": "57",
+                            "app_system" : "staging"
+                        });                
 
                         console.log(JSON.stringify(r));
+                        app.userToken = window.localStorage.getItem("user_token");
+
+                        if (app.loginRequired == false ) {
+                            app.views.home.init();
+                        /* Attempt to validate the token */
+                        }else if (app.loginRequired == true && app.userToken){
+                            app.webservice.get(
+                                'departments',
+                                {},
+                                function (result) {
+                                    console.log("successCB");
+                                    app.views.home.init();
+                                },
+                                function (err) {
+                                    console.log("errorCB");
+                                    app.views.login.init();
+                                }
+                            );
+                        }else{
+                            app.views.login.init();
+                        }
                     }, function (e) {
                     console.log('RESULT ERROR DE REGISTRO');
 
@@ -155,10 +223,11 @@ var app = {
                 );
 
                 //app.geolocation.start();
-                app.views.chat.checkUnreadMessage();
+                //app.views.chat.checkUnreadMessage();
                 
             });
         }
+        app.push.init();
 
 
     },
@@ -175,6 +244,7 @@ var app = {
         backStack: [],
         homeInitCalled: 0,
         scrollPending: 0,
+        browserRef: null,
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -197,6 +267,8 @@ var app = {
         },
         goHome: function(e){
             $('#landingPageMenu').removeClass('hide');
+            $('#loginSpinner').addClass('hide');
+            app.views.chat.checkUnreadMessage();
             //app.views.products.showProductList(e);
             app.views.home.showStoreList();
             //app.views.home.showStoreListPre();
@@ -206,7 +278,10 @@ var app = {
             $('#landingPageMenu').removeClass('hide');
             app.views.backStack.pop();
             var length = app.views.backStack.length;
-            if (length == 0) return;
+            if (length == 0){
+                navigator.app.exitApp();
+                return;
+            } 
             var backToStr = app.views.backStack[length-1];
             var backTo = backToStr.split(":");
             if (backTo[0] == "StoreList"){
@@ -228,6 +303,14 @@ var app = {
                 app.views.products.showProductDetail(backTo[1],backTo[2],backTo[3]);
             } else if (backTo[0] == "ProductList"){
                 app.views.products.showProductListMore2(backTo[1],backTo[2]);
+            } else if (backTo[0] == "Favorites"){
+                app.views.home.getFavorites();
+            } else if (backTo[0] == "Chats"){
+                app.views.backStack.pop();
+                app.views.chat.list();
+            } else if (backTo[0] == "MapView"){
+                app.views.backStack.pop();
+                app.views.leaflet.showMap(backTo[1],backTo[2]);
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -237,6 +320,68 @@ var app = {
         showMenu: function(e){
              $('.navbar-collapse').collapse('show');
         },
+        login: {
+            init: function(){
+                console.log("app.views.login.init()");
+                $('.navbar-toggle').hide();
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                app.views.homeInitCalled = 0;
+                app.draw(
+                    '#content',
+                    '#loginView',
+                    'loginView',
+                    {},
+                    '',
+                    function () {
+                        $('#loginViewTitle').html(app.appName);
+                        app.bindEvents();
+                    }
+                );
+            },
+            register: function(e){
+                console.log("app.views.register.init()");
+                console.log(app.url + 'session');
+                console.log($('#login_user').val() + " > " +$('#login_password').val());
+                $('#loginSpinner').removeClass('hide');
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: app.url + 'session',
+                    crossDomain: true,
+                    data: {
+                        username: $('#login_user').val(),
+                        password: $('#login_password').val()
+                    },
+                    headers: {
+                        "Authorization": "Token token=" + app.token,
+                        "contentType": "application/json"
+                    },
+                    success: function(data) {
+                        console.log(JSON.stringify(data));
+                        if(data.success){
+                            app.logged = true;
+                            window.localStorage.setItem("user_token", data.token);
+                            app.userToken = data.token;
+                            app.views.home.init();
+                        }
+                    },
+                    error: function(a, b, c) {
+                        var err = {
+                            a: a,
+                            msg: b,
+                            message: 'Webservice Error: '+c
+                        };
+                        console.log(JSON.stringify(err));
+                        $('#loginSpinner').addClass('hide');
+                        $('.alert-danger').removeClass('hidden');
+                        $('.alert-danger').html(app.lang.getStr('%error_login%', 'aplication'));
+                    }
+                });
+            }
+        },
         home: {
             totalPages: 0,
             currentPage: 0,
@@ -244,7 +389,9 @@ var app = {
             storesChild: [],
             oStoreDetail: null,
             init: function (e) {
-                console.log('ap.views.home.init()');
+                console.log('app.views.home.init()');
+
+                $('.navbar-toggle').show();
 
                 if (app.views.homeInitCalled){
                   return;  
@@ -270,6 +417,10 @@ var app = {
                             
                 app.bindEvents();
 
+            },
+            logout: function (e) {
+                window.localStorage.removeItem("user_token");
+                app.views.login.init();
             },
             backCoverPage: function (e) {
                 console.log('app.views.home.backCoverPage()');
@@ -298,22 +449,7 @@ var app = {
                 $('.carousel').removeClass('hide');
                 $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
-                $('#vex-navbar2').html('');
-                $.each(app.views.departments, function (i, dep) {
-                    app.draw(
-                        '#vex-navbar2',
-                        '#menuItem2',
-                        'menuItem2',
-                        {
-                            name: stripLeadingTag(dep.name),
-                            id: dep.id
-                        },
-                        'append',
-                        function () {
-                            app.bindEvents();
-                        }
-                    );
-                });
+                app.views.generateMenu2();
 
                 $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
                 $('.carousel').carousel({
@@ -344,34 +480,15 @@ var app = {
             },
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
+                mixpanel.track("Home");
                 app.views.setDefaults();
                 var homeDeptId = -1;
                 if (!e){
                 $('.carousel').removeClass('hide');
                 $('#menubutton').removeClass('hide');
                 $('.navbar').addClass('hide');
-                $('#vex-navbar2').html('');
-                $.each(app.views.departments, function (i, dep) {
-                    if (isHome(dep.name)) {
-                        homeDeptId = dep.id;
-                    } else {
-                        app.draw(
-                            '#vex-navbar2',
-                            '#menuItem2',
-                            'menuItem2',
-                            {
-                                name: stripLeadingTag(dep.name),
-                                id: dep.id
-                            },
-                            'append',
-                            function () {
-                                app.bindEvents();
-                            }
-                        );
-                    }
-                });
+                homeDeptId = app.views.generateMenu2();
                     
-                }
                 $('.carousel').carousel({
                     interval: 3000
                 });
@@ -402,8 +519,8 @@ var app = {
 
                                 $('#storeList').html('');
 
+                                app.views.backStack.push("StoreList");
                                 if (result.stores.length > 1) {
-                                    app.views.backStack.push("StoreList");
                                     app.views.stores = new Array();
 
                                     app.views.home.showStores(result,false,false,1);
@@ -425,16 +542,14 @@ var app = {
                                         });
                                     }
                                     
-                                    app.views.home.getDepartment();
-                                    if (homeDeptId > -1){
-                                        $('#storeFilter').addClass('hide');
-                                    }
+                                    // Always hide filter since the departments are on the menu anyway
+                                    app.views.home.getDepartment(true);
                                     
                                 } else {
                                     app.views.stores = result.stores;
                                     console.log(JSON.stringify(app.views.stores));
                                     $('#rowStoreFilter').hide();
-                                    app.views.backStack.push("StoreDetail:"+app.views.stores[0].id);
+                                    //app.views.backStack.push("StoreDetail:"+app.views.stores[0].id);
                                     app.views.home.storeDetail();
                                 }
                             },
@@ -450,10 +565,10 @@ var app = {
                         app.bindEvents();
                     }
                 );
+                }
             },
             storeDetail: function (e) {
                 console.log('app.views.home.storeDetail()');
-                
                 var store_id;
 
                 if ($(e).attr('store_id')) {
@@ -470,6 +585,7 @@ var app = {
                     store_id = app.views.stores[0].id;
                     
                 }
+                mixpanel.track("Store",{"store_id":store_id });
                 //app.views.backStack.push("StoreDetail:"+store_id); //Moving to before call
 
                 var btBack = $(e).attr('store_id') ? true : false;
@@ -477,7 +593,6 @@ var app = {
                 if($(e).attr('dadStore')!=='false'){
                     app.views.auxBackFuc = 'storesList';
                 }
-                
                 app.views.home.getStoreDetail(store_id, btBack, $(e).attr('dadStore'));
                 
             },
@@ -515,7 +630,7 @@ var app = {
                         aa = store.about.indexOf('**AA**'); //Members / Featured Members
                         bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
                         cc = store.about.indexOf('**CC**'); //Products / Vendors
-                        aboutStripped = store.about;
+                        aboutStripped = stripAbout(store.about);
                         if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                         if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                         if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
@@ -531,8 +646,9 @@ var app = {
                                 uf: store.state,
                                 logo: store.logo,
                                 featured_product : !store.featured_product ? '' : store.featured_product,
-                                about: convertLinks(aboutStripped),
-                                dadStore: dadStore
+                                about: convertLinks2(aboutStripped),
+                                dadStore: dadStore,
+                                favorite: store.favorite
                             },
                             '',
                             function () {
@@ -546,8 +662,9 @@ var app = {
                                 if (app.views.backStack.length > 1){
                                     var ind = app.views.backStack.length-2;
                                     $('#backStack').html(app.views.backStack[ind]);
+                                    $('#backLink').removeClass('hide');
                                 }else{
-                                    $('#divBtBack').addClass('hide');
+                                    $('#backLink').addClass('hide');
                                 }
                                 
                                 //if(!btBack || ((app.views.home.store_id.length == 1) && (dadStore=='true'))){
@@ -558,15 +675,14 @@ var app = {
                                 if (store.corporate) {
 
                                     $('#store_name').addClass('hide');
-                                    $('#divBtBack').addClass('hide');
+                                    $('#backLink').addClass('hide');
                                     $('#btFav_0').addClass('hide');
                                 }
                                 
                                 $('#storeCategorie').change(function () {
                                     app.views.home.filterByCategory($('#storeCategorie'));
                                 });
-
-                                if (store.favorite == true) {
+                                if (store.favorite) {
                                     $('#btFav_' + store.id + ' span').removeClass('icon-star');
                                     $('#btFav_' + store.id + ' span').addClass('icon-star-filled');
 
@@ -583,11 +699,19 @@ var app = {
                                 if (store.logo.indexOf('medium.png') > -1){
                                     $('#storeImageProductView').addClass('hide');
                                 }
+                                if (hasCode(store.about,"showMapButton")){
+                                    $('#mapButton').removeClass('hide');
+                                }
+                                if (hasCode(store.about,"hideChatButton")){
+                                    $('#chatButton').addClass('hide');
+                                }
+                                if (hasCode(store.about,"hideContactButton")){
+                                    $('#contactButton').addClass('hide');
+                                }
                                 
                                 if(store.stores_count>0){
                                     
                                     $('#storeOptions').removeClass('hide');
-                                    $('#storesListDiv').removeClass('hide');
 
                                     if (aa > -1) {
                                         $('#liOptProductLink').text('Members');
@@ -642,24 +766,7 @@ var app = {
                                 app.bindEvents();
                             }
                         );
-                $('#vex-navbar2').html('');
-                $.each(app.views.departments, function (i, dep) {
-                    if (isHome(dep.name) == false) {
-                        app.draw(
-                            '#vex-navbar2',
-                            '#menuItem2',
-                            'menuItem2',
-                            {
-                                name: stripLeadingTag(dep.name),
-                                id: dep.id
-                            },
-                            'append',
-                            function () {
-                                app.bindEvents();
-                            }
-                        );
-                    }
-                });
+                        app.views.generateMenu2();
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
@@ -724,6 +831,7 @@ var app = {
                 
             },
             paginacao: function (url, options,type) {
+                console.log('app.view.home.paginacao');
                 if (app.views.home.totalPages > app.views.home.currentPage) {
 
                     app.views.home.currentPage += 1;
@@ -735,7 +843,10 @@ var app = {
                             console.log(JSON.stringify(result));
                             if (type.indexOf('storeschild') == 0) {
                                 app.views.home.addStore(result.stores, '#list-stores',0, true,'false',app.views.home.currentPage);
+                            }else if(type.indexOf('favorites') == 0){
+                                app.views.home.addFavorite(result.stores, '#favoriteList', 0, true, 'false',app.views.home.currentPage);
                             }else{
+                                    
                                 app.views.home.showStores(result,false,false,app.views.home.currentPage);
                             }
                             app.views.scrollPending = 0;
@@ -917,7 +1028,11 @@ var app = {
                                     $('#deptFilter').addClass('hide');
                                     $('#deptFilterName').html(dep_name);
                                 }
-                        
+                                if (app.views.backStack.length < 2) {
+                                    $('#backLink').addClass('hide');                        
+                                } else {
+                                    $('#backLink').removeClass('hide');                        
+                                }
                                 app.views.home.showStores(result, true, hideFilter,1);
 
                                 app.views.home.currentPage = 1;
@@ -947,7 +1062,7 @@ var app = {
                 }
                 );
             },
-            getDepartment: function(){
+            getDepartment: function(hideFilter){
                 console.log('app.views.home.getDepartment()');
                 app.webservice.get(
                     'departments',
@@ -974,6 +1089,11 @@ var app = {
                             $(this).attr('data-callback','app.views.home.filterByDepartment');
                         });
                         
+                        if (result.departments.length == 0 || hideFilter){
+                            $('#storeFilter').addClass('hide');
+                        } else {
+                            $('#storeFilter').removeClass('hide');
+                        }
                         app.bindEvents();
                     },
                     function (err) {
@@ -1012,6 +1132,26 @@ var app = {
                     app.views.home.storeDetail();
                 }
             },
+            showFavorites: function (result, search, hideFilter,currentPage) {
+                console.log('app.views.home.showSFavorites');
+                
+                search = !search ? false : true;
+                
+                var i = app.views.stores.length;
+                app.views.stores = new Array();
+
+                $.each(result.favorites, function (i, s) {
+                    if (result.favorites.length==1 || !s.corporate) {
+                        app.views.stores.push(s);
+                    }
+                });
+
+                if(app.views.stores.length==0){
+                    $('#storeList').html('<h3 class="noProduct">'+app.lang.getStr('%No store found%', 'aplication')+'</h3>');
+                }else if (app.views.stores.length > 0 || hideFilter==false){
+                    app.views.home.addFavorite(app.views.stores, '#favoriteList', i, search, 'true',currentPage);
+                }
+            },
             addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
                 console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
@@ -1024,10 +1164,12 @@ var app = {
                     aa = store.about.indexOf('**AA**');
                     bb = store.about.indexOf('**BB**');
                     cc = store.about.indexOf('**CC**');
-                    aboutStripped = store.about;
+                    aboutStripped = stripAbout(store.about);
+
                     if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
                     if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
                     if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
+                    
                     app.draw(
                         divId,
                         '#storeItem',
@@ -1037,15 +1179,16 @@ var app = {
                             city: store.city,
                             uf: store.state,
                             logo: store.logo,
-                            about: aboutStripped,
+                            about: addReadMore2(aboutStripped),
                             featured_product : !store.featured_product ? '' : store.featured_product,
                             id : store.id,
                             index: i,
-                            dadStore: dadStore
+                            dadStore: dadStore,
+                            favorite: store.favorite
                         },
                         'append',
                         function () {
-
+                            //console.log("store from lis: "+JSON.stringify(store));
                             if (store.favorite == true) {
                                 $('#btFav_' + i + ' span').removeClass('icon-star');
                                 $('#btFav_' + i + ' span').addClass('icon-star-filled');
@@ -1089,6 +1232,44 @@ var app = {
                                 $('#readMore_'+i).addClass('hide');
                                 $('#storeItem_'+store.id).attr('data-callback', '');
                             }
+                            i++;
+                            app.bindEvents();
+                        }
+                    );
+                });  
+            },
+            addFavorite: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
+                console.log('app.views.home.addstore');
+                var i = arrayIndex*currentPage;
+                $.each(storeArray, function (index, store) {
+                    if (store.about){
+                        aboutStripped = stripAbout(store.about);
+                    } else {
+                        aboutStripped = "";
+                    }
+                    app.draw(
+                        divId,
+                        '#favoriteItem',
+                        'favoriteItem',
+                        {
+                            name: stripLeadingTag(store.name),
+                            city: store.city,
+                            uf: store.state,
+                            id : store.id,
+                            about: aboutStripped,
+                            index: i,
+                            dadStore: dadStore,
+                            logo: store.logo,
+                            favorite : store.favorite
+                        },
+                        'append',
+                        function () {
+                            //console.log("store from lis: "+JSON.stringify(store));
+                            
+                            if (storeArray.length == 1 && search==false && dadStore=='true') {
+                                $('.storeItem').css('height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
+                            }
+
                             i++;
                             app.bindEvents();
                         }
@@ -1150,6 +1331,67 @@ var app = {
                     }
                 );
             },
+            getFavorites: function(e){
+                console.log('app.views.home.showFavorites()');
+                app.views.backStack.pop();
+
+                app.views.backStack.push("Favorites");
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                
+                app.draw(
+                    '#content',
+                    '#favoriteView',
+                    'favoriteView',
+                    {
+                    },
+                    '',
+                    function () {
+
+                        app.webservice.get(
+                            'favorites',
+                            {},
+                            function (result) {
+                                console.log(JSON.stringify(result));
+                                app.views.stores = new Array();
+                                $('#favoriteList').html('');
+                        
+                                if (app.views.backStack.length > 1){
+                                    var ind = app.views.backStack.length-2;
+                                    $('#backStack').html(app.views.backStack[ind]);
+                                    $('#backLink').removeClass('hide');
+                                }else{
+                                    $('#backLink').addClass('hide');
+                                }
+                                
+                                app.views.home.showFavorites(result, true, true,1);
+
+                                app.views.home.currentPage = 1;
+                                app.views.home.totalPages = result.pages;
+
+                                if (app.views.home.totalPages > 1) {
+
+                                    $(window).on("scroll", function () { //pagination
+                                        if ($(this).scrollTop() + $(this).height() >= $('#favoriteList').parent().height()) {
+
+                                            app.views.home.paginacao('favorites', {},'favorites');
+                                        }
+                                    });
+                                }
+                                app.bindEvents();
+
+                            },
+                            function (e) {
+                                //console.log(JSON.stringify(e));
+                            }
+                        );
+                        
+                        app.bindEvents();
+                }
+                );
+            },
             showContact: function (e) {
                 console.log('app.views.home.showContact');
                 console.log($(e).attr('store_index'));
@@ -1177,9 +1419,9 @@ var app = {
                     'contactView',
                     {
                         phone: store.phone ? store.phone : '',
-                        email: store.email,
+                        email: store.email ? store.email : '',
                         website: store.website ? store.website : '',
-                        websiteView: store.website,
+                        websiteView: store.website ? store.website : '',
                         address: store.address,
                         city: store.city,
                         state: store.state,
@@ -1200,23 +1442,120 @@ var app = {
                         if (!store.website || store.website == '') {
                             $('.contactWebsite').addClass('hide');
                         }
-
+                        console.log("store.about:"+store.about);
+                        if (store.about.indexOf("**hideAddress") > -1){
+                            $('.contactAddress').addClass('hide');
+                        }
                         app.bindEvents();
 
                     }
                 );
             },
             openSite: function (e) {
+                console.log("opensite");
                 var ref;
                 var url = $(e).attr('data-site');
-                if (url.indexOf('http') == 0)
-                    ref = window.open($(e).attr('data-site'), '_system', 'location=yes'); 
-                else
-                    ref = window.open('http://' + $(e).attr('data-site'), '_system', 'location=yes');   
-            }            
+                if (url.indexOf('http') == 0) {
+                    console.log("open 1");
+                    ref = cordova.InAppBrowser.open($(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
+                }else{
+                    console.log("open 2");
+                    ref = cordova.InAppBrowser.open('http://' + $(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes');  
+                }
+
+                ref.addEventListener('loadstop', function(event) {
+                    console.log("loadstop");
+                    console.log("event.url:"+event.url);
+                    if (event.url.match("mobile/close")) {
+                        ref.close();
+                    }
+                });
+                //ref.addEventListener('loadstop', loadstopcb);
+                ref.addEventListener('loadstart', loadstartcb);
+                ref.addEventListener('loaderror', loaderrorcb);
+            }
+        },
+        generateMenu2: function () {
+            console.log('app.views.generateMenu2()');
+            $('#vex-navbar2').html('');
+            var strHome;
+            $.each(app.views.departments, function (i, dep) {
+                if (isHome(dep.name)){
+                    strHome = dep.id;
+                } else {
+                    app.draw(
+                        '#vex-navbar2',
+                        '#menuItem2',
+                        'menuItem2',
+                        {
+                            name: stripLeadingTag(dep.name),
+                            id: dep.id
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }   
+                    );
+                }
+            });
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemFavorite2',
+                'menuItemFavorite2',
+                {
+                    name: app.lang.getStr('%Favorites%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemChats2',
+                'menuItemChats2',
+                {
+                    name: app.lang.getStr('%Chats%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemMap2',
+                'menuItemMap2',
+                {
+                    name: app.lang.getStr('%V-Map%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            if (app.loginRequired){
+                app.draw(
+                    '#vex-navbar2',
+                    '#menuItemLogout2',
+                    'menuItemLogout2',
+                    {
+                        name: app.lang.getStr('%Logout%', 'aplication'),
+                        id: 0
+                    },
+                    'append',
+                    function () {
+                        app.bindEvents();
+                    }
+                );
+            }
+            return strHome;
         },
         generateMenu: function () {
-            console.log('app.views.home.generateMenu()');
+            console.log('app.views.generateMenu()');
 
             app.webservice.get(
                 'departments',
@@ -1260,6 +1599,46 @@ var app = {
                             );
                         }
                     });
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemFavorite',
+                        'menuItemFavorite',
+                        {
+                            name: app.lang.getStr('%Favorites%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemChats',
+                        'menuItemChats',
+                        {
+                            name: app.lang.getStr('%Chats%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemMap',
+                        'menuItemMap',
+                        {
+                            name: app.lang.getStr('%V-Map%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
                     app.views.goHome();
                 },
                 function (err) {
@@ -1484,6 +1863,13 @@ var app = {
                         console.log("result.products.length: "+result.products.length);
                         if (result.products.length > 0 && store_count > 0){
                             $('#storeTabs').removeClass('hide');
+                            $('#productListDiv').removeClass('hide');
+                        }
+                        if (result.products.length > 0 && store_count == 0){
+                            $('#productListDiv').removeClass('hide');
+                        }
+                        if (result.products.length == 0 && store_count > 0){
+                            $('#storesListDiv').removeClass('hide');
                         }
                     },
                     function (e) {
@@ -1768,8 +2154,9 @@ var app = {
                         if (app.views.backStack.length > 1){
                             var ind = app.views.backStack.length-2;
                             $('#backStack').html(app.views.backStack[ind]);
+                            $('#backLink').removeClass('hide');
                         }else{
-                            $('#divBtBack').addClass('hide');
+                            $('#backLink').addClass('hide');
                         }
 
                         if (result.contact_info == '<p></p>') {
@@ -2154,6 +2541,128 @@ var app = {
                 
             }
         },
+        leaflet: {
+            showMap: function(latitude, longitude) {
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').addClass('hide');
+                app.views.backStack.push("MapView:"+latitude+":"+longitude);
+                
+                if (app.views.backStack.length > 1){
+                    var ind = app.views.backStack.length-2;
+                    $('#backStack').html(app.views.backStack[ind]);
+                    $('#backLink').removeClass('hide');
+                }else{
+                    $('#backLink').addClass('hide');
+                }
+                
+                app.draw(
+                    '#content',
+                    '#leafletView',
+                    'leafletView',
+                    {},
+                    '',
+                    function () {
+                        //var mymap = L.map('mapid').setView([app.device.latitude, app.device.longitude], 8);
+                        var mymap = L.map('mapid').setView([latitude,longitude], 13); // Wyoming
+                        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
+                            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                            maxZoom: 18,
+                            id: 'mapbox.streets',
+                            accessToken: 'pk.eyJ1IjoibmFuY3lwaWVkcmEiLCJhIjoiY2l4ZXA1ejR6MDBnajJ0bnA1M3lzYWtobCJ9.CNGXj48Gw_Gs5moeZqbjyQ'
+                        }).addTo(mymap);
+                        
+                        var option = {
+                            latitude: latitude, 
+                            longitude: longitude,
+                            radius: 50
+                        };
+                        
+                        app.webservice.get(
+                            'maps',
+                            option,
+                            function (result) {
+                                //console.log(JSON.stringify(result));
+                                
+                                var fuelIcon = L.icon({iconUrl: "img/Fuel.png", iconSize: [25,25]})
+                                var foodIcon = L.icon({iconUrl: "img/Food.png", iconSize: [25,25]})
+                                var hotelIcon = L.icon({iconUrl: "img/Hotel.png", iconSize: [25,25]})
+                                var hospitallIcon = L.icon({iconUrl: "img/Hospital.png", iconSize: [25,25]})
+                                var exitIcon = L.icon({iconUrl: "img/Exit.png"})
+                                
+                                $.each(result.stores, function (i, store) {
+                                    if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap")){
+                                        if (hasCode(store.about,"fuelIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: fuelIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"foodIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: foodIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"exitIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: exitIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"hotelIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
+                                        else if (hasCode(store.about,"hospitalIcon"))
+                                            var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
+                                        
+                                        var domelem = document.createElement('a');
+                                        domelem.href = store.id;
+                                        domelem.innerHTML = store.name;
+                                        domelem.onclick = function() {
+                                            alert(this.href);
+                                            
+                                            // do whatever else you want to do - open accordion etc
+                                        };
+                                        marker.bindPopup('<a href="#" class="btn btn-product" store_id="' + store.id + '" onclick="app.views.home.storeDetail(this);">' + store.name + '</a>');
+                                        //marker.bindPopup(domelem);
+                                        //marker.bindPopup("<p>"+store.name+"</p>"+store.about);
+                                    }
+                                });
+                            }
+                        );
+                    },
+                    function (err) {
+                        console.log(JSON.stringify(err));
+                    }
+                );
+
+            },
+            getPosition: function (){
+                console.log('app.views.leaflet.getPosition()');
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        console.log('GPS RESULT');
+                        console.log('latitude: '+position.coords.latitude);
+                        console.log('longitude: '+position.coords.longitude);
+
+                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude);
+                    },
+                    function (error) {
+                        console.log('GPS ERROR');
+                        console.log(JSON.stringify(error));
+                    },
+                    {timeout: 10000, enableHighAccuracy: true}
+                );
+                
+            },
+            getStore: function (e){
+                var store_id = $(e).attr('store_index');
+                app.webservice.get(
+                    'maps?q[store_id_eq]='+store_id,
+                    {},
+                    function (result) {
+                        console.log(JSON.stringify(result));
+                        $.each(result.stores, function (i, store) {
+                            console.log("store: "+store.name);
+                            app.views.leaflet.showMap(store.latitude, store.longitude);
+                        });
+                    },
+                    function (err){
+                        console.log(JSON.stringify(err));    
+                    }
+                );
+            }
+        },
         vMap: {
             map: '',
             infoWindow: null,
@@ -2169,6 +2678,12 @@ var app = {
             gpsError: null,
             init: function (e) {
                 console.log('app.views.vMapView.init()');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').removeClass('hide');
+
                 $('#splashView').addClass('hide');
                 $('.navbar-fixed-bottom').addClass('hide');
 
@@ -2893,6 +3408,11 @@ var app = {
             },
             openChat: function(store){
                 console.log('app.views.chat.openChat');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').removeClass('hide');
                 
                 app.draw(
                     '#content',
@@ -2910,33 +3430,28 @@ var app = {
                             'stores/'+store.id+'/messages',
                             {},
                             function (result) {
-                                console.log(JSON.stringify(result));
-                                console.log('DEVICE EMAIL>>>' + app.device.email)
+                                //console.log(JSON.stringify(result));
                                 app.views.backStack.push("ChatView");
                                 if(!app.device.email){
                                     $('#newChatForm').removeClass('hide');
                                     app.views.chat.start = false;
                                 }
 
-                                console.log("window:"+$(window).height());
-                                console.log("menuNavBar:"+$('#menuNavBar').outerHeight(true));
-                                console.log("divBtBack:"+$('#divBtBack').outerHeight(true));
-                                console.log("navChatFooter:"+$('#navChatFooter').outerHeight(true));
-                                $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                                $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                                $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                                $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                                 $.each(result.messages, function (index, item) {
-                                    app.views.chat.addMessage(item);
+                                    app.views.chat.addMessage(item,stripLeadingTag(store.name));
                                 });
-                                
-                                $("#chatList").scrollTop($('#chatList').prop("scrollHeight")); 
-                                
-                                app.views.chat.checkMensage(store.id);
-                                
+                                setTimeout(function(){ 
+                                    $("#chatList").animate({ scrollTop: $('#chatList').prop("scrollHeight")}, 1000);
+                                }, 
+                                500);
+
+                                app.views.chat.checkUnreadMessage();                    
                             },
                             function (err) {
                                 console.log(err);
-                                //app.views.loadView.hide();$('#map_load_icon').addClass('hide');
                             }
                         );
                         
@@ -2945,41 +3460,53 @@ var app = {
                     }
                 ); 
             },
-            addMessage: function(item){
+            addMessage: function(item,storeName){
                 console.log('app.views.chat.addMessage');
-//                console.log(item);
-                var created_at = moment(item.created_at);
-//                console.log('ADD MESSAGE: ' + app.lang.date.pattern);
                 var name = '';
-                if (item.kind == 1){ 
-                    name = "Me";
+                if (item.kind == 1){
+                    if (app.device.name) name = app.device.name;
+                    else name = $('#chatUserName').val();
                 }else {
-                    name="Vex Travel";
+                    if (storeName) name=storeName;
+                    else name=app.views.home.oStoreDetail.name;
                 }
-                app.draw(
-                    '#chatList',
-                    '#chatItem',
-                    'chatView',
-                    {
-                        id      : item.id,
-                        message : item.message,
-                        msgDate : created_at.format(app.lang.date.pattern),
-                        email   : name,
-                        kind    : name
+                var dt = new Date(item.created_at);
+                navigator.globalization.dateToString(
+                    dt,
+                    function (date) {
+                        app.draw(
+                            '#chatList',
+                            '#chatItem',
+                            'chatItem',
+                            {
+                                id      : item.id,
+                                message : item.message,
+                                msgDate : date.value,
+                                email   : name,
+                                kind    : name
+                            },
+                            'append',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
                     },
-                    'append',
-                    function () {
-                        app.bindEvents();
-                    }
+                    function () {console.log('Error getting dateString\n');},
+                    {formatLength:'short', selector:'date and time'}
                 );
             },
             list: function(e){
                 console.log('app.views.chat.list()');
-                
+                app.views.backStack.push("Chats");
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
+
                 app.draw(
                     '#content',
                     '#chatListView',
-                    'chatView',
+                    'chatListView',
                     {},
                     '',
                     function () {
@@ -3021,18 +3548,27 @@ var app = {
                 
             },
             addStore : function(storeChat,index){
+                console.log('app.views.chat.addStore');
                 app.draw(
                     '#chatStoreList',
                     '#chatStoreItem',
                     'chatView',
                     {
                         index          : index,
+                        id             : storeChat.id,
                         img            : storeChat.logo,
                         storeName      : storeChat.name,
                         messages_count : storeChat.messages_count
                     },
                     'append',
                     function () {
+                        if (storeChat.messages_count == 0){
+                            $("#storeBadge_"+storeChat.id).removeClass('vex-badge');
+                            $("#storeBadge_"+storeChat.id).addClass('gray-badge');
+                        } else {
+                            $("#storeBadge_"+storeChat.id).addClass('vex-badge');
+                            $("#storeBadge_"+storeChat.id).removeClass('gray-badge');
+                        }
                         app.bindEvents();
                     }
                 );
@@ -3042,25 +3578,25 @@ var app = {
                 
                 if(!app.views.chat.start){
                     
-                    if($('#chatUserName').val()==''){
+                    if($('#chatUserName').val()=='' && !app.device.name){
                         $('.alert-danger').html(app.lang.getStr('%The field <b>Name</b> is mandatory%','chatView'));
                         $('.alert-danger').removeClass('hide');
                         $('#chatUserName').focus();
                         
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                         return;
                     }
                     
-                    if($('#chatUserEmail').val()==''){
+                    if($('#chatUserEmail').val()==''&& !app.device.email){
                         $('.alert-danger').html(app.lang.getStr('%The field <b>Email</b> is mandatory%','chatView'));
                         $('.alert-danger').removeClass('hide');
                         $('#chatUserMessage').focus();
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                         return;
                     }
@@ -3090,14 +3626,14 @@ var app = {
                         $('.alert-danger').addClass('hide');
                         
                         
-                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#divBtBack').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
-                        $('#chatList').css('height',($('.chatContent').height()-$('#chatStoreInfo').height()));
+                        $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
+                        $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
                         
                         $('#chatUserMessage').val('');
                         
                         if(!app.device.email){
                             app.webservice.post(
-                                '',
+                                'device',
                                 'PUT',
                                 {
                                     device: {
@@ -3107,7 +3643,8 @@ var app = {
                                 },
                                 function (result) {
                                     console.log(JSON.stringify(result));
-                                    app.device.email = $('#chatUserEmail').val();
+                                    app.device.name = result.name;
+                                    app.device.email = result.email;
                                     
                                 },
                                 function (err) {
@@ -3121,75 +3658,76 @@ var app = {
                     }
                 );
             },
-            checkMensage: function(store_id){
-                console.log('app.views.chat.checkMEnsage()');
+            checkMensage: function(store_id, store_name){
+                console.log('app.views.chat.checkMensage()');
                 
-                app.views.chat.chekTime = setInterval(function(){
-                    
-                    if($('#chatUserMessage').length){
-                        app.webservice.get(
-                            'stores/'+store_id+'/messages/unread',
-                            {},
-                            function (result) {
-                                console.log(result);
-                                $.each(result.messages, function (index, item) {
-                                    app.views.chat.addMessage(item);
-                                });
+                app.webservice.get(
+                    'stores/'+store_id+'/messages/unread',
+                    {},
+                    function (result) {
+                        $.each(result.messages, function (index, item) {
+                            app.views.chat.addMessage(item,store_name);
+                        });
                                 
-                                if(result.messages.length>0){
-                                    $("#chatList").animate({scrollTop: $('#chatList').prop("scrollHeight")}, 500); 
-                                }
-                            },
-                            function (err) {
-                                console.log(err);
-                            }
-                        );
-                    }else{
-                        clearInterval(app.views.chat.chekTime);
+                        if(result.messages.length>0){
+                            setTimeout(function(){ 
+                                $("#chatList").animate({ scrollTop: $('#chatList').prop("scrollHeight")}, 1000);
+                            }, 
+                            500);
+                        }
+                    },
+                    function (err) {
+                        console.log(err);
                     }
-                    
-                },5000);
+                );
             },
             checkUnreadMessage: function(){
                 console.log('app.views.chat.checkUnreadMessage()');
                 
-                app.chatToken = setInterval(function(){
-                    
-                    app.webservice.get(
-                        'messages',
-                        {},
-                        function (result) {
-                            console.log(result);
-                            var count = 0;
-                            $.each(result.stores, function (index, item) {
+                app.webservice.get(
+                    'messages',
+                    {},
+                    function (result) {
+                        console.log(JSON.stringify(result));
+                        var count = 0;
+                        $.each(result.stores, function (index, item) {
+                            if (parseInt(item.id) == parseInt($('#storeTitleName').attr('store_id'))){
+                                app.views.chat.checkMensage(item.id,item.name);
+                            } else {
                                 count += item.messages_count;
-                            });
-                            
-                            if(count>0){
-                                $('#msgCount').removeClass('hide');
-                                $('#msgCount').html(count);
-                                
-                                if($('#chatStoreList').length){
-                                    $('#chatStoreList').html('');
-                                    $.each(result.stores, function (index, item) {
-                                        app.views.chat.addStore(item,index);
-                                    });
-                                }
-                            }else{
-                                $('#msgCount').addClass('hide');
                             }
-                        },
-                        function (err) {
-                            console.log(err);
+                            var badge_store_id = "#storeBadge_" + item.id;
+                            if ($(badge_store_id) && item.messages_count > 0){
+                                $(badge_store_id).html(item.messages_count);
+                                $(badge_store_id).addClass('vex-badge');
+                                $(badge_store_id).removeClass('gray-badge');
+                            } else {
+                                $(badge_store_id).html(item.messages_count);
+                                $(badge_store_id).removeClass('vex-badge');
+                                $(badge_store_id).addClass('gray-badge');
+                            }
+                        });
+                        if(count>0){
+                            $("#msgcount1").html(count);
+                            $('#msgcount1').removeClass('hide');
+                            $("#msgcount2").html(count);
+                            $('#msgcount2').removeClass('hide');
+                            $("#msgcount3").html(count);
+                            $('#msgcount3').removeClass('hide');
+                            $("#msgcount4").html(count);
+                            $('#msgcount4').removeClass('hide');
+                        }else{
+                            $('#msgcount1').addClass('hide');
+                            $('#msgcount2').addClass('hide');
+                            $('#msgcount3').addClass('hide');
+                            $('#msgcount4').addClass('hide');
                         }
-                    );
-                },1500000);
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
             }
-        },
-        stopCheckUnreadMessage: function(){
-            console.log('app.views.chat.stopCheckUnreadMessage()');
-            
-            clearInterval(app.chatToken);
         }
     },
     showToken: function () {
@@ -3209,6 +3747,44 @@ $(document).ready(function () {
     console.log('Run app');
     app.initialize();
 });
+function loadstartcb(event){
+    console.log("loadstart");
+}
+function loadstopcb(event){
+    console.log("loadstop");
+}
+function loaderrorcb(event){
+    console.log("loaderror");
+}
+function stripAbout(about){
+    // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon**
+    aboutStripped = about;
+    var strArray = about.split("**");
+    if (strArray.length > 0){
+        aboutStripped = strArray[strArray.length-1];
+    }else {
+        aboutStripped = about;
+    }
+    //aboutStripped = aboutStripped.replace('**hideAddress**','');
+    //aboutStripped = aboutStripped.replace('**showMap**','');
+    //aboutStripped = aboutStripped.replace('**hideChat**','');
+    return aboutStripped;
+}
+function hasCode(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        console.log("strCodes: "+strCodes);
+        var codeArray = strCodes.split(",");
+        console.log("codeArray.length: "+codeArray.length);
+        for (i=0; i<codeArray.length; i++){
+            if (code.indexOf(codeArray[i]) === 0)
+                return true;
+        }
+    }
+    return false;
+}
 function stripLeadingTag(inputText){
     var strArray;
     strArray = inputText.split("**");
@@ -3226,7 +3802,8 @@ function isHome(inputText){
     return false;
 }
 function addReadMore2(text, store_id, id, readMode) { /* to make sure the script runs after page load */
-	return text;
+    var descriptionStr = convertLinks(text);
+    return strip(descriptionStr);
 }
 function addReadMore(text, store_id, id, readMode) { /* to make sure the script runs after page load */
 
@@ -3278,29 +3855,47 @@ function getCategoryId(cats,cat_name){
                 $.each(c.subcategories, function (i, sub) {
                     if (sub.name.indexOf(cat_name) == 0  && sub.name.length == cat_name.length){
                         c_id = sub.id;
-                        return false;
+                        return c_id;
                     }
                 });
             } else {
                 if (c.name.indexOf(cat_name) == 0 && c.name.length == cat_name.length){
                     c_id = c.id;
-                    return false;
+                    return c_id;
                 }
             }
         }
     });
     return c_id;
 }
+function convertLinks2(text) {
+    var div = document.createElement('div');
+    div.innerHTML = text;
+    var a = div.getElementsByTagName("a");
+    
+    for (i=0; i<a.length; i++){
+        console.log("href: "+a[i].href);
+        a[i].setAttribute("data-site",a[i].href);
+        a[i].setAttribute("data-callback","app.views.home.openSite");
+        a[i].href = "#"
+    }
+    console.log("innerHTML:"+div.innerHTML);
+    return div.innerHTML;
+}
 function convertLinks(text) {
-    links = linkify.find(text);
-    console.log("links.length"+links.length);
+    var div = document.createElement('div');
+    div.innerHTML = text;
+    var pureText = div.innerText;
+    links = linkify.find(pureText);
     for (j=0; j<links.length; j++){
-        console.log("links.href: "+links[j].href);
         if (links[j].type.indexOf('url') > -1){
-            text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + links[j].href + '</a>');
+            if (links[j].href.indexOf('calendar') > -1) {
+                text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + "Calendar" + '</a>');
+            } else {
+                text = text.replace(links[j].href, '<a href="#" data-callback="app.views.home.openSite" data-site="' + links[j].href + '" >' + links[j].href + '</a>');
+            }
         }
     }
-    console.log("text: "+text);
     return text;
 }
 function findContact(text) {
