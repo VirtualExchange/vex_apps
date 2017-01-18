@@ -310,7 +310,7 @@ var app = {
                 app.views.chat.list();
             } else if (backTo[0] == "MapView"){
                 app.views.backStack.pop();
-                app.views.leaflet.showMap(backTo[1],backTo[2]);
+                app.views.leaflet.showMap(backTo[1],backTo[2],backTo[3]);
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -515,7 +515,7 @@ var app = {
                             req,
                             {},
                             function (result) {
-                                //console.log(JSON.stringify(result));
+                                console.log(JSON.stringify(result));
 
                                 $('#storeList').html('');
 
@@ -2542,13 +2542,13 @@ var app = {
             }
         },
         leaflet: {
-            showMap: function(latitude, longitude) {
+            showMap: function(latitude, longitude, branchOnly) {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
                 $('.navbar').removeClass('hide');
                 $('#backLink').addClass('hide');
-                app.views.backStack.push("MapView:"+latitude+":"+longitude);
+                app.views.backStack.push("MapView:"+latitude+":"+longitude+":"+branchOnly);
                 
                 if (app.views.backStack.length > 1){
                     var ind = app.views.backStack.length-2;
@@ -2593,7 +2593,11 @@ var app = {
                                 var exitIcon = L.icon({iconUrl: "img/Exit.png"})
                                 
                                 $.each(result.stores, function (i, store) {
-                                    if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap")){
+                                    var isSubBranch = false;
+                                    $.each(app.views.home.storesChild, function(j, childStore){
+                                        if (store.id == childStore.id) isSubBranch = true;
+                                    });
+                                    if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap") && isSubBranch){
                                         if (hasCode(store.about,"fuelIcon"))
                                             var marker = L.marker([store.latitude,store.longitude],{icon: fuelIcon}).addTo(mymap);
                                         else if (hasCode(store.about,"foodIcon"))
@@ -2637,7 +2641,7 @@ var app = {
                         console.log('latitude: '+position.coords.latitude);
                         console.log('longitude: '+position.coords.longitude);
 
-                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude);
+                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude, false);
                     },
                     function (error) {
                         console.log('GPS ERROR');
@@ -2656,7 +2660,7 @@ var app = {
                         console.log(JSON.stringify(result));
                         $.each(result.stores, function (i, store) {
                             console.log("store: "+store.name);
-                            app.views.leaflet.showMap(store.latitude, store.longitude);
+                            app.views.leaflet.showMap(store.latitude, store.longitude, true);
                         });
                     },
                     function (err){
