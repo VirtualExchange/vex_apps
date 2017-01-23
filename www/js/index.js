@@ -242,6 +242,7 @@ var app = {
         productsDrawn: [],
         backFunction: null,
         backStack: [],
+        displayOnMap: [],
         homeInitCalled: 0,
         scrollPending: 0,
         browserRef: null,
@@ -783,7 +784,7 @@ var app = {
                     {},
                     function (result) {
                         console.log('result child store');
-                        console.log(result);
+                        console.log(JSON.stringify(result));
                         
                         $('#list-stores').html('');
                         
@@ -2542,7 +2543,49 @@ var app = {
             }
         },
         leaflet: {
-            showMap: function(latitude, longitude, branchOnly) {
+            test: function(e){
+                app.views.leaflet.hierarchy();
+            },
+            hierarchy: function(mymap,store_id,page){
+                console.log("Store start: "+store_id+" page: "+page);
+                
+                var req = "";
+                if (!store_id) req = 'stores';
+                else req = 'stores/' + store_id+'/stores';
+                
+                var options = {};
+                if (!page) options['page'] = 1;
+                else options['page'] = page;
+                
+                app.webservice.get(
+                    req,
+                    options,
+                    function (result) {
+                        console.log(JSON.stringify(result));
+                        $.each(result.stores, function (i, store) {
+                            var parent_id = store_id;
+                            if (store.stores_count > 0){
+                                app.views.leaflet.hierarchy(store.id);
+                            }
+                            console.log("parent_id: "+parent_id+" ,store.name: "+store.name+" ,store.id: "+store.id);
+                            $.each(app.views.home.displayOnMap, function(j,mapStore){
+                                if (mapStore.id == store.id){
+                                    app.views.leaflet.showStore(mymap,mapStore);
+                                }
+                            });
+                        });
+                        if (result.pages > 1 && options['page'] < result.pages){
+                            console.log("Next store_id: "+store_id+" page: "+options['page']);
+                            app.views.leaflet.hierarchy(store_id, options['page']+1);
+                        } 
+                        console.log("Store finish: "+store_id);
+                    },
+                    function (err){
+                        console.log(JSON.stringify(err));
+                    }
+                );
+            },
+            showMap: function(latitude, longitude, branchOnly,store_id) {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
@@ -2585,45 +2628,11 @@ var app = {
                             option,
                             function (result) {
                                 //console.log(JSON.stringify(result));
-                                
-                                var fuelIcon = L.icon({iconUrl: "img/Fuel.png", iconSize: [25,25]})
-                                var foodIcon = L.icon({iconUrl: "img/Food.png", iconSize: [25,25]})
-                                var hotelIcon = L.icon({iconUrl: "img/Hotel.png", iconSize: [25,25]})
-                                var hospitallIcon = L.icon({iconUrl: "img/Hospital.png", iconSize: [25,25]})
-                                var exitIcon = L.icon({iconUrl: "img/Exit.png"})
-                                
-                                $.each(result.stores, function (i, store) {
-                                    var isSubBranch = false;
-                                    $.each(app.views.home.storesChild, function(j, childStore){
-                                        if (store.id == childStore.id) isSubBranch = true;
-                                    });
-                                    if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap") && isSubBranch){
-                                        if (hasCode(store.about,"fuelIcon"))
-                                            var marker = L.marker([store.latitude,store.longitude],{icon: fuelIcon}).addTo(mymap);
-                                        else if (hasCode(store.about,"foodIcon"))
-                                            var marker = L.marker([store.latitude,store.longitude],{icon: foodIcon}).addTo(mymap);
-                                        else if (hasCode(store.about,"exitIcon"))
-                                            var marker = L.marker([store.latitude,store.longitude],{icon: exitIcon}).addTo(mymap);
-                                        else if (hasCode(store.about,"hotelIcon"))
-                                            var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
-                                        else if (hasCode(store.about,"hospitalIcon"))
-                                            var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
-                                        else
-                                            var marker = L.marker([store.latitude,store.longitude]).addTo(mymap);
-
-                                        var domelem = document.createElement('a');
-                                        domelem.href = store.id;
-                                        domelem.innerHTML = store.name;
-                                        domelem.onclick = function() {
-                                            alert(this.href);
-                                            
-                                            // do whatever else you want to do - open accordion etc
-                                        };
-                                        marker.bindPopup('<a href="#" class="btn btn-product" store_id="' + store.id + '" onclick="app.views.home.storeDetail(this);">' + store.name + '</a>');
-                                        //marker.bindPopup(domelem);
-                                        //marker.bindPopup("<p>"+store.name+"</p>"+store.about);
-                                    }
-                                });
+                                app.views.home.displayOnMap = result.stores;
+                                app.views.leaflet.hierarchy(mymap,store_id);
+                                //$.each(result.stores, function (i, store) {
+                                //    app.views.leaflet.showStore(mymap,store);
+                                //});
                             }
                         );
                     },
@@ -2633,6 +2642,39 @@ var app = {
                 );
 
             },
+            showStore: function (mymap,store) {
+                var fuelIcon = L.icon({iconUrl: "img/Fuel.png", iconSize: [25,25]})
+                var foodIcon = L.icon({iconUrl: "img/Food.png", iconSize: [25,25]})
+                var hotelIcon = L.icon({iconUrl: "img/Hotel.png", iconSize: [25,25]})
+                var hospitallIcon = L.icon({iconUrl: "img/Hospital.png", iconSize: [25,25]})
+                var exitIcon = L.icon({iconUrl: "img/Exit.png"})
+                if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap")){
+                    if (hasCode(store.about,"fuelIcon"))
+                        var marker = L.marker([store.latitude,store.longitude],{icon: fuelIcon}).addTo(mymap);
+                    else if (hasCode(store.about,"foodIcon"))
+                        var marker = L.marker([store.latitude,store.longitude],{icon: foodIcon}).addTo(mymap);
+                    else if (hasCode(store.about,"exitIcon"))
+                        var marker = L.marker([store.latitude,store.longitude],{icon: exitIcon}).addTo(mymap);
+                    else if (hasCode(store.about,"hotelIcon"))
+                        var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
+                    else if (hasCode(store.about,"hospitalIcon"))
+                        var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
+                    else
+                        var marker = L.marker([store.latitude,store.longitude]).addTo(mymap);
+
+                    var domelem = document.createElement('a');
+                    domelem.href = store.id;
+                    domelem.innerHTML = store.name;
+                    domelem.onclick = function() {
+                        alert(this.href);
+                        // do whatever else you want to do - open accordion etc
+                    };
+                    marker.bindPopup('<a href="#" class="btn btn-product" store_id="' + store.id + '" onclick="app.views.home.storeDetail(this);">' + store.name + '</a>');
+                    //marker.bindPopup(domelem);
+                    //marker.bindPopup("<p>"+store.name+"</p>"+store.about);
+                }
+                
+            },
             getPosition: function (){
                 console.log('app.views.leaflet.getPosition()');
                 navigator.geolocation.getCurrentPosition(
@@ -2641,7 +2683,7 @@ var app = {
                         console.log('latitude: '+position.coords.latitude);
                         console.log('longitude: '+position.coords.longitude);
 
-                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude, false);
+                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude, false,null);
                     },
                     function (error) {
                         console.log('GPS ERROR');
@@ -2658,9 +2700,9 @@ var app = {
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-                        $.each(result.stores, function (i, store) {
+                        $.each(result.stores, function (i, store) { 
                             console.log("store: "+store.name);
-                            app.views.leaflet.showMap(store.latitude, store.longitude, true);
+                            app.views.leaflet.showMap(store.latitude, store.longitude, true,store_id);
                         });
                     },
                     function (err){
