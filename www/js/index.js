@@ -2565,7 +2565,7 @@ var app = {
                         $.each(result.stores, function (i, store) {
                             var parent_id = store_id;
                             if (store.stores_count > 0){
-                                app.views.leaflet.hierarchy(store.id);
+                                app.views.leaflet.hierarchy(mymap,store.id);
                             }
                             console.log("parent_id: "+parent_id+" ,store.name: "+store.name+" ,store.id: "+store.id);
                             $.each(app.views.home.displayOnMap, function(j,mapStore){
@@ -2576,7 +2576,7 @@ var app = {
                         });
                         if (result.pages > 1 && options['page'] < result.pages){
                             console.log("Next store_id: "+store_id+" page: "+options['page']);
-                            app.views.leaflet.hierarchy(store_id, options['page']+1);
+                            app.views.leaflet.hierarchy(mymap,store_id, options['page']+1);
                         } 
                         console.log("Store finish: "+store_id);
                     },
