@@ -2627,12 +2627,16 @@ var app = {
                             'maps',
                             option,
                             function (result) {
-                                //console.log(JSON.stringify(result));
-                                app.views.home.displayOnMap = result.stores;
-                                app.views.leaflet.hierarchy(mymap,store_id);
-                                //$.each(result.stores, function (i, store) {
-                                //    app.views.leaflet.showStore(mymap,store);
-                                //});
+                                console.log(JSON.stringify(result));
+                                if (store_id){
+                                    app.views.home.displayOnMap = result.stores;
+                                    app.views.leaflet.hierarchy(mymap,store_id);
+                                } else {
+                                    $.each(result.stores, function (i, store) {
+                                        app.views.leaflet.showStore(mymap,store);
+                                    });
+                                    
+                                }
                             }
                         );
                     },
@@ -2688,8 +2692,9 @@ var app = {
                     function (error) {
                         console.log('GPS ERROR');
                         console.log(JSON.stringify(error));
+                        app.views.leaflet.showMap(40.7128, -74.0059, false,null);
                     },
-                    {timeout: 10000, enableHighAccuracy: true}
+                    {timeout: 3000, enableHighAccuracy: true}
                 );
                 
             },
