@@ -246,6 +246,7 @@ var app = {
         homeInitCalled: 0,
         scrollPending: 0,
         browserRef: null,
+        mapStore: [],
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -2585,7 +2586,7 @@ var app = {
                     }
                 );
             },
-            showMap: function(latitude, longitude, branchOnly,store_id) {
+            showMap: function(latitude, longitude, branchOnly) {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
@@ -2622,15 +2623,15 @@ var app = {
                             longitude: longitude,
                             radius: 50
                         };
-                        
                         app.webservice.get(
                             'maps',
                             option,
                             function (result) {
                                 console.log(JSON.stringify(result));
-                                if (store_id){
+                                if (branchOnly){
                                     app.views.home.displayOnMap = result.stores;
-                                    app.views.leaflet.hierarchy(mymap,store_id);
+                                    app.views.leaflet.showStore(mymap,app.views.home.mapStore);
+                                    app.views.leaflet.hierarchy(mymap,app.views.home.mapStore.id);
                                 } else {
                                     $.each(result.stores, function (i, store) {
                                         app.views.leaflet.showStore(mymap,store);
@@ -2687,12 +2688,12 @@ var app = {
                         console.log('latitude: '+position.coords.latitude);
                         console.log('longitude: '+position.coords.longitude);
 
-                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude, false,null);
+                        app.views.leaflet.showMap(position.coords.latitude, position.coords.longitude, false);
                     },
                     function (error) {
                         console.log('GPS ERROR');
                         console.log(JSON.stringify(error));
-                        app.views.leaflet.showMap(40.7128, -74.0059, false,null);
+                        app.views.leaflet.showMap(40.7128, -74.0059, false);
                     },
                     {timeout: 3000, enableHighAccuracy: true}
                 );
@@ -2707,7 +2708,10 @@ var app = {
                         console.log(JSON.stringify(result));
                         $.each(result.stores, function (i, store) { 
                             console.log("store: "+store.name);
-                            app.views.leaflet.showMap(store.latitude, store.longitude, true,store_id);
+                            if (i == 0) {
+                                app.views.home.mapStore = store;
+                                app.views.leaflet.showMap(store.latitude, store.longitude, true);
+                            }
                         });
                     },
                     function (err){
