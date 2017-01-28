@@ -186,9 +186,17 @@ div[id^="readMore"]{
 .favoriteButton:focus{
     outline: none;
 }
+#makeFavorite{
+    font-size: 125%;
+}
+#favoriteRow{
+    padding-top: 10px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
 .badge-notify{
    background:red;
-   position:absolute;
+   position:absolute;   
    top: -5px;
    right: -5px;
 }
