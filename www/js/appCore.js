@@ -13,7 +13,7 @@ var appCore = {
     url      : 'http://ve-api-staging.herokuapp.com/api/',
     token    : 'TE2UtTUX-lC-SPUkKT9YpQ',
     appName  : 'VEx Chambers',
-    senderID : "727346400787",
+    senderID : "866211906691",
     lastGeoDate : null,
     offLine : false,
 //    logged : false,
