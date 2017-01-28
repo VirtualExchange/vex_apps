@@ -257,9 +257,9 @@
                                     <a href="" class="btn btn-primary" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true">%Chat%</a>
                                     <a href="" class="btn btn-primary hide" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" dadStore="true">Map</a>
                                     <!--<a href="" class="btn btn-primary hide" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.test" dadStore="true">Map</a>-->
-                                    <button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.views.home.saveFavorite">
-                                        <span class="icon icon-star"></span>
-                                    </button>
+                                    <p id="favoriteRow"><button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.views.home.saveFavorite">
+                                        <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
+                                    </button></p>
                                 </div>
                                 
                                 <!--<div class="text-left HstoreAddress">{{city}}, {{uf}}</div>-->

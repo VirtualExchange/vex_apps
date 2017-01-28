@@ -606,6 +606,7 @@ var app = {
                     'stores/' + store_id,
                     {},
                     function (result) {
+                        console.log(JSON.stringify(result));
                         app.views.scrool = $(window).scrollTop();
                         app.views.home.oStoreDetail = result;
                         app.views.home.showStoreDetail(result, btBack, dadStore);
@@ -628,7 +629,7 @@ var app = {
                     'stores/' + store.id + '/categories',
                     {},
                     function (result) {
-                        //console.log(JSON.stringify(result));
+                        console.log(JSON.stringify(result));
                         aa = store.about.indexOf('**AA**'); //Members / Featured Members
                         bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
                         cc = store.about.indexOf('**CC**'); //Products / Vendors
@@ -687,6 +688,7 @@ var app = {
                                 if (store.favorite) {
                                     $('#btFav_' + store.id + ' span').removeClass('icon-star');
                                     $('#btFav_' + store.id + ' span').addClass('icon-star-filled');
+                                    $('#btFav_' + store.id + ' span').html('Clear Favorite');
 
                                     $('.btFavorite').attr('data-callback', 'app.views.home.removeFavorite');
                                 }
@@ -1194,6 +1196,7 @@ var app = {
                             if (store.favorite == true) {
                                 $('#btFav_' + i + ' span').removeClass('icon-star');
                                 $('#btFav_' + i + ' span').addClass('icon-star-filled');
+                                $('#btFav_' + i + ' span').html('Clear Favorite');
                                 $('#btFav_' + i).attr('data-callback', 'app.views.home.removeFavorite');
                             }
                             
@@ -1292,6 +1295,7 @@ var app = {
                     //change bt in store list
                     $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('icon-star');
                     $('#btFav_' + $(e).attr('store_index') + ' span').addClass('icon-star-filled');
+                    $('#btFav_' + $(e).attr('store_index') + ' span').html('Clear Favorite');
 
                     $('#btFav_' + $(e).attr('store_index')).attr('data-callback', 'app.views.home.removeFavorite');
 
@@ -1318,7 +1322,7 @@ var app = {
                         console.log(JSON.stringify(result));
                         $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('icon-star-filled');
                         $('#btFav_' + $(e).attr('store_index') + ' span').addClass('icon-star');
-
+                        $('#btFav_' + $(e).attr('store_index') + ' span').html('Make Favorite');
                         $('#btFav_' + $(e).attr('store_index')).attr('data-callback', 'app.views.home.saveFavorite');
 
                         //change bt in detail store
