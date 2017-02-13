@@ -621,22 +621,14 @@ var app = {
             },
             showStoreDetail: function(store, btBack, dadStore){
                 console.log('app.views.home.showStoreDetail');
-                var aa = -1;
-                var bb = -1;
-                var cc = -1;
                 var aboutStripped;
                 app.webservice.get(
                     'stores/' + store.id + '/categories',
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-                        aa = store.about.indexOf('**AA**'); //Members / Featured Members
-                        bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
-                        cc = store.about.indexOf('**CC**'); //Products / Vendors
+                        
                         aboutStripped = stripAbout(store.about);
-                        if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
-                        if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
-                        if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
 
                         app.draw(
                             '#content',
@@ -728,18 +720,16 @@ var app = {
                                 if(store.stores_count>0){
                                     
                                     $('#storeOptions').removeClass('hide');
-
-                                    if (aa > -1) {
-                                        $('#liOptProductLink').text('Members');
-                                        $('#liOptStoreLink').text('Featured Members');
+                                    var storeTabName, productTabName;
+                                    if (hasCode(store.about,"storetab"))
+                                    {
+                                        storeTabName = getTabName(store.about,"storetab");
+                                        $('#liOptStoreLink').text(storeTabName);
                                     }
-                                    if (bb > -1) {
-                                        $('#liOptProductLink').text('Vendors');
-                                        $('#liOptStoreLink').text('Featured Vendors');
-                                    }
-                                    if (cc > -1) {
-                                        $('#liOptProductLink').text('Offers');
-                                        $('#liOptStoreLink').text('Vendors');
+                                    if (hasCode(store.about,"producttab"))
+                                    {
+                                        productTabName = getTabName(store.about,"producttab");
+                                        $('#liOptProductLink').text(productTabName);
                                     }
                                     
                                     $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
@@ -1170,21 +1160,11 @@ var app = {
             addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
                 console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
-                var aa = -1;
-                var bb = -1;
-                var cc = -1;
                 var aboutStripped;
 
                 $.each(storeArray, function (index, store) {
-                    aa = store.about.indexOf('**AA**');
-                    bb = store.about.indexOf('**BB**');
-                    cc = store.about.indexOf('**CC**');
                     aboutStripped = stripAbout(store.about);
 
-                    if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
-                    if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
-                    if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
-                    
                     app.draw(
                         divId,
                         '#storeItem',
@@ -1226,17 +1206,9 @@ var app = {
                                 $('#featured_'+i).addClass('hide');
                             }
                             
-                            if(store.stores_count>0){
-                                $('#btnProduct_'+i).html(app.lang.getStr('%More%', 'storeItem'))
-                            }
-                            if (aa > -1){
-                                $('#btnProduct_'+i).html(app.lang.getStr('Members', 'storeItem'))
-                            }
-                            if (bb > -1){
-                                $('#btnProduct_'+i).html(app.lang.getStr('Vendors', 'storeItem'))
-                            }
-                            if (cc > -1){
-                                $('#btnProduct_'+i).html(app.lang.getStr('Offers', 'storeItem'))
+                            if (hasCode(store.about,"producttab")){
+                                var productTabName = getTabName(store.about,"producttab");
+                                $('#btnProduct_'+i).html(productTabName);
                             }
                             if(!dadStore){
                                 $('#btnContact_'+i).attr('dadStore','false');
@@ -3910,6 +3882,23 @@ function getCustomLink(about,code){
             if (codeArray[i].indexOf(code) === 0){
                 buttonArray = codeArray[i].split(";");
                 if (buttonArray.length >=4 ) return buttonArray[3];
+                else return "";
+            }
+        }
+    }
+    return "";
+    
+}
+function getTabName(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        var codeArray = strCodes.split(",");
+        for (i=0; i<codeArray.length; i++){
+            if (codeArray[i].indexOf(code) === 0){
+                buttonArray = codeArray[i].split(";");
+                if (buttonArray.length >=2 ) return buttonArray[1];
                 else return "";
             }
         }
