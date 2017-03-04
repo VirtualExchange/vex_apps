@@ -710,9 +710,14 @@ var app = {
                                     var customLink = getCustomLink(store.about,"custombutton");
                                     var customName = getCustomName(store.about,"custombutton");
                                     var customType = getCustomType(store.about,"custombutton");
-                                    $('#customButton').html(customName);
+                                    $('#customButtonText').html(customName);
                                     $('#customButton').attr('customlink', customLink);
                                     $('#customButton').attr('customtype',customType);
+                                    if (customType.indexOf('pdf') == 0){
+                                        $('#customButtonIcon').attr('class','fa fa-file-pdf-o');
+                                    } else if (customType.indexOf('video') == 0){
+                                        $('#customButtonIcon').attr('class','fa fa-video-camera');
+                                    }
                                 } else {
                                     console.log("No custom button: "+store.about);
                                 }
