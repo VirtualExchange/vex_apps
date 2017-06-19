@@ -621,22 +621,14 @@ var app = {
             },
             showStoreDetail: function(store, btBack, dadStore){
                 console.log('app.views.home.showStoreDetail');
-                var aa = -1;
-                var bb = -1;
-                var cc = -1;
                 var aboutStripped;
                 app.webservice.get(
                     'stores/' + store.id + '/categories',
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-                        aa = store.about.indexOf('**AA**'); //Members / Featured Members
-                        bb = store.about.indexOf('**BB**'); //Vendors / Featured Vendors
-                        cc = store.about.indexOf('**CC**'); //Products / Vendors
+                        
                         aboutStripped = stripAbout(store.about);
-                        if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
-                        if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
-                        if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
 
                         app.draw(
                             '#content',
@@ -685,7 +677,8 @@ var app = {
                                 $('#storeCategorie').change(function () {
                                     app.views.home.filterByCategory($('#storeCategorie'));
                                 });
-                                if (store.favorite) {
+                                console.log("store.favorite: "+store.favorite);
+                                if (store.favorite == true) {
                                     $('#btFav_' + store.id + ' span').removeClass('icon-star');
                                     $('#btFav_' + store.id + ' span').addClass('icon-star-filled');
                                     $('#btFav_' + store.id + ' span').html('Clear Favorite');
@@ -712,22 +705,36 @@ var app = {
                                 if (hasCode(store.about,"hideContactButton")){
                                     $('#contactButton').addClass('hide');
                                 }
+                                if (hasCode(store.about,"custombutton")){
+                                    $('#customButton').removeClass('hide');
+                                    var customLink = getCustomLink(store.about,"custombutton");
+                                    var customName = getCustomName(store.about,"custombutton");
+                                    var customType = getCustomType(store.about,"custombutton");
+                                    $('#customButtonText').html(customName);
+                                    $('#customButton').attr('customlink', customLink);
+                                    $('#customButton').attr('customtype',customType);
+                                    if (customType.indexOf('pdf') == 0){
+                                        $('#customButtonIcon').attr('class','fa fa-file-pdf-o');
+                                    } else if (customType.indexOf('video') == 0){
+                                        $('#customButtonIcon').attr('class','fa fa-video-camera');
+                                    }
+                                } else {
+                                    console.log("No custom button: "+store.about);
+                                }
                                 
                                 if(store.stores_count>0){
                                     
                                     $('#storeOptions').removeClass('hide');
-
-                                    if (aa > -1) {
-                                        $('#liOptProductLink').text('Members');
-                                        $('#liOptStoreLink').text('Featured Members');
+                                    var storeTabName, productTabName;
+                                    if (hasCode(store.about,"storetab"))
+                                    {
+                                        storeTabName = getTabName(store.about,"storetab");
+                                        $('#liOptStoreLink').text(storeTabName);
                                     }
-                                    if (bb > -1) {
-                                        $('#liOptProductLink').text('Vendors');
-                                        $('#liOptStoreLink').text('Featured Vendors');
-                                    }
-                                    if (cc > -1) {
-                                        $('#liOptProductLink').text('Offers');
-                                        $('#liOptStoreLink').text('Vendors');
+                                    if (hasCode(store.about,"producttab"))
+                                    {
+                                        productTabName = getTabName(store.about,"producttab");
+                                        $('#liOptProductLink').text(productTabName);
                                     }
                                     
                                     $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
@@ -786,7 +793,6 @@ var app = {
                     'stores/'+store_id+'/stores',
                     {},
                     function (result) {
-                        console.log('result child store');
                         console.log(JSON.stringify(result));
                         
                         $('#list-stores').html('');
@@ -1159,21 +1165,11 @@ var app = {
             addStore: function(storeArray, divId, arrayIndex, search, dadStore,currentPage){
                 console.log('app.views.home.addstore');
                 var i = arrayIndex*currentPage;
-                var aa = -1;
-                var bb = -1;
-                var cc = -1;
                 var aboutStripped;
 
                 $.each(storeArray, function (index, store) {
-                    aa = store.about.indexOf('**AA**');
-                    bb = store.about.indexOf('**BB**');
-                    cc = store.about.indexOf('**CC**');
                     aboutStripped = stripAbout(store.about);
 
-                    if (aa > -1) { aboutStripped = store.about.replace('**AA**','');}
-                    if (bb > -1) { aboutStripped = store.about.replace('**BB**','');}
-                    if (cc > -1) { aboutStripped = store.about.replace('**CC**','');}
-                    
                     app.draw(
                         divId,
                         '#storeItem',
@@ -1215,17 +1211,9 @@ var app = {
                                 $('#featured_'+i).addClass('hide');
                             }
                             
-                            if(store.stores_count>0){
-                                $('#btnProduct_'+i).html(app.lang.getStr('%More%', 'storeItem'))
-                            }
-                            if (aa > -1){
-                                $('#btnProduct_'+i).html(app.lang.getStr('Members', 'storeItem'))
-                            }
-                            if (bb > -1){
-                                $('#btnProduct_'+i).html(app.lang.getStr('Vendors', 'storeItem'))
-                            }
-                            if (cc > -1){
-                                $('#btnProduct_'+i).html(app.lang.getStr('Offers', 'storeItem'))
+                            if (hasCode(store.about,"producttab")){
+                                var productTabName = getTabName(store.about,"producttab");
+                                $('#btnProduct_'+i).html(productTabName);
                             }
                             if(!dadStore){
                                 $('#btnContact_'+i).attr('dadStore','false');
@@ -1398,6 +1386,24 @@ var app = {
                 }
                 );
             },
+            customButton: function (e) {
+                var ref;
+                var uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_video.php?link=';
+                customLink = $(e).attr('customLink');
+                customType = $(e).attr('customType');
+                if (customType.indexOf("video") === 0){
+                    uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_video.php?link=';
+                } else if (customType.indexOf("pdf") === 0){
+                    uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_pdf.php?link=';
+                }
+                    
+                ref = cordova.InAppBrowser.open(uri+encodeURIComponent(customLink), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
+                ref.addEventListener('loadstop', function(event) {
+                    if (event.url.match("mobile/close")) {
+                        ref.close();
+                    }
+                });
+            },
             showContact: function (e) {
                 console.log('app.views.home.showContact');
                 console.log($(e).attr('store_index'));
@@ -1444,12 +1450,10 @@ var app = {
                         if (!store.email || store.email == '') {
                             $('.contactEmail').addClass('hide');
                         }
-                        console.log('Site:' + store.website + '.');
                         if (!store.website || store.website == '') {
                             $('.contactWebsite').addClass('hide');
                         }
-                        console.log("store.about:"+store.about);
-                        if (store.about.indexOf("**hideAddress") > -1){
+                        if (hasCode(store.about,"hideAddress")){
                             $('.contactAddress').addClass('hide');
                         }
                         app.bindEvents();
@@ -1866,7 +1870,6 @@ var app = {
                     function (result) {
 //                        console.log(JSON.stringify(result));
                         app.views.products.addProducts(result.products);
-                        console.log("result.products.length: "+result.products.length);
                         if (result.products.length > 0 && store_count > 0){
                             $('#storeTabs').removeClass('hide');
                             $('#productListDiv').removeClass('hide');
@@ -3835,11 +3838,78 @@ function hasCode(about,code){
         strCodes = strArray[1];
         var codeArray = strCodes.split(",");
         for (i=0; i<codeArray.length; i++){
-            if (code.indexOf(codeArray[i]) === 0)
+            codeArray[i].indexOf(code)
+            if (codeArray[i].indexOf(code) === 0)
                 return true;
         }
     }
     return false;
+}
+function getCustomName(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        var codeArray = strCodes.split(",");
+        for (i=0; i<codeArray.length; i++){
+            if (codeArray[i].indexOf(code) === 0){
+                buttonArray = codeArray[i].split(";");
+                if (buttonArray.length >=2 ) return buttonArray[1];
+                else return "";
+            }
+        }
+    }
+    return "";
+}
+function getCustomType(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        var codeArray = strCodes.split(",");
+        for (i=0; i<codeArray.length; i++){
+            if (codeArray[i].indexOf(code) === 0){
+                buttonArray = codeArray[i].split(";");
+                if (buttonArray.length >=3 ) return buttonArray[2];
+                else return "";
+            }
+        }
+    }
+    return "";
+}
+function getCustomLink(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        var codeArray = strCodes.split(",");
+        for (i=0; i<codeArray.length; i++){
+            if (codeArray[i].indexOf(code) === 0){
+                buttonArray = codeArray[i].split(";");
+                if (buttonArray.length >=4 ) return buttonArray[3];
+                else return "";
+            }
+        }
+    }
+    return "";
+    
+}
+function getTabName(about,code){
+    var strArray = about.split("**");
+    var strCodes;
+    if (strArray.length > 1){
+        strCodes = strArray[1];
+        var codeArray = strCodes.split(",");
+        for (i=0; i<codeArray.length; i++){
+            if (codeArray[i].indexOf(code) === 0){
+                buttonArray = codeArray[i].split(";");
+                if (buttonArray.length >=2 ) return buttonArray[1];
+                else return "";
+            }
+        }
+    }
+    return "";
+    
 }
 function stripLeadingTag(inputText){
     var strArray;
@@ -3935,7 +4005,6 @@ function convertLinks2(text) {
         a[i].setAttribute("data-callback","app.views.home.openSite");
         a[i].href = "#"
     }
-    console.log("innerHTML:"+div.innerHTML);
     return div.innerHTML;
 }
 function convertLinks(text) {

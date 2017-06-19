@@ -33,7 +33,7 @@
         <!--<link rel="stylesheet" type="text/css" href="css/index.css" />-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="js/lib/jqueryui/jquery-ui.min.css" />
-        <link rel="stylesheet" type="text/css" href="css/font-awesome-4.3.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="js/lib/bootstrap-ios7/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="js/lib/bootstrap-ios7/css/bootstrap-theme.css" />
         <link rel="stylesheet" type="text/css" href="css/fonts/stylesheet.css"/>
@@ -252,19 +252,26 @@
                                 <h4 class="text-left HstoreAddress">{{name}}</h4>
                                 <p class="text-left HstoreName">{{about}}</p>
                                 
-                                <div class="row">
+                                
+                                <!--<div class="text-left HstoreAddress">{{city}}, {{uf}}</div>-->
+                            </div>
+                        </div>
+                                <div class="row" id="buttonRow">
+                                    <!--
                                     <a href="" class="btn btn-primary" id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true">%Contact%</a>
                                     <a href="" class="btn btn-primary" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true">%Chat%</a>
                                     <a href="" class="btn btn-primary hide" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" dadStore="true">Map</a>
+                                    <a href="" class="btn btn-primary hide" id="customButton" store_index="{{index}}" data-callback="app.views.home.customButton" dadStore="true">Custom</a>
+                                    -->
+                                    <button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br>Contact</button>
+                                    <button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>
+                                    <button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>
+                                    <button type="button" class="btn btn-primary hide text-center" id="customButton" store_index="{{index}}"data-callback="app.views.home.customButton" ><span id="customButtonIcon" class="fa fa-video-camera"></span><br><span id="customButtonText">Video</span></button>
                                     <!--<a href="" class="btn btn-primary hide" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.test" dadStore="true">Map</a>-->
                                     <p id="favoriteRow"><button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.views.home.saveFavorite">
                                         <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
                                     </button></p>
                                 </div>
-                                
-                                <!--<div class="text-left HstoreAddress">{{city}}, {{uf}}</div>-->
-                            </div>
-                        </div>
                         <!--
                         <div class="row">
                             <div class="col-xs-12 col-sm-12">
@@ -294,10 +301,10 @@
             <div class="productList">
                 <ul class="nav nav-tabs hide" id="storeTabs">
                     <li class="active" id="liOptProduct">
-                        <a href="#" data-callback="app.views.home.showStoresProducts">%Products%</a>
+                        <a href="#" id="liOptProductLink" data-callback="app.views.home.showStoresProducts">%Products%</a>
                     </li>
                     <li id="liOptStore">
-                        <a href="#" data-callback="app.views.home.showStoresChild">%Stores%</a>
+                        <a href="#" id="liOptStoreLink" data-callback="app.views.home.showStoresChild">%Stores%</a>
                     </li>
                 </ul>
                 <div id="storesListDiv" class="hide">
