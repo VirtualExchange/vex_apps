@@ -606,7 +606,7 @@ var app = {
                     'stores/' + store_id,
                     {},
                     function (result) {
-                        console.log(JSON.stringify(result));
+                        console.log("store detail: "+JSON.stringify(result));
                         app.views.scrool = $(window).scrollTop();
                         app.views.home.oStoreDetail = result;
                         app.views.home.showStoreDetail(result, btBack, dadStore);
@@ -679,9 +679,9 @@ var app = {
                                 });
                                 console.log("store.favorite: "+store.favorite);
                                 if (store.favorite == true) {
-                                    $('#btFav_' + store.id + ' span').removeClass('icon-star');
-                                    $('#btFav_' + store.id + ' span').addClass('icon-star-filled');
-                                    $('#btFav_' + store.id + ' span').html('Clear Favorite');
+                                    $('#btFav_' + store.id).removeClass('fa-star-o');
+                                    $('#btFav_' + store.id).addClass('fa-star');
+                                    //$('#btFav_' + store.id).html('Clear Favorite');
 
                                     $('.btFavorite').attr('data-callback', 'app.views.home.removeFavorite');
                                 }
@@ -714,9 +714,9 @@ var app = {
                                     $('#customButton').attr('customlink', customLink);
                                     $('#customButton').attr('customtype',customType);
                                     if (customType.indexOf('pdf') == 0){
-                                        $('#customButtonIcon').attr('class','fa fa-file-pdf-o');
+                                        $('#customButton').attr('class','fa fa-file-pdf-o fa-3x');
                                     } else if (customType.indexOf('video') == 0){
-                                        $('#customButtonIcon').attr('class','fa fa-video-camera');
+                                        $('#customButton').attr('class','fa fa-video-camera fa-3x');
                                     }
                                 } else {
                                     console.log("No custom button: "+store.about);
@@ -1190,9 +1190,9 @@ var app = {
                         function () {
                             //console.log("store from lis: "+JSON.stringify(store));
                             if (store.favorite == true) {
-                                $('#btFav_' + i + ' span').removeClass('icon-star');
-                                $('#btFav_' + i + ' span').addClass('icon-star-filled');
-                                $('#btFav_' + i + ' span').html('Clear Favorite');
+                                $('#btFav_' + i + ' span').removeClass('fa-star-o');
+                                $('#btFav_' + i + ' span').addClass('fa-star');
+                                //$('#btFav_' + i + ' span').html('Clear Favorite');
                                 $('#btFav_' + i).attr('data-callback', 'app.views.home.removeFavorite');
                             }
                             
@@ -1281,9 +1281,9 @@ var app = {
                 function (result) {
                     console.log(JSON.stringify(result));
                     //change bt in store list
-                    $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('icon-star');
-                    $('#btFav_' + $(e).attr('store_index') + ' span').addClass('icon-star-filled');
-                    $('#btFav_' + $(e).attr('store_index') + ' span').html('Clear Favorite');
+                    $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('fa-star-o');
+                    $('#btFav_' + $(e).attr('store_index') + ' span').addClass('fa-star');
+                    //$('#btFav_' + $(e).attr('store_index') + ' span').html('Clear Favorite');
 
                     $('#btFav_' + $(e).attr('store_index')).attr('data-callback', 'app.views.home.removeFavorite');
 
@@ -1308,9 +1308,9 @@ var app = {
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-                        $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('icon-star-filled');
-                        $('#btFav_' + $(e).attr('store_index') + ' span').addClass('icon-star');
-                        $('#btFav_' + $(e).attr('store_index') + ' span').html('Make Favorite');
+                        $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('fa-star');
+                        $('#btFav_' + $(e).attr('store_index') + ' span').addClass('fa-star-o');
+                        //$('#btFav_' + $(e).attr('store_index') + ' span').html('Make Favorite');
                         $('#btFav_' + $(e).attr('store_index')).attr('data-callback', 'app.views.home.saveFavorite');
 
                         //change bt in detail store
@@ -1421,7 +1421,7 @@ var app = {
                     
                 }
                                 
-                $('#modalContact .modal-title').html(stripLeadingTag(store.name) + ' - ' + app.lang.getStr('%Contact%', 'contactView'));
+                $('#modalContact .modal-title').html(stripLeadingTag(store.name));
 
                 $('#btContactClose').html(app.lang.getStr('%Close%', 'contactView'));
 
