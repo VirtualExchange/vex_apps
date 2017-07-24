@@ -194,8 +194,6 @@
                     </div>
                     <div id="storeDetail_{{index}}" class="col-xs-8 col-sm-8" >
                         <h4>{{name}}</h4>
-                        <p>{{about}}</p>
-                        <div id="readMore_{{index}}" >Read More</div>
                     </div>
                 </div> 
             </a>
@@ -209,8 +207,6 @@
                     </div>
                     <div id="storeDetail_{{index}}" class="col-xs-8 col-sm-8" >
                         <h4>{{name}}</h4>
-                        <p>{{about}}</p>
-                        <div id="readMore_{{index}}" >Read More</div>
                     </div>
                 </div> 
             </a>
@@ -250,51 +246,30 @@
                             </div>
                             <div class="col-xs-8 col-sm-8">
                                 <h4 class="text-left HstoreAddress">{{name}}</h4>
-                                <p class="text-left HstoreName">{{about}}</p>
                                 
                                 
-                                <!--<div class="text-left HstoreAddress">{{city}}, {{uf}}</div>-->
                             </div>
                         </div>
-                                <div class="row" id="buttonRow">
-                                    <!--
-                                    <a href="" class="btn btn-primary" id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true">%Contact%</a>
-                                    <a href="" class="btn btn-primary" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true">%Chat%</a>
-                                    <a href="" class="btn btn-primary hide" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" dadStore="true">Map</a>
-                                    <a href="" class="btn btn-primary hide" id="customButton" store_index="{{index}}" data-callback="app.views.home.customButton" dadStore="true">Custom</a>
-                                    -->
-                                    <button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br>Contact</button>
-                                    <button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>
-                                    <button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>
-                                    <button type="button" class="btn btn-primary hide text-center" id="customButton" store_index="{{index}}"data-callback="app.views.home.customButton" ><span id="customButtonIcon" class="fa fa-video-camera"></span><br><span id="customButtonText">Video</span></button>
-                                    <!--<a href="" class="btn btn-primary hide" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.test" dadStore="true">Map</a>-->
-                                    <p id="favoriteRow"><button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.views.home.saveFavorite">
-                                        <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
-                                    </button></p>
-                                </div>
-                        <!--
-                        <div class="row">
+						<div class="row">
                             <div class="col-xs-12 col-sm-12">
-                                <p class="text-left HstoreName">{{about}}</p>
-                            </div>
+								<p class="text-left HstoreName">{{about}}
+								</p>
+							</div>
+					    </div>
+                        <div class="row" id="buttonRow">
+    						<a id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true" class="fa fa-address-card-o fa-3x"></a>&nbsp;
+    						<a id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true" class="fa fa-comment-o fa-3x"></a>&nbsp;
+    						<a id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" class="hide fa fa-map-marker fa-3x"></a>&nbsp;
+    						<a id="customButton" store_index="{{index}}"data-callback="app.views.home.customButton" class="hide fa fa-video-camera fa-3x"></a>&nbsp;
+							<a id="btFav_{{index}}" store_index="{{index}}"data-callback="app.views.home.saveFavorite" class="fa fa-star-o fa-3x"></a>
+                            <!--<button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br></button>-->
+                            <!--<button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>-->
+                            <!--<button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>-->
+                            <!--<button type="button" class="btn btn-primary hide text-center" id="customButton" store_index="{{index}}"data-callback="app.views.home.customButton" ><span id="customButtonIcon" class="fa fa-video-camera"></span><br><span id="customButtonText">Video</span></button>-->
+                            <!--<p id="favoriteRow"><button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.views.home.saveFavorite">
+                                <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
+                            </button></p>-->
                         </div>
-                        -->
-                        <!--
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12">
-                                <a href="" class="btn btn-primary" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true">%Contact%</a>
-                            </div>
-                            <div class="col-xs-4 col-sm-4">
-                                <a href="" class="btn btn-primary" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true">%Chat%</a>
-                            </div>
-                            <div class="col-xs-4 col-sm-4">
-                                <button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link" data-callback="app.views.home.saveFavorite">
-                                    <span class="icon icon-star"></span>
-                                </button>
-                            </div>
-                        </div>
-                        -->
-
                     </div>
                 </div>
             </div>
@@ -395,7 +370,7 @@
                                 <p>%Contact%</p>
                                 {{contact}}
                             </li>
-                            <li class="text-left">
+                            <li class="hide text-left">
                                 <a class="btn btn-success" data-callback="app.views.products.showProductListMore" id="moreFrom" cat_name="{{category_name}}" store_id="{{store_id}}">%More%</a>
                             </li>
                         </ul>
@@ -406,33 +381,31 @@
 
         <script id="contactView" type="text/html">
             <div class="contactModel">
-                <dl>
-                    <dt class="contactPhone">
+                    <h4 class="contactPhone">
                     %Telephone%
-                    </dt>
-                    <dd class="contactPhone">
-                        <a href="#" onclick="window.location.href='tel:{{phone}}';" class="btn btn-link">{{phone}}</a>
-                    </dd>
-                    <dt class="contactEmail">
+                    </h4>
+                    <div class="contactPhone">
+                        <a href="#" onclick="window.location.href='tel:{{phone}}';">{{phone}}</a>
+                    </div>
+                    <h4 class="contactEmail">
                     %Email%
-                    </dt>
-                    <dd class="contactEmail">
-                        <a href="mailto:{{email}}"  class="btn btn-link">{{email}}</a>
-                    </dd>
-                    <dt class="contactWebsite">
+                    </h4>
+                    <div class="contactEmail">
+                        <a href="mailto:{{email}}">{{email}}</a>
+                    </div>
+                    <h4 class="contactWebsite">
                     %Website%
-                    </dt>
-                    <dd class="contactWebsite">
-                        <a href="#" data-callback="app.views.home.openSite" data-site="{{website}}"  class="btn btn-link">{{websiteView}}</a>
-                    </dd>
-                    <dt class="contactAddress">
+                    </h4>
+					<div class="contactWebsite" id="websitewrap">
+                        <a href="#" data-callback="app.views.home.openSite" data-site="{{website}}" >{{websiteView}}</a>
+                    </div>
+                    <h4 class="contactAddress">
                     %Address%
-                    </dt>
-                    <dd class="contactAddress">
+                    </h4>
+                    <div class="contactAddress">
                     {{address}}<br>
                     {{city}},&nbsp;{{state}}&nbsp;&nbsp;{{zip}}
-                    </dd>
-                    </ul>
+                    </div>
             </div>
         </script>
         <script id="chatView" type="text/html">
