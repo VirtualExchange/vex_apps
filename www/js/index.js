@@ -679,11 +679,10 @@ var app = {
                                 });
                                 console.log("store.favorite: "+store.favorite);
                                 if (store.favorite == true) {
-                                    $('#btFav_' + store.id).removeClass('fa-star-o');
-                                    $('#btFav_' + store.id).addClass('fa-star');
+                                    $('#favoriteButton').removeClass('fa-star-o');
+                                    $('#favoriteButton').addClass('fa-star');
+                                    $('#favoriteButton').attr('data-callback', 'app.views.home.removeFavorite');
                                     //$('#btFav_' + store.id).html('Clear Favorite');
-
-                                    $('.btFavorite').attr('data-callback', 'app.views.home.removeFavorite');
                                 }
                                 
                                 if(!aboutStripped || aboutStripped== '<p></p>'){
@@ -714,9 +713,9 @@ var app = {
                                     $('#customButton').attr('customlink', customLink);
                                     $('#customButton').attr('customtype',customType);
                                     if (customType.indexOf('pdf') == 0){
-                                        $('#customButton').attr('class','fa fa-file-pdf-o fa-3x');
+                                        $('#customButton').attr('class','fa fa-file-pdf-o fa-2x');
                                     } else if (customType.indexOf('video') == 0){
-                                        $('#customButton').attr('class','fa fa-video-camera fa-3x');
+                                        $('#customButton').attr('class','fa fa-video-camera fa-2x');
                                     }
                                 } else {
                                     console.log("No custom button: "+store.about);
@@ -1190,10 +1189,10 @@ var app = {
                         function () {
                             //console.log("store from lis: "+JSON.stringify(store));
                             if (store.favorite == true) {
-                                $('#btFav_' + i + ' span').removeClass('fa-star-o');
-                                $('#btFav_' + i + ' span').addClass('fa-star');
+                                $('#favoriteButton').removeClass('fa-star-o');
+                                $('#favoriteButton').addClass('fa-star');
+                                $('#favoriteButton').attr('data-callback', 'app.views.home.removeFavorite');
                                 //$('#btFav_' + i + ' span').html('Clear Favorite');
-                                $('#btFav_' + i).attr('data-callback', 'app.views.home.removeFavorite');
                             }
                             
                             if (storeArray.length == 1 && search==false && dadStore=='true') {
@@ -1281,17 +1280,15 @@ var app = {
                 function (result) {
                     console.log(JSON.stringify(result));
                     //change bt in store list
-                    $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('fa-star-o');
-                    $('#btFav_' + $(e).attr('store_index') + ' span').addClass('fa-star');
+                    $('#favoriteButton').removeClass('fa-star-o');
+                    $('#favoriteButton').addClass('fa-star');
+                    $('#favoriteButton').attr('data-callback', 'app.views.home.removeFavorite');
                     //$('#btFav_' + $(e).attr('store_index') + ' span').html('Clear Favorite');
 
-                    $('#btFav_' + $(e).attr('store_index')).attr('data-callback', 'app.views.home.removeFavorite');
-
                     //change bt in detail store
-                    $(e).children('span').removeClass('icon-star');
-                    $(e).children('span').addClass('icon-star-filled');
-
-                    $(e).attr('data-callback', 'app.views.home.removeFavorite');
+                    //$(e).children('span').removeClass('icon-star');
+                    //$(e).children('span').addClass('icon-star-filled');
+                    //$(e).attr('data-callback', 'app.views.home.removeFavorite');
 
                 },
                     function (e) {
@@ -1308,16 +1305,15 @@ var app = {
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-                        $('#btFav_' + $(e).attr('store_index') + ' span').removeClass('fa-star');
-                        $('#btFav_' + $(e).attr('store_index') + ' span').addClass('fa-star-o');
+                        $('#favoriteButton').removeClass('fa-star');
+                        $('#favoriteButton').addClass('fa-star-o');
+                        $('#favoriteButton').attr('data-callback', 'app.views.home.saveFavorite');
                         //$('#btFav_' + $(e).attr('store_index') + ' span').html('Make Favorite');
-                        $('#btFav_' + $(e).attr('store_index')).attr('data-callback', 'app.views.home.saveFavorite');
 
                         //change bt in detail store
-                        $(e).children('span').removeClass('icon-star-filled');
-                        $(e).children('span').addClass('icon-star');
-
-                        $(e).attr('data-callback', 'app.views.home.saveFavorite');
+                        //$(e).children('span').removeClass('icon-star-filled');
+                        //$(e).children('span').addClass('icon-star');
+                        //$(e).attr('data-callback', 'app.views.home.saveFavorite');
 
                     },
                     function (e) {
