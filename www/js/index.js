@@ -1219,8 +1219,8 @@ var app = {
                                 $('#btnProduct_'+i).attr('dadStore','false');
                             }
                             if (store.logo.indexOf('medium.png') > -1){
-                                $('#storeImage_'+i).addClass('hide');
-                                $('#storeDetail_'+i).addClass('col-xs-12 col-sm-12');
+                                $('#storeImage_'+store.id).addClass('hide');
+                                $('#storeDetail_'+store.id).addClass('col-xs-12 col-sm-12');
                                 $('#readMore_'+i).addClass('hide');
                                 $('#storeItem_'+store.id).attr('data-callback', '');
                             }
