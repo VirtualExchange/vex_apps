@@ -78,7 +78,7 @@
   border-radius: 1px;
 }
 
-#menubutton { position: absolute; right: 5px; top: 15px; }
+#menubutton { position: absolute; right: 1px; top: -5px; }
 
 .navbar-brand
 {
