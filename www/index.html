@@ -34,8 +34,8 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="js/lib/jqueryui/jquery-ui.min.css" />
         <link rel="stylesheet" type="text/css" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" type="text/css" href="js/lib/bootstrap-ios7/css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="js/lib/bootstrap-ios7/css/bootstrap-theme.css" />
+        <link rel="stylesheet" type="text/css" href="js/lib/bootstrap-3.3.7-dist/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="js/lib/bootstrap-3.3.7-dist/css/bootstrap-theme.css" />
         <link rel="stylesheet" type="text/css" href="css/fonts/stylesheet.css"/>
         <link rel="stylesheet" type="text/css" href="css/style.css"/>
 
@@ -85,10 +85,13 @@
         <script type="text/javascript" src="js/lib/linkify/linkify.min.js"></script>
         <script type="text/javascript" src="js/lib/linkify/linkify-jquery.min.js"></script>
         
-        <script type="text/javascript" src="js/lib/bootstrap-ios7/js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/lib/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
         <script type="text/javascript" src="js/lib/tim/tim.js"></script>
         <script type="text/javascript" src="js/lib/fastclick.js"></script>
         <script type="text/javascript" src='js/lib/Swipe-master/swipe.js'></script>
+        <script type="text/javascript" src='js/lib/bootstrap3-typeahead.js'></script>
+        <script type="text/javascript" src='js/lib/bloodhound.min.js'></script>
+		
         <script type="text/javascript" src="js/appCore.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 
@@ -482,27 +485,26 @@
             <div class="contentAjust">
                 <div class="row">
                     <ol class="breadcrumb text-center">
-                        <li class="active"><a class="btn-link" href="#" data-callback="app.views.search.byDepartment">%Departments%</a></li>
-                        <li><a class="btn-link" href="#" data-callback="app.views.search.byName">%Search Stores%</a></li>
+                        <li class="active"><a class="btn-link selected" href="#" data-callback="app.views.search.byName">%Search Stores%</a></li>
+                        <li><a class="btn-link" href="#" data-callback="app.views.search.byDepartment">%Departments%</a></li>
                     </ol>
-                    <div id="byDepartment">
+                    <div id="byDepartment" class="hide">
                         <ul class="list-group"></ul>
                     </div>
-                    <div id="byName" class="hide" style="margin: 5px;">
+                    <div id="byName" style="margin: 5px;">
                         <div class="input-group">
-                            <span class="input-group-addon"><span class="icon icon-search"></span></span>
-                            <input type="text" placeholder="%Search by store name%" class="form-control" id="storeNameInput" onkeyup="app.views.search.filterByName(this)"/>
-                            <span class="input-group-addon" onclick="$('#storeNameInput').val('');"><span class="icon icon-close"></span></span>
+                            <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                            <input type="text" placeholder="%Search by store name%" class="form-control" id="storeNameInput"/>
+                            <span class="input-group-addon" onclick="$('#storeNameInput').val('');"><span class="fa fa-times"></span></span>
                         </div>
-                        <div id="resultByName"></div>
                     </div>
                 </div>
             </div>
         </script>
         <script type="text/html" id="byDepartmentItem">
-            <a href="#" data-callback="app.views.home.filterByDepartment" class="list-group-item" dep_id="{{id}}" dep_name="{{name}}">
+            <a href="#" data-callback="app.views.search.filterByDepartment" class="list-group-item" dep_id="{{id}}" dep_name="{{name}}">
                 <span class="depName">{{name}}</span>
-                <span class="icon icon-right-nav pull-right"></span>
+                <span class="fa fa-angle-right pull-right"></span>
             </a>
         </script>
         
@@ -615,17 +617,22 @@
         </script>        
         <script type="text/html" id="menuItemFavorite">
             <li>
-                <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+                <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-star-o">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemChats">
             <li>
-                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target=".navbar-collapse">{{name}}<span id="msgcount3" class="vex-badge badge pull-right"></a>
+                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount3" class="vex-badge badge pull-right"></a>
             </li>
         </script>        
         <script type="text/html" id="menuItemMap">
             <li>
-                <a href="#" data-callback="app.views.leaflet.getPosition" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+                <a href="#" data-callback="app.views.leaflet.getPosition" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-map-marker">&nbsp;{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemSearch">
+            <li>
+                <a href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout">
@@ -640,17 +647,22 @@
         </script>        
         <script type="text/html" id="menuItemFavorite2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+                <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-star-o">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemChats2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target="#landingPageMenu">{{name}}<span id="msgcount4" class="hide vex-badge badge pull-right"></a>
+                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount4" class="hide vex-badge badge pull-right"></a>
             </li>
         </script>        
         <script type="text/html" id="menuItemMap2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.leaflet.getPosition" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+                <a href="#" data-callback="app.views.leaflet.getPosition" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-map-marker">&nbsp;{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemSearch2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout2">
@@ -694,10 +706,11 @@
                     </button>
                     <div id='navbar-backbutton'>
                         <a class="btn-link" id="backLink" data-callback="app.views.goBack" >
-                            <span id='backbutton-icon' class='icon icon-2x icon-left'></span>
+                            <!--<span id='backbutton-icon' class='icon icon-2x icon-left'></span>-->
+							<span id='backbutton-icon' class='fa fa-2x fa-chevron-left'></span>
                             <span id='backbutton-text'>Back</span>
                         </a>
-                        <span id="appTile" class="navbar-brand" href="#">Title</span>
+						<span id="appTile" class="navbar-brand" href="#">Title</span>
                     </div>                
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

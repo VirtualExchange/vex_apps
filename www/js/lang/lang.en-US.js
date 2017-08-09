@@ -45,9 +45,9 @@ var lang_enUS = {
         },
         'searchView' : {
             '%BACK%'                 : 'BACK',
-            '%Departments%'          : 'Departments',
-            '%Search Stores%'        : 'Search Stores',
-            '%Search by store name%' : 'Search by store name'
+            '%Departments%'          : 'Categories',
+            '%Search Stores%'        : 'Search',
+            '%Search by store name%' : 'Search'
         },
         'resultView' : {
             '%BACK%' : 'BACK'
