@@ -494,6 +494,46 @@ var appCore = {
                 }
             });
         },
+        get2: function(url, path, args, successCB, errorCB) {
+            console.log('app.webservice.get(): ' + url + path, JSON.stringify(args));
+
+            if(!app.checkConnection()){
+                return;
+            }
+            
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: url + path,
+                data: args,
+                headers: {
+                    "Authorization": "Token token=" + app.token,
+                    'X-Access-Token': app.userToken,
+                    'X-Device-Token': window.localStorage.getItem("token")
+                },
+                success: function(data) {
+                    successCB(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if(textStatus==="timeout"){
+                        navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), 
+                            function () {}, 
+                            app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+                    }else{
+                        /*navigator.notification.alert(textStatus, 'Close');*/
+                    } 
+                    var err = {
+                        a: jqXHR,
+                        msg: textStatus,
+                        message: 'Webservice Error: '+errorThrown
+                    };
+                    errorCB(err);
+                    console.log("jqXHR.responseText: "+jqXHR.responseText);
+                    console.log("textStatus: "+textStatus);
+                    console.log("errorThrown: "+errorThrown);
+                }
+            });
+        },
         post: function(path, type, args, successCB, errorCB) {
             console.log('app.webservice.post(): ' + (app.url  + '/' + path), JSON.stringify(args));
 

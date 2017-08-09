@@ -313,6 +313,9 @@ var app = {
             } else if (backTo[0] == "MapView"){
                 app.views.backStack.pop();
                 app.views.leaflet.showMap(backTo[1],backTo[2],backTo[3]);
+            } else if (backTo[0] == "SearchView"){
+                app.views.backStack.pop();
+				app.views.search.init();
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -1543,6 +1546,19 @@ var app = {
                     app.bindEvents();
                 }
             );
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemSearch2',
+                'menuItemSearch2',
+                {
+                    name: app.lang.getStr('%Search%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
             if (app.loginRequired){
                 app.draw(
                     '#vex-navbar2',
@@ -1638,6 +1654,19 @@ var app = {
                         'menuItemMap',
                         {
                             name: app.lang.getStr('%V-Map%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemSearch',
+                        'menuItemSearch',
+                        {
+                            name: app.lang.getStr('%Search%', 'aplication'),
                             id: 0
                         },
                         'append',
@@ -2358,20 +2387,23 @@ var app = {
         },
         search: {
             init: function (e) {
-                console.log('app.views.search.int()');
+				app.views.loadView.show();
+                console.log('app.views.search.init()');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('.navbar').removeClass('hide');
                 
-                app.views.setDefaults();
-                
-                $('.linkHome').removeClass('selected');
-                $(e).addClass('selected');
-                
-                $('#content').html('');
-                
-                app.webservice.get(
+				app.views.backStack.push("SearchView");
+                //$('.linkHome').removeClass('selected');
+                //$(e).addClass('selected');
+				
+				app.webservice.get(
                     'departments',
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
+						app.views.loadView.hide();
                         app.draw(
                             '#content',
                             '#searchView',
@@ -2379,6 +2411,7 @@ var app = {
                             {},
                             '',
                             function () {
+								app.views.search.typeAhead();
 
                                 $.each(result.departments, function (i, dep) {
                                     app.draw(
@@ -2404,6 +2437,34 @@ var app = {
                     }
                 );
             },
+			typeAhead: function() {
+				const suggestions = [
+				{name: 'animal'},
+				{name: 'bread'}, 
+				{name: 'car'}, 
+				{name: 'cast'},
+				{name: 'carp'}]
+
+				var bloodhoundSuggestions = new Bloodhound({
+					datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+					queryTokenizer: Bloodhound.tokenizers.whitespace,
+					sufficient: 3,
+					/*local: suggestions,*/
+					prefetch: {
+						url: 'http://dev.phowma.com/api/v1/stores',
+					}
+				});
+				$("#storeNameInput").typeahead({
+					items: 4,
+					source:bloodhoundSuggestions.ttAdapter(),
+					afterSelect: function(item) {
+						console.log('item.name: ' + item.name + " item.id: "+item.id);
+						$('#autocomplete').val(item.name);
+						app.views.backStack.push("StoreDetail:"+item.id);
+						app.views.search.storeDetail(item.id);
+					},							
+				});
+			},
             byName: function (e) {
                 console.log('app.views.search.byName()');
                 $('.breadcrumb > li').removeClass('active');
@@ -2429,7 +2490,8 @@ var app = {
             },
             filterByDepartment: function(e){
                 console.log('app.views.search.filterByDepartment()');
-                app.views.search.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'));
+                app.views.backStack.push("StoreListByDept:"+$(e).attr('dep_id')+":"+$(e).attr('dep_name')+":"+"noFilter");
+                app.views.home.storeListByDepartment($(e).attr('dep_id'),$(e).attr('dep_name'),false);
             },
             storeListByDepartment: function (dep_id, dep_name) {
                 console.log('app.views.search.storeListByDepartment()');
@@ -2541,8 +2603,8 @@ var app = {
             },
             storeDetail: function (store_id) {
                 console.log('app.views.search.storeDetail()');
-                app.views.auxBackFuc = 'search';
-                app.views.home.getStoreDetail(store_id, true, 'false');
+                //app.views.auxBackFuc = 'search';
+                app.views.home.getStoreDetail(store_id, true, 'true');
                 
             }
         },
