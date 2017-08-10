@@ -120,7 +120,19 @@ var app = {
         }
 
         //document.addEventListener("backbutton", app.onBackKeyDown, false);
-
+		$(document).ajaxSend(function(event, jqXHR, settings) {
+			if (settings.url.indexOf("dev.phowma") > -1){
+				$('.contentAjust').addClass('hide');
+				app.views.loadView.show();
+			}
+			
+		});
+		$(document).ajaxComplete(function(event, jqXHR, settings) {
+			if (settings.url.indexOf("dev.phowma") > -1){
+				$('.contentAjust').removeClass('hide');
+				app.views.loadView.hide();
+			}
+		});
         console.log("ANTES: " + window.localStorage.getItem("token"));
 
         //window.localStorage.clear();
@@ -1123,7 +1135,6 @@ var app = {
                 app.views.stores = new Array();
 
                 $.each(result.stores, function (i, s) {
-                    
                     if (result.stores.length==1 || !s.corporate) {
                         //console.log(JSON.stringify(s));
                         app.views.stores.push(s);
@@ -2452,6 +2463,14 @@ var app = {
 					/*local: suggestions,*/
 					prefetch: {
 						url: 'http://dev.phowma.com/api/v1/stores',
+						prepare: function (settings) {
+							settings.headers = {
+								'Authorization' : "Token token=" + app.token,
+								'X-Access-Token': app.userToken,
+								'X-Device-Token': window.localStorage.getItem("token")
+							};
+							return settings;
+						}
 					}
 				});
 				$("#storeNameInput").typeahead({
