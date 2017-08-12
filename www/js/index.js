@@ -120,19 +120,19 @@ var app = {
         }
 
         //document.addEventListener("backbutton", app.onBackKeyDown, false);
-		$(document).ajaxSend(function(event, jqXHR, settings) {
-			if (settings.url.indexOf("dev.phowma") > -1){
-				$('.contentAjust').addClass('hide');
-				app.views.loadView.show();
-			}
-			
-		});
-		$(document).ajaxComplete(function(event, jqXHR, settings) {
-			if (settings.url.indexOf("dev.phowma") > -1){
-				$('.contentAjust').removeClass('hide');
-				app.views.loadView.hide();
-			}
-		});
+        $(document).ajaxSend(function(event, jqXHR, settings) {
+            if (settings.url.indexOf("dev.phowma") > -1){
+                $('.contentAjust').addClass('hide');
+                app.views.loadView.show();
+            }
+            
+        });
+        $(document).ajaxComplete(function(event, jqXHR, settings) {
+            if (settings.url.indexOf("dev.phowma") > -1){
+                $('.contentAjust').removeClass('hide');
+                app.views.loadView.hide();
+            }
+        });
         console.log("ANTES: " + window.localStorage.getItem("token"));
 
         //window.localStorage.clear();
@@ -327,7 +327,7 @@ var app = {
                 app.views.leaflet.showMap(backTo[1],backTo[2],backTo[3]);
             } else if (backTo[0] == "SearchView"){
                 app.views.backStack.pop();
-				app.views.search.init();
+                app.views.search.init();
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -344,6 +344,7 @@ var app = {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 app.views.homeInitCalled = 0;
                 app.draw(
                     '#content',
@@ -591,7 +592,10 @@ var app = {
                 if ($(e).attr('store_id')) {
                     $('.carousel').addClass('hide');
                     $('#menubutton').addClass('hide');
+                    console.log("Trying to hide menu...");
+                    $('#landingPageMenu').collapse('hide');
                     $('#landingPageMenu').addClass('hide');
+                    $('#landingPageMenu').collapse('hide');
                     $('.navbar').removeClass('hide');
                     
                     store_id = $(e).attr('store_id');
@@ -1234,6 +1238,8 @@ var app = {
                             }
                             if (store.logo.indexOf('medium.png') > -1){
                                 $('#storeImage_'+store.id).addClass('hide');
+                                $('#storeDetail_'+store.id).removeClass('col-xs-8');
+                                $('#storeDetail_'+store.id).removeClass('col-sm-8');
                                 $('#storeDetail_'+store.id).addClass('col-xs-12 col-sm-12');
                                 $('#readMore_'+i).addClass('hide');
                                 $('#storeItem_'+store.id).attr('data-callback', '');
@@ -1343,6 +1349,7 @@ var app = {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 $('.navbar').removeClass('hide');
                 
                 app.draw(
@@ -1570,6 +1577,21 @@ var app = {
                     app.bindEvents();
                 }
             );
+            /*
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemAccount2',
+                'menuItemAccount2',
+                {
+                    name: app.lang.getStr('%Account%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            */
             if (app.loginRequired){
                 app.draw(
                     '#vex-navbar2',
@@ -1685,6 +1707,21 @@ var app = {
                             app.bindEvents();
                         }
                     );
+                    /*
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemAccount',
+                        'menuItemAccount',
+                        {
+                            name: app.lang.getStr('%Account%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    */
                     app.views.goHome();
                 },
                 function (err) {
@@ -2021,8 +2058,6 @@ var app = {
                             }
                             if (prod.name.indexOf('**banner**') == 0) {
                                 $('#productItem_'+prod.id).attr('data-callback', '');
-                            } else {
-                                $('#readMore_'+index).removeClass('hide');
                             }
                             app.bindEvents();
                         }
@@ -2398,23 +2433,24 @@ var app = {
         },
         search: {
             init: function (e) {
-				app.views.loadView.show();
+                app.views.loadView.show();
                 console.log('app.views.search.init()');
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 $('.navbar').removeClass('hide');
                 
-				app.views.backStack.push("SearchView");
+                app.views.backStack.push("SearchView");
                 //$('.linkHome').removeClass('selected');
                 //$(e).addClass('selected');
-				
-				app.webservice.get(
+                
+                app.webservice.get(
                     'departments',
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-						app.views.loadView.hide();
+                        app.views.loadView.hide();
                         app.draw(
                             '#content',
                             '#searchView',
@@ -2422,7 +2458,7 @@ var app = {
                             {},
                             '',
                             function () {
-								app.views.search.typeAhead();
+                                app.views.search.typeAhead();
 
                                 $.each(result.departments, function (i, dep) {
                                     app.draw(
@@ -2448,42 +2484,42 @@ var app = {
                     }
                 );
             },
-			typeAhead: function() {
-				const suggestions = [
-				{name: 'animal'},
-				{name: 'bread'}, 
-				{name: 'car'}, 
-				{name: 'cast'},
-				{name: 'carp'}]
+            typeAhead: function() {
+                const suggestions = [
+                {name: 'animal'},
+                {name: 'bread'}, 
+                {name: 'car'}, 
+                {name: 'cast'},
+                {name: 'carp'}]
 
-				var bloodhoundSuggestions = new Bloodhound({
-					datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-					queryTokenizer: Bloodhound.tokenizers.whitespace,
-					sufficient: 3,
-					/*local: suggestions,*/
-					prefetch: {
-						url: 'http://dev.phowma.com/api/v1/stores',
-						prepare: function (settings) {
-							settings.headers = {
-								'Authorization' : "Token token=" + app.token,
-								'X-Access-Token': app.userToken,
-								'X-Device-Token': window.localStorage.getItem("token")
-							};
-							return settings;
-						}
-					}
-				});
-				$("#storeNameInput").typeahead({
-					items: 4,
-					source:bloodhoundSuggestions.ttAdapter(),
-					afterSelect: function(item) {
-						console.log('item.name: ' + item.name + " item.id: "+item.id);
-						$('#autocomplete').val(item.name);
-						app.views.backStack.push("StoreDetail:"+item.id);
-						app.views.search.storeDetail(item.id);
-					},							
-				});
-			},
+                var bloodhoundSuggestions = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    sufficient: 3,
+                    /*local: suggestions,*/
+                    prefetch: {
+                        url: 'http://dev.phowma.com/api/v1/stores',
+                        prepare: function (settings) {
+                            settings.headers = {
+                                'Authorization' : "Token token=" + app.token,
+                                'X-Access-Token': app.userToken,
+                                'X-Device-Token': window.localStorage.getItem("token")
+                            };
+                            return settings;
+                        }
+                    }
+                });
+                $("#storeNameInput").typeahead({
+                    items: 4,
+                    source:bloodhoundSuggestions.ttAdapter(),
+                    afterSelect: function(item) {
+                        console.log('item.name: ' + item.name + " item.id: "+item.id);
+                        $('#autocomplete').val(item.name);
+                        app.views.backStack.push("StoreDetail:"+item.id);
+                        app.views.search.storeDetail(item.id);
+                    },                          
+                });
+            },
             byName: function (e) {
                 console.log('app.views.search.byName()');
                 $('.breadcrumb > li').removeClass('active');
@@ -2674,6 +2710,7 @@ var app = {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 $('.navbar').removeClass('hide');
                 $('#backLink').addClass('hide');
                 app.views.backStack.push("MapView:"+latitude+":"+longitude+":"+branchOnly);
@@ -2822,6 +2859,7 @@ var app = {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 $('.navbar').removeClass('hide');
                 $('#backLink').removeClass('hide');
 
@@ -3552,6 +3590,7 @@ var app = {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 $('.navbar').removeClass('hide');
                 $('#backLink').removeClass('hide');
                 
@@ -3642,6 +3681,7 @@ var app = {
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
                 $('.navbar').removeClass('hide');
 
                 app.draw(
@@ -3869,6 +3909,61 @@ var app = {
                     }
                 );
             }
+        },
+        account: {
+            init: function(){
+                console.log("app.views.account.init()");
+        
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
+                $('.navbar').removeClass('hide');
+                $('#backLink').addClass('hide');
+                app.views.backStack.push("AccountView");
+                app.webservice.get(
+                    'device',
+                    {},
+                    function (result) {
+                        console.log(JSON.stringify(result));
+                        app.draw(
+                            '#content',
+                            '#accountView',
+                            'accountView',
+                            {
+                                id: result.id,
+                                token: result.token,
+                                push_token: result.push_token,
+                                kind: result.kind,
+                                latitude: result.latitude,
+                                longitude: result.longitude,
+                                radius: result.radius,
+                                name: result.name ? result.name : "",
+                                email: result.email ? result.email : "",
+                                phone: result.phone ? result.phone : ""
+                            },
+                            '',
+                            function () {
+                                app.bindEvents();
+                            }
+                        );
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
+                
+                app.draw(
+                    '#content',
+                    '#accountView',
+                    'accountView',
+                    {},
+                    '',
+                    function () {
+                        app.bindEvents();
+                    }
+                );
+            },
         }
     },
     showToken: function () {
