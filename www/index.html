@@ -315,7 +315,6 @@
                         <p class="list-group-item-text red" id="regular_price_{{index}}" >{{regular_price}}</p>
                         <p class="list-group-item-text green" id="sale_price_{{index}}" >{{price}}</p>
                         <div id="productDescription_{{index}}" >{{description}}</div>
-                        <div id="readMore_{{index}}" class="hide">Read More</div>
                     </div>
                 </div>
             </a>
@@ -609,7 +608,21 @@
                 <img src="img/load_image.gif" style="width: 40px;"/>
             </div>
         </script>
-
+        <script type="text/html" id="accountView">
+            <div class="fullRow">
+                <div class="alert alert-danger hidden" role="alert"></div>
+				<p>id: {{id}}</p>
+				<p>token: {{token}}</p>
+				<p>kind: {{kind}}</p>
+				<p>latitude: {{latitude}}</p>
+				<p>longitude: {{longitude}}</p>
+				<p>radius: {{radius}}</p>
+				<p>name: {{name}}</p>
+				<p>email: {{email}}</p>
+				<p>phone: {{phone}}</p>
+				<p>push_token: {{push_token}}</p>
+            </div>
+		</script>
         <script type="text/html" id="menuItem">
             <li>
                 <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
@@ -633,6 +646,11 @@
         <script type="text/html" id="menuItemSearch">
             <li>
                 <a href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemAccount">
+            <li>
+                <a href="#" data-callback="app.views.account.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout">
@@ -663,6 +681,11 @@
         <script type="text/html" id="menuItemSearch2">
             <li class="list-group-item">
                 <a href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemAccount2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.views.account.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout2">

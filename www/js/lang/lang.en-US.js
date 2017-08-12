@@ -102,7 +102,8 @@ var lang_enUS = {
             '%Favorites%'      : 'Favorites',
             '%Chats%'            : 'Chats',
             '%Exit%': 'Exit',
-            '%Logout%': 'Logout'
+            '%Logout%': 'Logout',
+            '%Account%': 'Account'
         },
         'chatView':{
             '%SEND%' : 'SEND',

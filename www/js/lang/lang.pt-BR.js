@@ -97,7 +97,8 @@ var lang_ptBR = {
             '%Favorites%'      : 'Favorites',
             '%Chats%'            : 'Chats',
             '%Exit%': 'Exit',
-            '%Logout%': 'Logout'
+            '%Logout%': 'Logout',
+            '%Account%': 'Account'
         },
         'chatView':{
             '%SEND%' : 'ENVIAR',
