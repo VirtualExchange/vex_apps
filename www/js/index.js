@@ -2481,7 +2481,7 @@ var app = {
                             function () {
                                 app.views.search.typeAhead();
                                 if (result.departments.length == 0){
-                                    $('#searchTab').addclass('hide');
+                                    $('#searchTab').addClass('hide');
                                 }
                                 $.each(result.departments, function (i, dep) {
                                     app.draw(
