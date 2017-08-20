@@ -1404,7 +1404,6 @@ var app = {
                 );
             },
             customButton: function (e) {
-                var ref;
                 var uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_video.php?link=';
                 customLink = $(e).attr('customLink');
                 customType = $(e).attr('customType');
@@ -1414,12 +1413,28 @@ var app = {
                     uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_pdf.php?link=';
                 }
                     
-                ref = cordova.InAppBrowser.open(uri+encodeURIComponent(customLink), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
-                ref.addEventListener('loadstop', function(event) {
+                app.views.browserRef = cordova.InAppBrowser.open(uri+encodeURIComponent(customLink), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
+                
+                var loadingSpinner = false;
+                app.views.browserRef.addEventListener('loadstop', function(event) {
+                    navigator.notification.activityStop();
                     if (event.url.match("mobile/close")) {
-                        ref.close();
+                        app.views.browserRef.close();
                     }
                 });
+                app.views.browserRef.addEventListener('loadstart', function(event) {
+                    if (!loadingSpinner){
+                        navigator.notification.activityStart("Please Wait", "Loading...");
+                        loadingSpinner = true;
+                    }else{
+                        navigator.notification.activityStop();
+                    }
+                });
+                app.views.browserRef.addEventListener('loaderror', function(event) {
+                    navigator.notification.activityStop();
+                    loadingSpinner = false;
+                });
+                
             },
             showContact: function (e) {
                 console.log('app.views.home.showContact');
@@ -1483,23 +1498,29 @@ var app = {
                 var ref;
                 var url = $(e).attr('data-site');
                 if (url.indexOf('http') == 0) {
-                    console.log("open 1");
-                    ref = cordova.InAppBrowser.open($(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
+                    app.views.browserRef = cordova.InAppBrowser.open($(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes,hardwareback=no'); 
                 }else{
-                    console.log("open 2");
-                    ref = cordova.InAppBrowser.open('http://' + $(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes');  
+                    app.views.browserRef = cordova.InAppBrowser.open('http://' + $(e).attr('data-site'), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes,hardwareback=no');  
                 }
-
-                ref.addEventListener('loadstop', function(event) {
-                    console.log("loadstop");
-                    console.log("event.url:"+event.url);
+                var loadingSpinner = false;
+                app.views.browserRef.addEventListener('loadstop', function(event) {
+                    navigator.notification.activityStop();
                     if (event.url.match("mobile/close")) {
-                        ref.close();
+                        app.views.browserRef.close();
                     }
                 });
-                //ref.addEventListener('loadstop', loadstopcb);
-                ref.addEventListener('loadstart', loadstartcb);
-                ref.addEventListener('loaderror', loaderrorcb);
+                app.views.browserRef.addEventListener('loadstart', function(event) {
+                    if (!loadingSpinner){
+                        navigator.notification.activityStart("Please Wait", "Loading...");
+                        loadingSpinner = true;
+                    }else{
+                        navigator.notification.activityStop();
+                    }
+                });
+                app.views.browserRef.addEventListener('loaderror', function(event) {
+                    navigator.notification.activityStop();
+                    loadingSpinner = false;
+                });
             }
         },
         generateMenu2: function () {
@@ -1525,6 +1546,19 @@ var app = {
                     );
                 }
             });
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemSearch2',
+                'menuItemSearch2',
+                {
+                    name: app.lang.getStr('%Search%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
             app.draw(
                 '#vex-navbar2',
                 '#menuItemFavorite2',
@@ -1557,19 +1591,6 @@ var app = {
                 'menuItemMap2',
                 {
                     name: app.lang.getStr('%V-Map%', 'aplication'),
-                    id: 0
-                },
-                'append',
-                function () {
-                    app.bindEvents();
-                }
-            );
-            app.draw(
-                '#vex-navbar2',
-                '#menuItemSearch2',
-                'menuItemSearch2',
-                {
-                    name: app.lang.getStr('%Search%', 'aplication'),
                     id: 0
                 },
                 'append',
@@ -1656,6 +1677,19 @@ var app = {
                     });
                     app.draw(
                         '#vex-navbar',
+                        '#menuItemSearch',
+                        'menuItemSearch',
+                        {
+                            name: app.lang.getStr('%Search%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    app.draw(
+                        '#vex-navbar',
                         '#menuItemFavorite',
                         'menuItemFavorite',
                         {
@@ -1687,19 +1721,6 @@ var app = {
                         'menuItemMap',
                         {
                             name: app.lang.getStr('%V-Map%', 'aplication'),
-                            id: 0
-                        },
-                        'append',
-                        function () {
-                            app.bindEvents();
-                        }
-                    );
-                    app.draw(
-                        '#vex-navbar',
-                        '#menuItemSearch',
-                        'menuItemSearch',
-                        {
-                            name: app.lang.getStr('%Search%', 'aplication'),
                             id: 0
                         },
                         'append',
@@ -2459,7 +2480,9 @@ var app = {
                             '',
                             function () {
                                 app.views.search.typeAhead();
-
+                                if (result.departments.length == 0){
+                                    $('#searchTab').addclass('hide');
+                                }
                                 $.each(result.departments, function (i, dep) {
                                     app.draw(
                                         '#byDepartment .list-group',
@@ -3984,13 +4007,13 @@ $(document).ready(function () {
     app.initialize();
 });
 function loadstartcb(event){
-    console.log("loadstart");
+    navigator.notification.activityStart("Please Wait","Loading...");
 }
 function loadstopcb(event){
-    console.log("loadstop");
+    navigator.notification.activityStop();
 }
 function loaderrorcb(event){
-    console.log("loaderror");
+    navigator.notification.activityStop();
 }
 function stripAbout(about){
     // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon**
