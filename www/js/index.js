@@ -166,12 +166,8 @@ var app = {
                 mixpanel.people.set({
                     "device_type": device.platform
                 });
-                mixpanel.people.set({
-                    "device_type": device.platform
-                });
                 mixpanel.register({
-                    "app_id": "57",
-                    "app_system" : "staging"
+                    "app_id": app.token
                 });                
                 app.lang.config(function () {
                     if (app.loginRequired == true) {
@@ -201,8 +197,7 @@ var app = {
                         app.device = r;
                         mixpanel.identify(r.id);
                         mixpanel.register({
-                            "app_id": "57",
-                            "app_system" : "staging"
+                            "app_id": app.token
                         });                
 
                         console.log(JSON.stringify(r));
@@ -498,7 +493,7 @@ var app = {
             },
             showStoreList: function (e) {
                 console.log('app.views.home.showStoreList');
-                mixpanel.track("Home");
+                //mixpanel.track("Home");
                 app.views.setDefaults();
                 var homeDeptId = -1;
                 if (!e){
@@ -1343,6 +1338,7 @@ var app = {
             },
             getFavorites: function(e){
                 console.log('app.views.home.showFavorites()');
+                mixpanel.track("Favorites");
                 app.views.backStack.pop();
 
                 app.views.backStack.push("Favorites");
@@ -1452,7 +1448,7 @@ var app = {
                     store = $(e).attr('dadStore')=='true' ? app.views.stores[$(e).attr('store_index')] : app.views.home.storesChild[$(e).attr('store_index')];
                     
                 }
-                                
+                mixpanel.track("Contact",{"store_id":store.id });
                 $('#modalContact .modal-title').html(stripLeadingTag(store.name));
 
                 $('#btContactClose').html(app.lang.getStr('%Close%', 'contactView'));
@@ -2455,6 +2451,7 @@ var app = {
         search: {
             init: function (e) {
                 app.views.loadView.show();
+                mixpanel.track("Search");
                 console.log('app.views.search.init()');
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
@@ -2813,7 +2810,7 @@ var app = {
 
                     var domelem = document.createElement('a');
                     domelem.href = store.id;
-                    domelem.innerHTML = store.name;
+                    domelem.innerHTML = stripLeadingTag(store.name);
                     domelem.onclick = function() {
                         alert(this.href);
                         // do whatever else you want to do - open accordion etc
@@ -2845,6 +2842,7 @@ var app = {
             },
             getStore: function (e){
                 var store_id = $(e).attr('store_index');
+                mixpanel.track("Map",{"store_id":store_id });
                 app.webservice.get(
                     'maps?q[store_id_eq]='+store_id,
                     {},
@@ -3610,6 +3608,7 @@ var app = {
             },
             openChat: function(store){
                 console.log('app.views.chat.openChat');
+                mixpanel.track("Chat",{"store_id":store.id });
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
                 $('#landingPageMenu').addClass('hide');
@@ -3700,6 +3699,7 @@ var app = {
             },
             list: function(e){
                 console.log('app.views.chat.list()');
+                mixpanel.track("Chats");
                 app.views.backStack.push("Chats");
                 $('.carousel').addClass('hide');
                 $('#menubutton').addClass('hide');
