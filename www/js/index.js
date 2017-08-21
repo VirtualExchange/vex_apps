@@ -2815,7 +2815,7 @@ var app = {
                         alert(this.href);
                         // do whatever else you want to do - open accordion etc
                     };
-                    marker.bindPopup('<a href="#" class="btn btn-product" store_id="' + store.id + '" onclick="app.views.home.storeDetail(this);">' + store.name + '</a>');
+                    marker.bindPopup('<a href="#" class="btn btn-product" store_id="' + store.id + '" onclick="app.views.home.storeDetail(this);">' + stripLeadingTag(store.name) + '</a>');
                     //marker.bindPopup(domelem);
                     //marker.bindPopup("<p>"+store.name+"</p>"+store.about);
                 }
