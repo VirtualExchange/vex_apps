@@ -2511,14 +2511,17 @@ var app = {
                 {name: 'car'}, 
                 {name: 'cast'},
                 {name: 'carp'}]
-
+                var url = 'http://dev.phowma.com/api/v1/stores';
+                if (app.host.indexOf('http://ve-api-staging.herokuapp.com/') == 0){
+                    url = url + "?staging=1";
+                }
                 var bloodhoundSuggestions = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     sufficient: 3,
                     /*local: suggestions,*/
                     prefetch: {
-                        url: 'http://dev.phowma.com/api/v1/stores',
+                        url: url,
                         prepare: function (settings) {
                             settings.headers = {
                                 'Authorization' : "Token token=" + app.token,
