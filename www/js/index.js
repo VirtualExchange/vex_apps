@@ -2852,7 +2852,7 @@ var app = {
                     function (result) {
                         console.log(JSON.stringify(result));
                         $.each(result.stores, function (i, store) { 
-                            console.log("store: "+store.name);
+                            console.log("id: "+store.id+" name: "+store.name+" lat: "+store.latitude+" long: "+store.longitude);
                             if (i == 0) {
                                 app.views.home.mapStore = store;
                                 app.views.leaflet.showMap(store.latitude, store.longitude, true);
