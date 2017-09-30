@@ -13,7 +13,7 @@ var appCore = {
 //    url      : 'http://ve-api-staging.herokuapp.com/api/',
     token    : 'IX2Yh0b4UO-qY8znyXMVew',
     appName  : 'Juno Beach',
-    senderID : "243934368690",
+    senderID : "228606620336",
     lastGeoDate : null,
     offLine : false,
 //    logged : false,
