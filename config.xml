@@ -61,6 +61,7 @@
         <splash height="1242" src="www/res/ios/Default-Landscape-736h.png" width="2208" />
     </platform>
     <engine name="android" spec="~6.2.3" />
+    <engine name="ios" spec="~4.5.2" />
     <plugin name="cordova-plugin-device" spec="~1.1.2" />
     <plugin name="cordova-plugin-dialogs" spec="~1.2.1" />
     <plugin name="cordova-plugin-geolocation" spec="~2.2.0" />
