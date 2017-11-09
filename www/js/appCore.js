@@ -314,7 +314,7 @@ var appCore = {
                 console.log('data.message: '+data.message);
                 console.log('data.title: '+data.title);
                 if (data.message.indexOf("You have new message") == 0){
-                    setTimeout(app.views.chat.checkUnreadMessage,1000);
+                    setTimeout(app.chat.checkUnreadMessage,1000);
                 } else {
                     navigator.notification.alert(
                         data.message,
