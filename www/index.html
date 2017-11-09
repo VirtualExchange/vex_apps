@@ -93,6 +93,17 @@
         <script type="text/javascript" src='js/lib/bloodhound.min.js'></script>
 		
         <script type="text/javascript" src="js/appCore.js"></script>
+        <script type="text/javascript" src="js/account.js"></script>
+        <script type="text/javascript" src="js/vmap.js"></script>
+        <script type="text/javascript" src="js/chat.js"></script>
+        <script type="text/javascript" src="js/notification.js"></script>
+        <script type="text/javascript" src="js/leaflet.js"></script>
+        <script type="text/javascript" src="js/search.js"></script>
+        <script type="text/javascript" src="js/pin.js"></script>
+        <script type="text/javascript" src="js/products.js"></script>
+        <script type="text/javascript" src="js/login.js"></script>
+        <script type="text/javascript" src="js/home.js"></script>
+        <script type="text/javascript" src="js/views.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 
 
@@ -119,7 +130,7 @@
                         <label for="login_password">%Password%</label>
                         <input type="password" class="form-control" id="login_password" placeholder="%Password%"/>
                     </div>
-                    <a href="javascript:void(0)" data-callback="app.views.login.register" class="btn btn-default">Submit</a>
+                    <a href="javascript:void(0)" data-callback="app.login.register" class="btn btn-default">Submit</a>
                 </form>
                 <div id="loginSpinner" class="row hide">
                     <div class="span4"></div>
@@ -133,17 +144,17 @@
             <div class="backgroundLogo fullRow">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4">
-                        <a href="#" data-callback="app.views.search.init" class="btn btn-default bt-footer">
+                        <a href="#" data-callback="app.search.init" class="btn btn-default bt-footer">
                             <span class="icon icon-search"></span> %Search%
                         </a>
                     </div>
                     <div class="col-xs-4 col-sm-4">
-                        <a href="#" data-callback="app.views.vMap.init" class="btn btn-default bt-footer">
+                        <a href="#" data-callback="app.vMap.init" class="btn btn-default bt-footer">
                             <i class="fa fa-map-marker" style="padding-top: 0;"></i> %V-Map%
                         </a>
                     </div>
                     <div class="col-xs-4 col-sm-4">
-                        <a href="#" data-callback="app.views.home.showStoreList" class="btn btn-default bt-footer">
+                        <a href="#" data-callback="app.home.showStoreList" class="btn btn-default bt-footer">
                             <img src="img/iconStore.png" class="icon"/> %Stores%
                         </a>
                     </div>
@@ -172,7 +183,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
                             <span id="deptFilterName"></span><a href="#" id="deptFilter" class="btn btn-success" data-toggle="modal" data-target="#filterStoreModal">%Filter%</a>
-                            <a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.views.home.showStoreList">Clear Filter</a>
+                            <a href="#" id="clearFilter" class="btn btn-success hide" data-callback="app.home.showStoreList">Clear Filter</a>
                         </div>
                     </div>
                 </div>
@@ -190,7 +201,7 @@
         </script>
 
         <script type="text/html" id="storeItem">
-            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.views.home.storeDetail" store_id="{{id}}" dadStore="{{dadStore}}" >
+            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.home.storeDetail" store_id="{{id}}" dadStore="{{dadStore}}" >
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{id}}">
                         <img src="{{logo}}" class="img-responsive img-rounded" />
@@ -203,7 +214,7 @@
         </script>        
 
         <script type="text/html" id="favoriteItem">
-            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.views.home.storeDetail" store_id="{{id}}" dadStore="{{dadStore}}" >
+            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.home.storeDetail" store_id="{{id}}" dadStore="{{dadStore}}" >
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{index}}">
                         <img src="{{logo}}" class="img-responsive img-rounded" />
@@ -260,16 +271,16 @@
 							</div>
 					    </div>
                         <div class="row" id="buttonRow">
-    						<a id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true" class="fa fa-address-card-o fa-2x"></a>&nbsp;
-    						<a id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true" class="fa fa-comment-o fa-2x"></a>&nbsp;
-    						<a id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" class="hide fa fa-map-marker fa-2x"></a>&nbsp;
-    						<a id="customButton" store_index="{{index}}"data-callback="app.views.home.customButton" class="hide fa fa-video-camera fa-2x"></a>&nbsp;
-							<a id="favoriteButton" store_index="{{index}}"data-callback="app.views.home.saveFavorite" class="fa fa-star-o fa-2x"></a>
-                            <!--<button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.views.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br></button>-->
-                            <!--<button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.views.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>-->
-                            <!--<button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.views.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>-->
-                            <!--<button type="button" class="btn btn-primary hide text-center" id="customButton" store_index="{{index}}"data-callback="app.views.home.customButton" ><span id="customButtonIcon" class="fa fa-video-camera"></span><br><span id="customButtonText">Video</span></button>-->
-                            <!--<p id="favoriteRow"><button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.views.home.saveFavorite">
+    						<a id="contactButton" store_index="{{index}}" data-callback="app.home.showContact" dadStore="true" class="fa fa-address-card-o fa-2x"></a>&nbsp;
+    						<a id="chatButton" store_index="{{index}}" data-callback="app.chat.init" dadStore="true" class="fa fa-comment-o fa-2x"></a>&nbsp;
+    						<a id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" class="hide fa fa-map-marker fa-2x"></a>&nbsp;
+    						<a id="customButton" store_index="{{index}}"data-callback="app.home.customButton" class="hide fa fa-video-camera fa-2x"></a>&nbsp;
+							<a id="favoriteButton" store_index="{{index}}"data-callback="app.home.saveFavorite" class="fa fa-star-o fa-2x"></a>
+                            <!--<button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br></button>-->
+                            <!--<button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>-->
+                            <!--<button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>-->
+                            <!--<button type="button" class="btn btn-primary hide text-center" id="customButton" store_index="{{index}}"data-callback="app.home.customButton" ><span id="customButtonIcon" class="fa fa-video-camera"></span><br><span id="customButtonText">Video</span></button>-->
+                            <!--<p id="favoriteRow"><button type="button" id="btFav_{{index}}" store_index="{{index}}" class="btn-link favoriteButton" data-callback="app.home.saveFavorite">
                                 <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
                             </button></p>-->
                         </div>
@@ -279,10 +290,10 @@
             <div class="productList">
                 <ul class="nav nav-tabs hide" id="storeTabs">
                     <li class="active" id="liOptProduct">
-                        <a href="#" id="liOptProductLink" data-callback="app.views.home.showStoresProducts">%Products%</a>
+                        <a href="#" id="liOptProductLink" data-callback="app.home.showStoresProducts">%Products%</a>
                     </li>
                     <li id="liOptStore">
-                        <a href="#" id="liOptStoreLink" data-callback="app.views.home.showStoresChild">%Stores%</a>
+                        <a href="#" id="liOptStoreLink" data-callback="app.home.showStoresChild">%Stores%</a>
                     </li>
                 </ul>
                 <div id="storesListDiv" class="hide">
@@ -294,7 +305,7 @@
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12">
                                     <span id="catFilterNameProductView"></span><a href="#" id="catFilterProductView" class="btn btn-success" data-toggle="modal" data-target="#filterModalProductView">%Filter%</a>
-                                    <a href="#" id="clearFilterProductView" class="btn btn-success hide" data-callback="app.views.home.clearFilter">%Clear Filter%</a>
+                                    <a href="#" id="clearFilterProductView" class="btn btn-success hide" data-callback="app.home.clearFilter">%Clear Filter%</a>
                                 </div>
                             </div>
                         </div>
@@ -305,7 +316,7 @@
         </script>
 
         <script type="text/html" id="ProductItem">
-            <a class="list-group-item toProduct" id="productItem_{{id}}" href="#" data-callback="app.views.products.productDetail" store_id="{{store_id}}" prod_id="{{id}}" data-pin="false">
+            <a class="list-group-item toProduct" id="productItem_{{id}}" href="#" data-callback="app.products.productDetail" store_id="{{store_id}}" prod_id="{{id}}" data-pin="false">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4" id="productImage_{{index}}">
                         <img src="{{img}}" class="img-responsive img-rounded" />
@@ -351,10 +362,10 @@
                                 <span class="green" id="sale_price">{{price}}</span>
                             </li>
                             <li class="text-left">
-                                <a class="btn-link" data-callback="app.views.products.shareProduct">
+                                <a class="btn-link" data-callback="app.products.shareProduct">
                                     <i class="fa fa-share-alt fa-2x"></i>
                                 </a>
-                                <button id="pin_{{id}}" remove="false" class="btn-link btPin" product_id="{{id}}" data-callback="app.views.products.pinFavorite">
+                                <button id="pin_{{id}}" remove="false" class="btn-link btPin" product_id="{{id}}" data-callback="app.products.pinFavorite">
                                     <i class="fa fa-pin"></i>
                                 </button>
                             </li>
@@ -373,7 +384,7 @@
                                 {{contact}}
                             </li>
                             <li class="hide text-left">
-                                <a class="btn btn-success" data-callback="app.views.products.showProductListMore" id="moreFrom" cat_name="{{category_name}}" store_id="{{store_id}}">%More%</a>
+                                <a class="btn btn-success" data-callback="app.products.showProductListMore" id="moreFrom" cat_name="{{category_name}}" store_id="{{store_id}}">%More%</a>
                             </li>
                         </ul>
                     </div>
@@ -399,7 +410,7 @@
                     %Website%
                     </h4>
 					<div class="contactWebsite" id="websitewrap">
-                        <a href="#" data-callback="app.views.home.openSite" data-site="{{website}}" >{{websiteView}}</a>
+                        <a href="#" data-callback="app.home.openSite" data-site="{{website}}" >{{websiteView}}</a>
                     </div>
                     <h4 class="contactAddress">
                     %Address%
@@ -435,7 +446,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="%Enter Message%" id="chatUserMessage"/>
                     <span class="input-group-btn">
-                        <a class="btn btn-info" href="#" style="font-size: 15px;" data-callback="app.views.chat.sendMessage" store_id="{{store_id}}">%SEND%</a>
+                        <a class="btn btn-info" href="#" style="font-size: 15px;" data-callback="app.chat.sendMessage" store_id="{{store_id}}">%SEND%</a>
                     </span>
                 </div>
             </div>
@@ -459,7 +470,7 @@
             <div class="row mapDiv">
                 <ul class="nav nav-tabs" role="tablist" style="background-color: #fff;">
                     <li role="presentation" class="active">
-                        <a href="#mapContent" role="tab" data-toggle="tab" aria-controls="mapContent" aria-expanded="true" data-callback="app.views.vMap.showMap">%View Map%</a>
+                        <a href="#mapContent" role="tab" data-toggle="tab" aria-controls="mapContent" aria-expanded="true" data-callback="app.vMap.showMap">%View Map%</a>
                     </li>
                     <li role="presentation">
                         <a href="#tabList" role="tab" data-toggle="tab" aria-controls="tabList" aria-expanded="true">%View List%</a>
@@ -484,8 +495,8 @@
             <div class="contentAjust">
                 <div class="row">
                     <ol class="breadcrumb text-center" id="searchTab">
-                        <li class="active"><a class="btn-link selected" href="#" data-callback="app.views.search.byName">%Search Stores%</a></li>
-                        <li><a class="btn-link" href="#" data-callback="app.views.search.byDepartment">%Departments%</a></li>
+                        <li class="active"><a class="btn-link selected" href="#" data-callback="app.search.byName">%Search Stores%</a></li>
+                        <li><a class="btn-link" href="#" data-callback="app.search.byDepartment">%Departments%</a></li>
                     </ol>
                     <div id="byDepartment" class="hide">
                         <ul class="list-group"></ul>
@@ -501,7 +512,7 @@
             </div>
         </script>
         <script type="text/html" id="byDepartmentItem">
-            <a href="#" data-callback="app.views.search.filterByDepartment" class="list-group-item" dep_id="{{id}}" dep_name="{{name}}">
+            <a href="#" data-callback="app.search.filterByDepartment" class="list-group-item" dep_id="{{id}}" dep_name="{{name}}">
                 <span class="depName">{{name}}</span>
                 <span class="fa fa-angle-right pull-right"></span>
             </a>
@@ -527,7 +538,7 @@
             <div id="chatStoreList"></div>
         </script>
         <script id="chatStoreItem" type="text/html">
-            <a class="list-group-item" store_index="{{index}}" href="#" data-callback="app.views.chat.loadStoreChat"  >
+            <a class="list-group-item" store_index="{{index}}" href="#" data-callback="app.chat.loadStoreChat"  >
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{index}}">
                         <img src="{{img}}" class="img-responsive img-rounded" />
@@ -554,7 +565,7 @@
         <script type="text/html" id="resultView">
             <div class="panel panel-default hide" id="divBtBack">
                 <div class="panel-body">
-                    <a href="#" id="btBack" class="btn-link" data-callback="app.views.search.init">
+                    <a href="#" id="btBack" class="btn-link" data-callback="app.search.init">
                         <div class="row" >
                             <span class="icon icon-left"></span><span>%BACK%</span>
                             <span style="margin-left:10px">{{search}}</span>
@@ -598,7 +609,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
                             <span id="catFilterName"></span><a href="#" id="catFilter" class="btn btn-success" data-toggle="modal" data-target="#filterModal">%Filter%</a>
-                            <a href="#" id="clearFilter" class="btn btn-success hide" store_id="" data-callback="app.views.products.clearFilter">%Clear Filter%</a>
+                            <a href="#" id="clearFilter" class="btn btn-success hide" store_id="" data-callback="app.products.clearFilter">%Clear Filter%</a>
                         </div>
                     </div>
                 </div>
@@ -625,72 +636,72 @@
 		</script>
         <script type="text/html" id="menuItem">
             <li>
-                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemFavorite">
             <li>
-                <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-star-o">&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-star-o">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemChats">
             <li>
-                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount3" class="vex-badge badge pull-right"></a>
+                <a href="#" data-callback="app.chat.list" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount3" class="vex-badge badge pull-right"></a>
             </li>
         </script>        
         <script type="text/html" id="menuItemMap">
             <li>
-                <a href="#" data-callback="app.views.leaflet.getPosition" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-map-marker">&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.leaflet.getPosition" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-map-marker">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemSearch">
             <li>
-                <a href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.search.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemAccount">
             <li>
-                <a href="#" data-callback="app.views.account.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.account.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout">
             <li>
-                <a href="#" data-callback="app.views.home.logout" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+                <a href="#" data-callback="app.home.logout" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItem2">
             <li class="list-group-item">
-                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.views.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+                <a dep_id="{{id}}" dep_name="{{name}}" href="#" data-callback="app.home.filterByDepartmentFromMenu" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemFavorite2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-star-o">&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-star-o">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemChats2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.chat.list" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount4" class="hide vex-badge badge pull-right"></a>
+                <a href="#" data-callback="app.chat.list" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount4" class="hide vex-badge badge pull-right"></a>
             </li>
         </script>        
         <script type="text/html" id="menuItemMap2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.leaflet.getPosition" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-map-marker">&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.leaflet.getPosition" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-map-marker">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemSearch2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.search.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.search.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemAccount2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.account.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
+                <a href="#" data-callback="app.account.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemLogout2">
             <li class="list-group-item">
-                <a href="#" data-callback="app.views.home.logout" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+                <a href="#" data-callback="app.home.logout" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
             </li>
         </script>        
 
