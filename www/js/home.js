@@ -8,6 +8,8 @@ var home = {
             init: function (e) {
                 console.log('app.home.init()');
 
+                app.push.init();
+                
                 $('.navbar-toggle').show();
 
                 if (app.homeInitCalled){

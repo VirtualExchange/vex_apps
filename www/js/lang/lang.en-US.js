@@ -100,10 +100,11 @@ var lang_enUS = {
             '%Home%'             : 'Home',
             '%error_login%'      : 'Invalid email or password.',
             '%Favorites%'      : 'Favorites',
-            '%Chats%'            : 'Chats',
+            '%Chats%'            : 'Previous Chats',
             '%Exit%': 'Exit',
             '%Logout%': 'Logout',
-            '%Account%': 'Account'
+            '%Account%': 'Account',
+            '%Owner%': "Owner's Corner"
         },
         'chatView':{
             '%SEND%' : 'SEND',
@@ -132,6 +133,37 @@ var lang_enUS = {
         },
         'chatListView':{
             '%Chats%' : 'Chats'
+        },
+        'ownerLoginView':{
+            '%E-mail%' : 'E-mail',
+            '%Password%' : 'Password',
+            '%Forgot%' : 'Forgot',
+            '%Login%' : 'Login',
+            '%Log into your account.%' : 'Log into your account.',
+            '%Error%'                  : 'Erro',
+            '%Close%'                  : 'Fechar'
+        },
+        'ownerChatView':{
+            '%Chats%' : "Owner's Corner",
+            '%SEND%' : 'SEND',
+            '%Enter Message%' : 'Enter Message',
+            '%Name%' : 'Your name',
+            '%Email%' : 'Email',
+            '%The field <b>Name</b> is mandatory%' : 'The field <b>Name</b> is mandatory',
+            '%The field <b>Email</b> is mandatory%' : 'The field <b>Email</b> is mandatory',
+            '%The field <b>Message</b> is mandatory%' : 'The field <b>Message</b> is mandatory',
+            '%No chat is initialized%'  : 'No message history',
+            '%Back%' : 'Back',
+            '%Refresh%' : 'Refresh',
+            '%Logout%' : 'Logout'
+        },
+        'ownerRegisterView':{
+            '%Instruction%' : "Submit the information below to become of owner of %s.  You will be contacted by Virtual Open Exchange, LLC to verify you are the owner",
+            '%email%' : "Email",
+            '%password%' : "Password",
+            '%confirm password%': "Confirm Password",
+            '%register%' : "Register"
+           
         }
     }
 };

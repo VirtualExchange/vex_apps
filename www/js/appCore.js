@@ -9,11 +9,11 @@ var appCore = {
     },
 //    host     : 'http://api.vexapps.com/',
 //    url      : 'http://api.vexapps.com/api/devices/',
-    host     : 'http://ve-api-staging.herokuapp.com/',
-    url      : 'http://ve-api-staging.herokuapp.com/api/',
-    token    : 'RgDWBnKI9heQgp3Mdtq0ig',
+    ownerUrl     : 'http://www.virtualopenexchange.com/api/',
+    url      : 'http://www.virtualopenexchange.com/mobile/api/',
+    token    : 'xgUpz9gFP0UG1uDrbKcuCg',
     appName  : 'Virtual Exchange',
-    senderID : "727346400787",
+    senderID : "441867489546",
     lastGeoDate : null,
     offLine : false,
 //    logged : false,
@@ -21,6 +21,12 @@ var appCore = {
     loginRequired: false,
     chatToken : null,
     userToken : '',
+    stores   : {
+        id        : '',
+        logo      : '',
+        name      : '',
+        corporate : ''
+    },
     bindEvents: function() {
 
         $('a[data-callback]').unbind('click');
@@ -494,8 +500,8 @@ var appCore = {
                 }
             });
         },
-        get2: function(url, path, args, successCB, errorCB) {
-            console.log('app.webservice.get(): ' + url + path, JSON.stringify(args));
+        getOwner: function(path, args, successCB, errorCB) {
+            console.log('app.webservice.getOwner(): ' + app.ownerUrl + path, JSON.stringify(args));
 
             if(!app.checkConnection()){
                 return;
@@ -504,33 +510,25 @@ var appCore = {
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
-                url: url + path,
+                url: app.ownerUrl + path,
                 data: args,
+//                crossDomain: true,
                 headers: {
-                    "Authorization": "Token token=" + app.token,
-                    'X-Access-Token': app.userToken,
-                    'X-Device-Token': window.localStorage.getItem("token")
+                    "X-User-Email" : window.localStorage.getItem("ownerEmail"),
+                    'X-User-Token' : window.localStorage.getItem("ownerToken"),
+                    "contentType": "application/json"
                 },
                 success: function(data) {
                     successCB(data);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    if(textStatus==="timeout"){
-                        navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), 
-                            function () {}, 
-                            app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
-                    }else{
-                        /*navigator.notification.alert(textStatus, 'Close');*/
-                    } 
                     var err = {
                         a: jqXHR,
                         msg: textStatus,
                         message: 'Webservice Error: '+errorThrown
                     };
                     errorCB(err);
-                    console.log("jqXHR.responseText: "+jqXHR.responseText);
-                    console.log("textStatus: "+textStatus);
-                    console.log("errorThrown: "+errorThrown);
+                    console.log(jqXHR.responseText);
                 }
             });
         },
@@ -568,6 +566,39 @@ var appCore = {
                 }
             });
         },
+        ownerPost: function(path, type, args, successCB, errorCB) {
+            console.log('app.webservice.post(): ' + (app.ownerUrl  + '/' + path), JSON.stringify(args));
+
+            if(!app.checkConnection()){
+                return;
+            }
+            
+            $.ajax({
+                type: type,
+                dataType: 'json',
+                url: app.ownerUrl + path,
+                crossDomain: true,
+                data: args,
+                //		processData: false,
+                //		async: true,
+                headers: {
+                    "X-User-Email" : window.localStorage.getItem("ownerEmail"),
+                    'X-User-Token' : window.localStorage.getItem("ownerToken"),
+                    "contentType"  : "application/json"
+                },
+                success: function(data) {
+                    successCB(data);
+                },
+                error: function(a, b, c) {
+                    var err = {
+                        a: a,
+                        msg: b,
+                        message: 'Webservice Error: '+c
+                    };
+                    errorCB(err);
+                }
+            });
+        },
         registerDevice: function(args,successCB,errorCB){
             console.log('app.webservice.registerDevice(): ' + app.url +' > ' + app.token);
             console.log(JSON.stringify(args));
@@ -585,6 +616,34 @@ var appCore = {
                 //		async: true,
                 headers: {
                     "Authorization": "Token token=" + app.token,
+                    "contentType": "application/json"
+                },
+                success: function(data) {
+                    successCB(data);
+                },
+                error: function(a, b, c) {
+                    var err = {
+                        a: a,
+                        msg: b,
+                        message: 'Webservice Error: '+ c
+                    };
+                    errorCB(err);
+                }
+            });
+        },
+        ownerLogin: function(args,successCB,errorCB){
+            console.log('app.owner.ownerLogin(): ' + app.ownerUrl+' args: '+JSON.stringify(args));
+            if(!app.checkConnection()){
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: app.ownerUrl + 'sessions',
+                crossDomain: true,
+                data: args,
+                headers: {
                     "contentType": "application/json"
                 },
                 success: function(data) {

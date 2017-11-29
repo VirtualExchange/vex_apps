@@ -50,6 +50,7 @@ var views = {
                 return;
             } 
             var backToStr = app.views.backStack[length-1];
+            console.log("backToStr: "+backToStr);
             var backTo = backToStr.split(":");
             if (backTo[0] == "StoreList"){
                 app.views.backStack.pop();
@@ -81,6 +82,15 @@ var views = {
             } else if (backTo[0] == "SearchView"){
                 app.views.backStack.pop();
                 app.search.init();
+            } else if (backTo[0] == "OwnerLogin"){
+                app.views.backStack.pop();
+                app.ownerLogin.init();
+            } else if (backTo[0] == "ownerChatList"){
+                app.views.backStack.pop();
+                app.ownerChat.list();
+            } else if (backTo[0] == "ownerChatCustomerList"){
+                app.views.backStack.pop();
+                app.ownerChat.loadStoreList(backTo[1]);
             }else {
                 console.log("****ERROR****:Back not recognized");
             }
@@ -165,12 +175,27 @@ var views = {
                     app.bindEvents();
                 }
             );
+            /*
             app.draw(
                 '#vex-navbar2',
                 '#menuItemAccount2',
                 'menuItemAccount2',
                 {
                     name: app.lang.getStr('%Account%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            */
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemOwner2',
+                'menuItemOwner2',
+                {
+                    name: app.lang.getStr('%Owner%', 'aplication'),
                     id: 0
                 },
                 'append',
@@ -293,12 +318,27 @@ var views = {
                             app.bindEvents();
                         }
                     );
+                    /*
                     app.draw(
                         '#vex-navbar',
                         '#menuItemAccount',
                         'menuItemAccount',
                         {
                             name: app.lang.getStr('%Account%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    */
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemOwner',
+                        'menuItemOwner',
+                        {
+                            name: app.lang.getStr('%Owner%', 'aplication'),
                             id: 0
                         },
                         'append',

@@ -94,6 +94,9 @@
 		
         <script type="text/javascript" src="js/appCore.js"></script>
         <script type="text/javascript" src="js/account.js"></script>
+        <script type="text/javascript" src="js/ownerLogin.js"></script>
+        <script type="text/javascript" src="js/ownerRegister.js"></script>
+        <script type="text/javascript" src="js/ownerChat.js"></script>
         <script type="text/javascript" src="js/vmap.js"></script>
         <script type="text/javascript" src="js/chat.js"></script>
         <script type="text/javascript" src="js/notification.js"></script>
@@ -284,6 +287,7 @@
                                 <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
                             </button></p>-->
                         </div>
+                        <a href="#" id="ownerLink" store_name={{name}} data-callback="app.ownerRegister.init">Are you the owner of this business?</a>
                     </div>
                 </div>
             </div>
@@ -619,6 +623,60 @@
                 <img src="img/load_image.gif" style="width: 40px;"/>
             </div>
         </script>
+        <script type="text/html" id="ownerLoginView">
+            <h3 class="form-header">%Log into your account.%</h3>
+            <form role="form" id="loginForm">
+                <div class="form-inputs">
+                    <div class="control-group email optional user_email">
+                        <div class="form-group">
+                            <input autofocus="autofocus" class="string email optional form-control form-control input-lg" id="user_email" placeholder="%E-mail%" type="email" value="" name="user_email">
+                        </div>
+                    </div>
+                    <div class="control-group password optional user_password">
+                        <div class="form-group">
+                            <div class="form-group signin-password">
+                                <input class="form-control input-lg" id="user_password" label="false" placeholder="%Password%" type="password" name="user_password">
+                                <a class="forgot" href="#" data-callback="app.views.login.forgotPassword">%Forgot% ?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <a href="#" class="btn btn-primary btn-block btn-lg" data-callback="app.ownerLogin.submit">%Login%</a>
+                </div>
+                <br/>
+            </form>
+		</script>
+        <script type="text/html" id="ownerRegisterView">
+            <p>{{instruction}}</p>
+            <form role="form" id="registerForm">
+                <div class="form-inputs">
+                    <div class="control-group email optional user_email">
+                        <div class="form-group">
+                            <input autofocus="autofocus" class="string email optional form-control form-control input-lg" id="user_email" placeholder="%email%" type="email" value="" name="user_email">
+                        </div>
+                    </div>
+                    <div class="control-group password optional user_password">
+                        <div class="form-group">
+                            <div class="form-group signin-password">
+                                <input class="form-control input-lg" id="user_password" label="false" placeholder="%password%" type="password" name="user_password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group password optional user_confirm_password">
+                        <div class="form-group">
+                            <div class="form-group signin-password">
+                                <input class="form-control input-lg" id="user_confirm_password" label="false" placeholder="%confirm password%" type="password" name="user_confirm_password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <a href="#" class="btn btn-primary btn-block btn-lg" data-callback="app.ownerRegister.submit">%register%</a>
+                </div>
+                <br/>
+            </form>
+		</script>
         <script type="text/html" id="accountView">
             <div class="fullRow">
                 <div class="alert alert-danger hidden" role="alert"></div>
@@ -664,9 +722,19 @@
                 <a href="#" data-callback="app.account.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
+        <script type="text/html" id="menuItemOwner">
+            <li>
+                <a href="#" data-callback="app.ownerLogin.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
+            </li>
+        </script>        
         <script type="text/html" id="menuItemLogout">
             <li>
                 <a href="#" data-callback="app.home.logout" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemOwnerLogout">
+            <li>
+                <a href="#" data-callback="app.ownerLogin.logout" data-toggle="collapse" data-target=".navbar-collapse">{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItem2">
@@ -694,6 +762,11 @@
                 <a href="#" data-callback="app.search.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
             </li>
         </script>        
+        <script type="text/html" id="menuItemOwner2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.ownerLogin.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-search"></span>&nbsp;{{name}}</a>
+            </li>
+        </script>        
         <script type="text/html" id="menuItemAccount2">
             <li class="list-group-item">
                 <a href="#" data-callback="app.account.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-user-o"></span>&nbsp;{{name}}</a>
@@ -704,7 +777,99 @@
                 <a href="#" data-callback="app.home.logout" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
             </li>
         </script>        
+        <script type="text/html" id="menuItemOwnerLogout2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.ownerLogin.logout" data-toggle="collapse" data-target="#landingPageMenu">{{name}}</a>
+            </li>
+        </script>        
 
+        
+        
+        <script id="ownerChatView" type="text/html">
+            <div class="chatContent">
+                <div id="ownerChatList"></div>
+            </div>
+            <div id="navChatFooter" >
+                <div class="alert alert-danger hide"></div>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="%Enter Message%" id="chatUserMessage"/>
+                    <span class="input-group-btn">
+                        <a class="btn btn-info" href="#" style="font-size: 15px;" data-callback="app.ownerChat.sendMessage" device_id="{{device_id}}" store_id="{{store_id}}">%SEND%</a>
+                    </span>
+                </div>
+            </div>
+        </script>
+
+        <script id="ownerChatListView" type="text/html">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span ><b>%Chats%</b></span>
+                            <a href="#" class="btn btn-success pull-right" data-callback="app.ownerLogin.logout">%Logout%</a>
+                            <a href="#" class="fa fa-refresh fa-2x pull-right" id="refreshButton" data-callback="app.ownerChat.list">&nbsp;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ownerChatStoreList"></div>
+        </script>
+
+        <script id="ownerChatStoreItem" type="text/html">
+            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.ownerChat.loadStoreListFromLink" store_id="{{id}}" >
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{index}}">
+                        <img src="{{img}}" class="img-responsive img-rounded" />
+                    </div>
+                    <div id="storeDetail_{{index}}" class="col-xs-8 col-sm-8" >
+                        <h4>{{storeName}}&nbsp;<span id="storeBadge_{{id}}" class="badge vex-badge">{{messages_count}}</span></h4>
+                    </div>
+                </div> 
+            </a>
+        </script>        
+        
+        <script id="ownerChatCustomerView" type="text/html">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span ><b>%Chats%</b></span>
+                            <a href="#" class="btn btn-success pull-right" data-callback="app.ownerLogin.logout">%Logout%</a>
+                            <a href="#" class="fa fa-refresh fa-2x pull-right" id="refreshButton" store_id="{{store_id}} data-callback="app.ownerChat.loadStoreListFromLink">&nbsp;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ownerChatStoreList"></div>
+        </script>
+
+        <script id="ownerChatCustomerItem" type="text/html">
+            <a class="list-group-item" store_id="{{store_id}}" device_index="{{index}}" href="#" data-callback="app.ownerChat.loadStoreChat" device_id="{{device_id}}" >
+                <div class="row">
+                    <div id="storeDetail_{{index}}" class="col-xs-8 col-sm-8" >
+                        <h4>{{storeName}}&nbsp;<span id="storeBadge_{{device_id}}" class="badge vex-badge">{{messages_count}}</span></h4>
+                    </div>
+                </div> 
+            </a>
+        </script>        
+        
+        <script type="text/html" id="ownerChatItem">
+            <div id="chatHeader">
+                <div id="chatName" class="col-xs-6 col-sm-6">
+                {{kind}}
+                </div>
+                <div id="chatDate" class="text-muted col-xs-6 col-sm-6">
+                {{msgDate}}
+                </div>
+            </div>
+            <div id="chatMessage" class="col-xs-12 col-sm-12">
+            {{message}}
+            </div>
+        </script>
+        
+        
+        
+        
     </head>
     <body>
         <div id="loadView" class="hide">
