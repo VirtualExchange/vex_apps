@@ -11,7 +11,9 @@ var ownerRegister = {
             $('#backLink').removeClass('hide');
             
             var instruction = app.lang.getStr('%Instruction%', 'ownerRegisterView');
-            instruction = instruction.replace("%s","<b>"+$(e).attr('store_name')+"</b>");
+            var store_name="";
+            if (app.home.oStoreDetail) store_name = app.home.oStoreDetail.name;
+            instruction = instruction.replace("%s","<b>"+store_name+"</b>");
             
             // Push onto stack
             app.views.backStack.push("OwnerLogin");
