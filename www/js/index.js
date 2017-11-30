@@ -24,6 +24,9 @@ var app = {
         console.log('app.initialize');
         $.extend(this, appCore);
         $.extend(this, account);
+        $.extend(this, ownerLogin);
+        $.extend(this, ownerRegister);
+        $.extend(this, ownerChat);
         $.extend(this, vMap);
         $.extend(this, chat);
         $.extend(this, notification);
@@ -105,7 +108,13 @@ var app = {
             $('#msgCount').css('margin-left', '-25px');
         }
 
-        console.log(window.localStorage.getItem("token"));
+        var old_token_cleared = window.localStorage.getItem("old_token_cleared");
+        console.log("old_token_cleared: "+old_token_cleared);
+        if (!old_token_cleared){
+            console.log("old_token_cleared not found");
+            window.localStorage.removeItem("token");
+            window.localStorage.setItem("old_token_cleared","true");
+        }
 
         if (!window.localStorage.getItem("token")) {
             console.log('Token does not exist');
@@ -185,7 +194,6 @@ var app = {
                 );
             });
         }
-        app.push.init();
     },
     onBackKeyDown: function(e){
         e.preventDefault();
@@ -215,6 +223,25 @@ function loadstopcb(event){
 }
 function loaderrorcb(event){
     navigator.notification.activityStop();
+}
+function showHideBackButton(name){
+    var length = app.views.backStack.length;
+    
+    // Only push on stack if not already on stack
+    if (length > 0){
+        var backToStr = app.views.backStack[length-1];
+        if (name.indexOf(backToStr) != 0) app.views.backStack.push(name);
+    } else {
+        app.views.backStack.push(name);
+    }
+
+    if (app.views.backStack.length > 1){
+        var ind = app.views.backStack.length-2;
+        $('#backStack').html(app.views.backStack[ind]);
+        $('#backLink').removeClass('hide');
+    }else{
+        $('#backLink').addClass('hide');
+    }
 }
 function stripAbout(about){
     // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon**
