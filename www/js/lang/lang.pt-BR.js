@@ -149,7 +149,7 @@ var lang_ptBR = {
             '%Logout%' : 'Logout'
         },
         'ownerRegisterView':{
-            '%Instruction%' : "Submit the information below to become of owner of %s.  You will be contacted by Virtual Open Exchange, LLC to verify you are the owner",
+            '%Instruction%' : "Submit the information below to claim this business.<br/>Claiming this business will allow you to:<br/>- Chat with customers<br/>- Send notifications to customers<br/>- Post offerings",
             '%email%' : "Email",
             '%password%' : "Password",
             '%confirm password%': "Confirm Password",

@@ -12,8 +12,7 @@ var ownerRegister = {
             
             var instruction = app.lang.getStr('%Instruction%', 'ownerRegisterView');
             var store_name="";
-            if (app.home.oStoreDetail) store_name = app.home.oStoreDetail.name;
-            instruction = instruction.replace("%s","<b>"+store_name+"</b>");
+            if (app.home.oStoreDetail) store_name = stripAbout(app.home.oStoreDetail.name);
             
             // Push onto stack
             app.views.backStack.push("OwnerLogin");
@@ -22,7 +21,8 @@ var ownerRegister = {
                 '#ownerRegisterView',
                 'ownerRegisterView',
                 {
-                    instruction: instruction
+                    instruction: instruction,
+                    name: store_name
                 },
                 '',
                 function () {
@@ -32,6 +32,12 @@ var ownerRegister = {
         },
         submit: function(e){
             console.log('app.ownerRegister.submit()');
+            navigator.notification.alert(
+                'You will be contacted by a Virtual Open Exchange representative to determine if your are a qualified representative of this business',
+                function(){}, 
+                'Thank you!',
+                'Close'
+            );
             app.views.goBack();
             /*
             app.webservice.ownerLogin(
