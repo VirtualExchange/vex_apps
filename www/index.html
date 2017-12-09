@@ -287,7 +287,7 @@
                                 <span id="makeFavorite" class="icon icon-star">Make Favorite</span>
                             </button></p>-->
                         </div>
-                        <a href="#" id="ownerLink" data-callback="app.ownerRegister.init">Are you the owner of this business?</a>
+                        <a href="#" id="registerLink" class="hide" data-callback="app.ownerRegister.init">%Register%</a>
                     </div>
                 </div>
             </div>
@@ -644,27 +644,34 @@
                 <div class="form-actions">
                     <a href="#" class="btn btn-primary btn-block btn-lg" data-callback="app.ownerLogin.submit">%Login%</a>
                 </div>
+                <h3>%NoAccount%</h3>
+                <a class="forgot" href="#" data-callback="app.ownerRegister.init">%Register%</a>
                 <br/>
             </form>
 		</script>
         <script type="text/html" id="ownerRegisterView">
-            <h4>{{name}}</h4>
-            <p>{{instruction}}</p>
+            <!--<h4>{{name}}</h4>-->
+            <!--<p>{{instruction}}</p>-->
             <form role="form" id="registerForm">
                 <div class="form-inputs">
-                    <div class="control-group email optional user_email">
+                    <div class="control-group user_name">
                         <div class="form-group">
-                            <input autofocus="autofocus" class="string email optional form-control form-control input-lg" id="user_email" placeholder="%email%" type="email" value="" name="user_email">
+                            <input autofocus="autofocus" class="string form-control form-control input-lg" id="user_name" placeholder="%name%" value="" name="user_name">
                         </div>
                     </div>
-                    <div class="control-group password optional user_password">
+                    <div class="control-group email user_email">
+                        <div class="form-group">
+                            <input autofocus="autofocus" class="string email form-control form-control input-lg" id="user_email" placeholder="%email%" type="email" value="" name="user_email">
+                        </div>
+                    </div>
+                    <div class="control-group password user_password">
                         <div class="form-group">
                             <div class="form-group signin-password">
                                 <input class="form-control input-lg" id="user_password" label="false" placeholder="%password%" type="password" name="user_password">
                             </div>
                         </div>
                     </div>
-                    <div class="control-group password optional user_confirm_password">
+                    <div class="control-group password user_confirm_password">
                         <div class="form-group">
                             <div class="form-group signin-password">
                                 <input class="form-control input-lg" id="user_confirm_password" label="false" placeholder="%confirm password%" type="password" name="user_confirm_password">

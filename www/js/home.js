@@ -294,6 +294,9 @@ var home = {
                                     $('#btFav_0').addClass('hide');
                                 }
                                 
+                                if (store.register){
+                                    $('#registerLink').removeClass('hide');
+                                }
                                 $('#storeCategorie').change(function () {
                                     app.home.filterByCategory($('#storeCategorie'));
                                 });
