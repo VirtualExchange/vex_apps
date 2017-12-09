@@ -32,49 +32,32 @@ var ownerRegister = {
         },
         submit: function(e){
             console.log('app.ownerRegister.submit()');
-            navigator.notification.alert(
-                'You will be contacted by a Virtual Open Exchange representative to determine if your are a qualified representative of this business',
-                function(){}, 
-                'Thank you!',
-                'Close'
-            );
-            app.views.goBack();
-            /*
-            app.webservice.ownerLogin(
-            {
-                "user": {
-                    "email": $('#user_email').val(),
-                    "password":$('#user_password').val()
-                }
-            },
-            function(result){
-                console.log(JSON.stringify(result));
-                if(result.success==true){
-                    app.views.backStack.pop();
-                    $('#menuicon').removeClass('hide');
-                    $('#backLink').removeClass('hide');
-                    console.log('result.success');
-                    window.localStorage.setItem("ownerToken", result.auth_token);
-                    window.localStorage.setItem("ownerEmail", result.email);
-                    app.ownerLogin.title(result.store_id);
-                }else{
-                    console.log('result.fail');
+            app.webservice.ownerPost(
+                'sessions/register',
+                'POST',
+                {   
+                    user:{
+                        email: $('#user_email').val(),
+                        password: $('#user_password').val(),
+                        password_confirmation: $('#user_confirm_password').val(),
+                        name: $('#user_name').val()
+                    }
+                },
+                function(result){
+                    console.log(JSON.stringify(result));
+                    var submitMessage = app.lang.getStr('%submitMessage%', 'ownerRegisterView');
                     navigator.notification.alert(
-                        app.lang.getStr(result.message, 'loginView'), 
-                        function () {}, 
-                        app.lang.getStr('%Error%', 'aplication'), app.lang.getStr('%Close%', 'aplication')
+                        'You will be contacted by a Virtual Open Exchange representative to complete the process of registering a business',
+                        function(){}, 
+                        'Thank you!',
+                        'Close'
                     );
+                    app.views.goBack();
+                },
+                function(err){
+                    console.log(JSON.stringify(err));
                 }
-            },
-            function(err){
-                console.log('ERROR LOGIN');
-                console.log(JSON.stringify(err));
-                navigator.notification.alert(
-                    app.lang.getStr(err.a.responseJSON.message, 'loginView'), 
-                    function () {}, 
-                    app.lang.getStr('%Error%', 'loginView'), app.lang.getStr('%Close%', 'loginView')
-                );
-            });*/
+            );
         }/*,
         title: function(store_id){
             console.log("app.views.login.title()");

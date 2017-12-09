@@ -16,7 +16,8 @@ var lang_enUS = {
             '%Products%': 'Products',
 			'%Filter%'  : 'Filter',
 			'%Categories%'  : 'Categories',
-			'%Clear Filter%'  : 'Clear Filter'
+			'%Clear Filter%'  : 'Clear Filter',
+            '%Register%' : 'Register your business'
         },
         'ProductItem': {
             '%In%' : 'Pinned'
@@ -141,7 +142,10 @@ var lang_enUS = {
             '%Login%' : 'Login',
             '%Log into your account.%' : 'Log into your account.',
             '%Error%'                  : 'Erro',
-            '%Close%'                  : 'Fechar'
+            '%Close%'                  : 'Fechar',
+            '%NoAccount%' : "Don't have an account?",
+            '%Register%' : 'Register your business',
+            '%Error%' : 'Error'
         },
         'ownerChatView':{
             '%Chats%' : "Owner's Corner",
@@ -162,8 +166,9 @@ var lang_enUS = {
             '%email%' : "Email",
             '%password%' : "Password",
             '%confirm password%': "Confirm Password",
-            '%register%' : "Register"
-           
+            '%register%' : "Register",
+            '%name%' : "Name",
+            '%submitMessage%' : 'You will be contacted by a Virtual Open Exchange representative to complete the process of registering a business'
         }
     }
 };
