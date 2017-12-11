@@ -62,10 +62,7 @@ var search = {
                 {name: 'car'}, 
                 {name: 'cast'},
                 {name: 'carp'}]
-                var url = 'http://deploy.phowma.com/api/v1/stores';
-                if (app.host.indexOf('http://ve-api-staging.herokuapp.com/') == 0){
-                    url = url + "?staging=1";
-                }
+                var url = app.url + 'stores/search';
                 var bloodhoundSuggestions = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -81,7 +78,10 @@ var search = {
                                 'X-Device-Token': window.localStorage.getItem("token")
                             };
                             return settings;
-                        }
+                        },
+                        filter: function(response) {
+                            return response.stores;
+                        }                        
                     }
                 });
                 $("#storeNameInput").typeahead({
