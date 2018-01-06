@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="102010" id="com.vexapp.vex" version="1.2.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="103000" id="com.vexervices.vex" version="1.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>vexapp</name>
     <description>
         A sample Virtual Exchange App
@@ -60,7 +60,6 @@
         <splash height="2208" src="www/res/ios/Default-736h.png" width="1242" />
         <splash height="1242" src="www/res/ios/Default-Landscape-736h.png" width="2208" />
     </platform>
-    <engine name="android" spec="~6.2.3" />
     <plugin name="cordova-plugin-device" spec="~1.1.2" />
     <plugin name="cordova-plugin-dialogs" spec="~1.2.1" />
     <plugin name="cordova-plugin-geolocation" spec="~2.2.0" />
@@ -73,4 +72,11 @@
     <plugin name="phonegap-plugin-push" spec="~1.6.0">
         <variable name="SENDER_ID" value="441867489546" />
     </plugin>
+    <plugin name="cordova-plugin-braintree" spec="https://github.com/taracque/cordova-plugin-braintree" />
+    <plugin name="cordova-android-support-gradle-release" spec="^1.1.5">
+        <variable name="ANDROID_SUPPORT_VERSION" value="26.+" />
+    </plugin>
+    <plugin name="cordova-plugin-inapppurchase" spec="^1.2.0" />
+    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <engine name="android" spec="^6.2.3" />
 </widget>

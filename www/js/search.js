@@ -89,7 +89,7 @@ var search = {
                     source:bloodhoundSuggestions.ttAdapter(),
                     displayText: function(item) {
                         console.log("suggestion:item.display: "+item.display);
-                        return '<p>'+item.display + '</p>';
+                        return item.display;
                     },
                     matcher: function (item) {
                         var it = item.name;

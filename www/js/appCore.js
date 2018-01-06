@@ -17,9 +17,10 @@ var appCore = {
     lastGeoDate : null,
     offLine : false,
 //    logged : false,
-    logged : true,
-    loginRequired: false,
+    logged : false,
+    loginRequired: true,
     chatToken : null,
+    clientStores : [],
     userToken : '',
     stores   : {
         id        : '',

@@ -1,5 +1,6 @@
 var products = {
         products: {
+            categories: [],
             showProductList: function(e){
                 console.log('app.products.showProductList');
                 
@@ -323,6 +324,8 @@ var products = {
                             }
                             if (prod.images[0].medium && prod.images[0].medium.indexOf('/medium.png') > -1){
                                 $('#productImage_'+index).addClass('hide');
+                                $('#productDetail_'+index).removeClass('col-xs-8');
+                                $('#productDetail_'+index).removeClass('col-sm-8');
                                 $('#productDetail_'+index).addClass('col-xs-12 col-sm-12');
                             }
                             if (prod.name.indexOf('**banner**') == 0) {

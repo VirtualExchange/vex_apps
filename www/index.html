@@ -108,8 +108,7 @@
         <script type="text/javascript" src="js/home.js"></script>
         <script type="text/javascript" src="js/views.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
-
-
+        <script type="text/javascript" src="js/purchase.js"></script>
 
         <title>UI Prototype</title>
 
@@ -126,22 +125,59 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <label for="login_user">%User%</label>
-                        <input type="text" class="form-control" id="login_user" placeholder="%User%"/>
+                        <label for="login_user">%Email%</label>
+                        <input type="text" class="form-control" id="login_user" placeholder="%Email%"/>
                     </div>
                     <div class="form-group">
                         <label for="login_password">%Password%</label>
                         <input type="password" class="form-control" id="login_password" placeholder="%Password%"/>
                     </div>
-                    <a href="javascript:void(0)" data-callback="app.login.register" class="btn btn-default">Submit</a>
+                    <a href="javascript:void(0)" data-callback="app.login.submitLogin" class="btn btn-default">Submit</a>
                 </form>
                 <div id="loginSpinner" class="row hide">
                     <div class="span4"></div>
                     <div class="span4"><img class="center-block" src="img/load_image.gif" /></div>
                     <div class="span4"></div>
                 </div>
+                <h4>%NoAccount%</h4>
+                <h4><a href="#" data-callback="app.login.register">%Register%</a></h4>
             </div>
         </script>
+        <script type="text/html" id="registerView">
+            <form role="form" id="registerForm">
+                <div class="form-inputs">
+                    <h3>%Introduction%</h3>
+                    <div class="control-group user_name">
+                        <div class="form-group">
+                            <input autofocus="autofocus" class="string form-control form-control input-lg" id="user_name" placeholder="%Name%" value="" name="user_name">
+                        </div>
+                    </div>
+                    <div class="control-group email user_email">
+                        <div class="form-group">
+                            <input autofocus="autofocus" class="string email form-control form-control input-lg" id="user_email" placeholder="%Email%" type="email" value="" name="user_email">
+                        </div>
+                    </div>
+                    <div class="control-group password user_password">
+                        <div class="form-group">
+                            <div class="form-group signin-password">
+                                <input class="form-control input-lg" id="user_password" label="false" placeholder="%Password%" type="password" name="user_password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group password user_confirm_password">
+                        <div class="form-group">
+                            <div class="form-group signin-password">
+                                <input class="form-control input-lg" id="user_confirm_password" label="false" placeholder="%ConfirmPassword%" type="password" name="user_confirm_password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <a href="#" class="btn btn-primary btn-block btn-lg" data-callback="app.login.submitRegister">%Register%</a>
+                </div>
+                <br/>
+            </form>
+		</script>
 
         <script id="homeView" type="text/html">
             <div class="backgroundLogo fullRow">
@@ -211,6 +247,7 @@
                     </div>
                     <div id="storeDetail_{{id}}" class="col-xs-8 col-sm-8" >
                         <h4>{{name}}</h4>
+                        <span><button id="buyButton_{{id}}" class="btn btn-success hide">%Buy%</span>
                     </div>
                 </div> 
             </a>
@@ -288,6 +325,13 @@
                             </button></p>-->
                         </div>
                         <a href="#" id="registerLink" class="hide" data-callback="app.ownerRegister.init">%Register%</a>
+                        <div id="purchaseDiv" class="hide">
+                            <span>
+                                <p>Purchase to see more items in this category</p>
+                                <button id="purchaseButton" class="btn btn-success" store_id="{{index}}" data-callback="app.purchase.buy">Buy {{price}}
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
