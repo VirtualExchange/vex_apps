@@ -80,28 +80,38 @@ var search = {
                             return settings;
                         },
                         filter: function(response) {
-                            return response.stores;
+                            result = response.stores.concat(response.products);
+                            return result;
                         }                        
                     }
                 });
-                $("#storeNameInput").typeahead({
-                    items: 4,
-                    source:bloodhoundSuggestions.ttAdapter(),
-                    displayText: function(item) {
-                        console.log("suggestion:item.display: "+item.display);
-                        return item.display;
-                    },
-                    matcher: function (item) {
-                        var it = item.name;
-                        return ~it.toLowerCase().indexOf(this.query.toLowerCase());
-                    },
-                    afterSelect: function(item) {
-                        console.log('item.name: ' + item.name + " item.id: "+item.id);
-                        $('#autocomplete').val(item.name);
-                        app.views.backStack.push("StoreDetail:"+item.id);
-                        app.search.storeDetail(item.id);
-                    },                          
-                });
+                
+                $("#storeNameInput").typeahead(
+                    {
+                        items: 4,
+                        source: bloodhoundSuggestions.ttAdapter(),
+                        displayText: function(item) {
+                            console.log("suggestion:item.display: "+item.display);
+                            return item.display;
+                        },
+                        matcher: function (item) {
+                            console.log("item: "+item);
+                            console.log("item.name: "+item.name);
+                            var it = item.name;
+                            return ~it.toLowerCase().indexOf(this.query.toLowerCase());
+                        },
+                        afterSelect: function(item) {
+                            console.log('item.name: ' + item.name + " item.id: "+item.id);
+                            $('#autocomplete').val(item.name);
+                            if (item.product_id){
+                                app.products.showProductDetail(item.store_id,item.id,'false')
+                            } else {
+                                app.views.backStack.push("StoreDetail:"+item.id);
+                                app.search.storeDetail(item.id);
+                            }
+                        },                          
+                    }
+                );
             },
             byName: function (e) {
                 console.log('app.search.byName()');
