@@ -56,7 +56,7 @@ var ownerLogin = {
                     navigator.notification.alert(
                         app.lang.getStr(result.message, 'loginView'), 
                         function () {}, 
-                        app.lang.getStr('%Error%', 'aplication'), app.lang.getStr('%Close%', 'aplication')
+                        app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'aplication')
                     );
                 }
             },
@@ -66,7 +66,7 @@ var ownerLogin = {
                 navigator.notification.alert(
                     app.lang.getStr(err.a.responseJSON.message, 'loginView'), 
                     function () {}, 
-                    app.lang.getStr('%Error%', 'loginView'), app.lang.getStr('%Close%', 'loginView')
+                    app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'owernLoginView')
                 );
             });
         },
@@ -98,10 +98,15 @@ var ownerLogin = {
             window.localStorage.removeItem("ownerToken");
             app.views.backStack.pop();
             var len = app.views.backStack.length;
+            console.log("len: "+len);
             var backToStr = app.views.backStack[len-1];
+            console.log("backToStr: "+backToStr);
             if (backToStr.indexOf("owner")) app.views.backStack.pop();
-            backToStr = app.views.backStack[len-2];
-            if (backToStr.indexOf("owner")) app.views.backStack.pop();
+            if (len > 1) {
+              backToStr = app.views.backStack[len-2];
+              console.log("backToStr: "+backToStr);
+              if (backToStr.indexOf("owner")) app.views.backStack.pop();
+            }
             app.ownerLogin.init();
         }
     }

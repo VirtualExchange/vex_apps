@@ -16,7 +16,8 @@ var lang_enUS = {
             '%Products%': 'Products',
 			'%Filter%'  : 'Filter',
 			'%Categories%'  : 'Categories',
-			'%Clear Filter%'  : 'Clear Filter'
+			'%Clear Filter%'  : 'Clear Filter',
+            '%Register%' : 'Register your business'
         },
         'ProductItem': {
             '%In%' : 'Pinned'
@@ -25,7 +26,8 @@ var lang_enUS = {
             '%Produts%' : 'Produts',
             '%Contact%'  : 'Contact',
             '%Chat%' : 'Chat',
-            '%More%' : 'More'
+            '%More%' : 'More',
+            '%Buy%'  : 'Buy'
         },
         'contactView' : {
             '%Contact%'   : 'Contact',
@@ -125,8 +127,19 @@ var lang_enUS = {
             '%BACK%' : 'Back'
         },
         'loginView':{
-            '%User%'     : 'User name',
-            '%Password%' : 'Password' 
+            '%Email%'     : 'Email (Username)',
+            '%Password%' : 'Password',
+            '%SignIn%' : 'Sign in',
+            '%NoAccount%' : "Don't have an account?",
+            '%Register%' : "Register here"
+        },
+        'registerView':{
+            '%Introduction%' : 'Register account',
+            '%Name%'     : 'Name',
+            '%Email%'     : 'Email (Username)',
+            '%Password%' : 'Password',
+            '%ConfirmPassword%' : 'Confirm Password',
+            '%Register%' : "Register"
         },
         'favoriteView':{
             '%Favorites%' : 'Favorites'
@@ -141,7 +154,10 @@ var lang_enUS = {
             '%Login%' : 'Login',
             '%Log into your account.%' : 'Log into your account.',
             '%Error%'                  : 'Erro',
-            '%Close%'                  : 'Fechar'
+            '%Close%'                  : 'Fechar',
+            '%NoAccount%' : "Don't have an account?",
+            '%Register%' : 'Register your business',
+            '%Error%' : 'Error'
         },
         'ownerChatView':{
             '%Chats%' : "Owner's Corner",
@@ -162,8 +178,9 @@ var lang_enUS = {
             '%email%' : "Email",
             '%password%' : "Password",
             '%confirm password%': "Confirm Password",
-            '%register%' : "Register"
-           
+            '%register%' : "Register",
+            '%name%' : "Name",
+            '%submitMessage%' : 'You will be contacted by a Virtual Open Exchange representative to complete the process of registering a business'
         }
     }
 };

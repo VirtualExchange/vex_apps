@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="100000" id="com.vexservices.fouruvoex" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="102000" id="com.vexservices.fouruvoex" version="1.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>4UVOeX</name>
     <description>
         For you Virtual Open Exchange
@@ -72,4 +72,11 @@
     <plugin name="phonegap-plugin-push" spec="^1.6.4">
         <variable name="SENDER_ID" value="111387173184" />
     </plugin>
+    <plugin name="cordova-plugin-braintree" spec="https://github.com/taracque/cordova-plugin-braintree" />
+    <plugin name="cordova-android-support-gradle-release" spec="^1.1.5">
+        <variable name="ANDROID_SUPPORT_VERSION" value="26.+" />
+    </plugin>
+    <plugin name="cordova-plugin-inapppurchase" spec="^1.2.0" />
+    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <engine name="android" spec="^6.2.3" />
 </widget>

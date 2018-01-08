@@ -37,6 +37,7 @@ var app = {
         $.extend(this, login);
         $.extend(this, home);
         $.extend(this, views);
+        $.extend(this, purchase);
         app.events();
     },
 
@@ -107,7 +108,6 @@ var app = {
             $('#content').css('padding-top','10px');
             $('#msgCount').css('margin-left', '-25px');
         }
-
         var old_token_cleared = window.localStorage.getItem("old_token_cleared");
         console.log("old_token_cleared: "+old_token_cleared);
         if (!old_token_cleared){
@@ -173,13 +173,16 @@ var app = {
                         /* Attempt to validate the token */
                         }else if (app.loginRequired == true && app.userToken){
                             app.webservice.get(
-                                'departments',
+                                'session',
                                 {},
                                 function (result) {
+                                    console.log("result: "+JSON.stringify(result));
                                     console.log("User Token is valid");
+                                    app.clientStores = result.client.store_ids;
                                     app.home.init();
                                 },
                                 function (err) {
+                                    console.log("err: "+JSON.stringify(err));
                                     console.log("User Token is not valid");
                                     app.login.init();
                                 }
