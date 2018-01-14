@@ -1051,9 +1051,9 @@ var home = {
                                 //console.log(JSON.stringify(e));
                             }
                         );
-                        
+
                         app.bindEvents();
-                }
+                    }
                 );
             },
             customButton: function (e) {
@@ -1115,6 +1115,7 @@ var home = {
                     '#contactView',
                     'contactView',
                     {
+                        contactName : store.contact ? store.contact: '',
                         phone: store.phone ? store.phone : '',
                         email: store.email ? store.email : '',
                         website: store.website ? store.website : '',
@@ -1127,6 +1128,10 @@ var home = {
                 '',
                     function () {
                         $('#modalContact').modal('show');
+
+                        if (!store.contact || store.contact == '') {
+                            $('.contactName').addClass('hide');
+                        }
 
                         if (!store.phone || store.phone == '') {
                             $('.contactPhone').addClass('hide');

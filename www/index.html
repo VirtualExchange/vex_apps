@@ -410,12 +410,12 @@
                                 <span class="green" id="sale_price">{{price}}</span>
                             </li>
                             <li class="text-left">
+                                <!--
                                 <a class="btn-link" data-callback="app.products.shareProduct">
                                     <i class="fa fa-share-alt fa-2x"></i>
                                 </a>
-                                <button id="pin_{{id}}" remove="false" class="btn-link btPin" product_id="{{id}}" data-callback="app.products.pinFavorite">
-                                    <i class="fa fa-pin"></i>
-                                </button>
+                                -->
+                                <a id="pinButton" pin_id="" product_id ="{{id}}" data-callback="app.products.pinFavorite" class="fa fa-thumb-tack fa-rotate-90 fa-2x"></a>
                             </li>
                             <li>
                                 <p id="DatePinDetail_{{id}}" class="hide">
@@ -442,6 +442,12 @@
 
         <script id="contactView" type="text/html">
             <div class="contactModel">
+                    <h4 class="contactName">
+                    %Contact%
+                    </h4>
+                    <div class="contactName">
+                    {{contactName}}
+                    </div>
                     <h4 class="contactPhone">
                     %Telephone%
                     </h4>
@@ -568,7 +574,7 @@
         
         <script type="text/html" id="pinView">
             <div class="row">
-                <div class="row productList" style="margin: 10px; overflow: hidden;">
+                <div class="row productList">
                     <ul id="productList"></ul>
                 </div>
             </div>
@@ -754,6 +760,11 @@
                 <a href="#" data-callback="app.home.getFavorites" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-star-o">&nbsp;{{name}}</a>
             </li>
         </script>        
+        <script type="text/html" id="menuItemPinned">
+            <li>
+                <a href="#" data-callback="app.pin.init" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-thumb-tack">&nbsp;{{name}}</a>
+            </li>
+        </script>        
         <script type="text/html" id="menuItemChats">
             <li>
                 <a href="#" data-callback="app.chat.list" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-comment-o">&nbsp;{{name}}<span id="msgcount3" class="vex-badge badge pull-right"></a>
@@ -797,6 +808,11 @@
         <script type="text/html" id="menuItemFavorite2">
             <li class="list-group-item">
                 <a href="#" data-callback="app.home.getFavorites" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-star-o">&nbsp;{{name}}</a>
+            </li>
+        </script>        
+        <script type="text/html" id="menuItemPinned2">
+            <li class="list-group-item">
+                <a href="#" data-callback="app.pin.init" data-toggle="collapse" data-target="#landingPageMenu"><span class="fa fa-thumb-tack">&nbsp;{{name}}</a>
             </li>
         </script>        
         <script type="text/html" id="menuItemChats2">
