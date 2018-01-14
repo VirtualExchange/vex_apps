@@ -2,9 +2,13 @@ var pin = {
         pin: {
             init: function (e) {
                 console.log('app.pin.init()');
+                app.views.backStack.push("Pinned");
 
-                $('.linkHome').removeClass('selected');
-                $(e).addClass('selected');
+                $('.carousel').addClass('hide');
+                $('#menubutton').addClass('hide');
+                $('#landingPageMenu').addClass('hide');
+                $('#landingPageMenu').collapse('hide');
+                $('.navbar').removeClass('hide');
 
                 $(window).unbind('scroll');
 
@@ -21,8 +25,6 @@ var pin = {
                             '',
                             function () {
                                 app.products.addProducts(result.pins);
-
-                                $('.btPin').attr('remove', 'true');
                                 $('.toProduct').attr('data-callback', 'app.pin.showProduct');
                                 $('.toProduct').attr('data-pin', 'true');
                                 app.bindEvents();
@@ -44,6 +46,7 @@ var pin = {
                     'pins/' + prod_id,
                     {},
                     function (result) {
+                        app.views.backStack.push("ProductDetail:"+result.store_id+":"+result.product_id+":"+'true');
                         console.log(JSON.stringify(result));
                         app.products.addProductDetail(result, e);
                     },

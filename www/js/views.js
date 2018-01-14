@@ -73,6 +73,8 @@ var views = {
                 app.products.showProductListMore2(backTo[1],backTo[2]);
             } else if (backTo[0] == "Favorites"){
                 app.home.getFavorites();
+            } else if (backTo[0] == "Pinned"){
+                app.pin.init();
             } else if (backTo[0] == "Chats"){
                 app.views.backStack.pop();
                 app.chat.list();
@@ -142,6 +144,19 @@ var views = {
                 'menuItemFavorite2',
                 {
                     name: app.lang.getStr('%Favorites%', 'aplication'),
+                    id: 0
+                },
+                'append',
+                function () {
+                    app.bindEvents();
+                }
+            );
+            app.draw(
+                '#vex-navbar2',
+                '#menuItemPinned2',
+                'menuItemPinned2',
+                {
+                    name: app.lang.getStr('%Pinned%', 'aplication'),
                     id: 0
                 },
                 'append',
@@ -284,6 +299,19 @@ var views = {
                         'menuItemFavorite',
                         {
                             name: app.lang.getStr('%Favorites%', 'aplication'),
+                            id: 0
+                        },
+                        'append',
+                        function () {
+                            app.bindEvents();
+                        }
+                    );
+                    app.draw(
+                        '#vex-navbar',
+                        '#menuItemPinned',
+                        'menuItemPinned',
+                        {
+                            name: app.lang.getStr('%Pinned%', 'aplication'),
                             id: 0
                         },
                         'append',
