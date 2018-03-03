@@ -507,3 +507,20 @@ function findContact(text) {
 
     return text;
 }
+function hideHomeMenu() {
+    $('.carousel').addClass('hide');
+    $('#menubutton').addClass('hide');
+    $('#landingPageMenu').addClass('hide');
+    $('#landingPageMenu').collapse('hide');
+    $('#searchMenu').addClass('hide');
+    $('.navbar').removeClass('hide');
+}
+function showHomeMenu() {
+    $('.carousel').removeClass('hide');
+    $('#menubutton').removeClass('hide');
+    $('#landingPageMenu').removeClass('hide');
+    $('#landingPageMenu').collapse('hide');
+    $('#searchMenu').removeClass('hide');
+    $('.navbar').addClass('hide');
+}
+    

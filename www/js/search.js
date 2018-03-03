@@ -4,11 +4,7 @@ var search = {
                 app.views.loadView.show();
                 mixpanel.track("Search");
                 console.log('app.search.init()');
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 
                 app.views.backStack.push("SearchView");
                 //$('.linkHome').removeClass('selected');
@@ -85,10 +81,9 @@ var search = {
                         }                        
                     }
                 });
-                
-                $("#storeNameInput").typeahead(
+                $("#srch-term").typeahead(
                     {
-                        items: 4,
+                        items: 7,
                         source: bloodhoundSuggestions.ttAdapter(),
                         displayText: function(item) {
                             console.log("suggestion:item.display: "+item.display);
@@ -102,7 +97,33 @@ var search = {
                         },
                         afterSelect: function(item) {
                             console.log('item.name: ' + item.name + " item.id: "+item.id);
-                            $('#autocomplete').val(item.name);
+                            $('#srch-term').val("");
+                            if (item.product_id){
+                                app.products.showProductDetail(item.store_id,item.id,'false')
+                            } else {
+                                app.views.backStack.push("StoreDetail:"+item.id);
+                                app.search.storeDetail(item.id);
+                            }
+                        },                          
+                    }
+                );
+                $("#srch-term2").typeahead(
+                    {
+                        items: 7,
+                        source: bloodhoundSuggestions.ttAdapter(),
+                        displayText: function(item) {
+                            console.log("suggestion:item.display: "+item.display);
+                            return item.display;
+                        },
+                        matcher: function (item) {
+                            console.log("item: "+item);
+                            console.log("item.name: "+item.name);
+                            var it = item.name;
+                            return ~it.toLowerCase().indexOf(this.query.toLowerCase());
+                        },
+                        afterSelect: function(item) {
+                            console.log('item.name: ' + item.name + " item.id: "+item.id);
+                            $('#srch-term2').val("");
                             if (item.product_id){
                                 app.products.showProductDetail(item.store_id,item.id,'false')
                             } else {
@@ -252,6 +273,7 @@ var search = {
             storeDetail: function (store_id) {
                 console.log('app.search.storeDetail()');
                 //app.views.auxBackFuc = 'search';
+                hideHomeMenu();
                 app.home.getStoreDetail(store_id, true, 'true');
                 
             }

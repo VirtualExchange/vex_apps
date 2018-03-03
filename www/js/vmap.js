@@ -14,11 +14,7 @@ var vMap = {
             gpsError: null,
             init: function (e) {
                 console.log('app.vMapView.init()');
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 $('#backLink').removeClass('hide');
 
                 $('#splashView').addClass('hide');
