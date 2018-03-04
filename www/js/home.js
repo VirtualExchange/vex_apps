@@ -249,7 +249,11 @@ var home = {
                         console.log(JSON.stringify(result));
                         
                         aboutStripped = stripAbout(store.about);
-
+                        if (store.price)
+                            store_price = store.price;
+                        else
+                            store_price = '';
+                        console.log("store_price: "+store_price);
                         app.draw(
                             '#content',
                             '#ProductView',
@@ -263,140 +267,42 @@ var home = {
                                 featured_product : !store.featured_product ? '' : store.featured_product,
                                 about: convertLinks2(aboutStripped),
                                 dadStore: dadStore,
-                                favorite: store.favorite
+                                favorite: store.favorite,
+                                price: store_price
                             },
                             '',
                             function () {
-                                app.home.addCategorie2(result.categories);
-
-                                if (app.views.stores.length == 1) {
-
-                                    $('#storeProductList').css('min-height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
-                                    
+                                storeBought = false;
+                                for (i=0; i<app.clientStores.length; i++){
+                                    if (app.clientStores[i] == store.id){
+                                        storeBought = true;
+                                        break;
+                                    }    
                                 }
-                                if (app.views.backStack.length > 1){
-                                    var ind = app.views.backStack.length-2;
-                                    $('#backStack').html(app.views.backStack[ind]);
-                                    $('#backLink').removeClass('hide');
-                                }else{
-                                    $('#backLink').addClass('hide');
-                                }
-                                
-                                //if(!btBack || ((app.home.store_id.length == 1) && (dadStore=='true'))){
-                                //    console.log('hide back button');
-                                //    $('#divBtBack').addClass('hide');
-                                //}
-                                
-                                if (store.corporate) {
-
-                                    $('#store_name').addClass('hide');
-                                    $('#backLink').addClass('hide');
-                                    $('#btFav_0').addClass('hide');
-                                }
-                                
-                                if (store.register){
-                                    $('#registerLink').removeClass('hide');
-                                }
-                                $('#storeCategorie').change(function () {
-                                    app.home.filterByCategory($('#storeCategorie'));
-                                });
-                                console.log("store.favorite: "+store.favorite);
-                                if (store.favorite == true) {
-                                    $('#favoriteButton').removeClass('fa-star-o');
-                                    $('#favoriteButton').addClass('fa-star');
-                                    $('#favoriteButton').attr('data-callback', 'app.home.removeFavorite');
-                                    //$('#btFav_' + store.id).html('Clear Favorite');
-                                }
-                                
-                                if(!aboutStripped || aboutStripped== '<p></p>'){
-                                    $('#AboutDetail').addClass('hide');
-                                }
-
-                                if(!store.featured_product || store.featured_product== '<p></p>' || store.featured_product==''){
-                                    $('#featuredDetail').addClass('hide');
-                                }
-                                if (store.logo.indexOf('medium.png') > -1){
-                                    $('#storeImageProductView').addClass('hide');
-                                }
-                                if (hasCode(store.about,"showMapButton")){
-                                    $('#mapButton').removeClass('hide');
-                                }
-                                if (hasCode(store.about,"hideChatButton")){
-                                    $('#chatButton').addClass('hide');
-                                }
-                                if (hasCode(store.about,"hideContactButton")){
-                                    $('#contactButton').addClass('hide');
-                                }
-                                if (hasCode(store.about,"custombutton")){
-                                    $('#customButton').removeClass('hide');
-                                    var customLink = getCustomLink(store.about,"custombutton");
-                                    var customName = getCustomName(store.about,"custombutton");
-                                    var customType = getCustomType(store.about,"custombutton");
-                                    $('#customButtonText').html(customName);
-                                    $('#customButton').attr('customlink', customLink);
-                                    $('#customButton').attr('customtype',customType);
-                                    if (customType.indexOf('pdf') == 0){
-                                        $('#customButton').attr('class','fa fa-file-pdf-o fa-2x');
-                                    } else if (customType.indexOf('video') == 0){
-                                        $('#customButton').attr('class','fa fa-video-camera fa-2x');
-                                    }
+                                if (store.paid != true || storeBought) {
+                                    store.paid = false;
+                                    app.products.categories = result.categories;
+                                    app.home.showStoreTabs(result.categories,store,dadStore);
                                 } else {
-                                    console.log("No custom button: "+store.about);
+                                    cordova.getAppVersion.getPackageName().then(function (packageName) {
+                                        console.log("packageName: "+packageName);
+                                        console.log("product: "+packageName+"."+store.id);
+                                        product_name = packageName+"."+store.id;
+                                        console.log("product_name: "+product_name);
+                                        inAppPurchase
+                                        .getProducts([product_name])
+                                        .then(function (products) {
+                                            console.log(JSON.stringify(products));
+                                            /* Update the price */
+                                            price = products[0].price;
+                                            $('#purchaseButton').text("Buy "+price);
+                                            $('#purchaseDiv').removeClass('hide');
+                                        })
+                                        .catch(function (err) {
+                                            console.log(JSON.stringify(err));
+                                        });        
+                                    });
                                 }
-                                
-                                if(store.stores_count>0){
-                                    
-                                    $('#storeOptions').removeClass('hide');
-                                    var storeTabName, productTabName;
-                                    if (hasCode(store.about,"storetab"))
-                                    {
-                                        storeTabName = getTabName(store.about,"storetab");
-                                        $('#liOptStoreLink').text(storeTabName);
-                                    }
-                                    if (hasCode(store.about,"producttab"))
-                                    {
-                                        productTabName = getTabName(store.about,"producttab");
-                                        $('#liOptProductLink').text(productTabName);
-                                    }
-                                    
-                                    $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
-                                    $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
-                                    
-                                    app.home.getStoresChild(store.id);
-
-                                    
-                                }else{
-                                    
-                                    $('#storeOptions').addClass('hide');
-                                    $('#productListDiv').removeClass('hide');
-                                    //$('#liOptStore').addClass('hide');
-                                    $('#storeTabs').addClass('hide');
-                                    $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
-                                    $('#list-stores').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
-                        
-                                }
-                                console.log("Back functionality: dadStore:"+dadStore+" app.home.oStoreDetail.id:"+app.home.oStoreDetail.id);
-                                if(dadStore=='false' && app.views.auxBackFuc!='search'){
-                                    app.views.backFunction = app.products.backStoreDad;
-                                    $('#btBack').attr('dad_id', app.home.store_id[app.home.store_id.length-1]);
-
-                                }else if(app.views.auxBackFuc=='storesList'){
-                                    
-                                    app.views.backFunction = app.products.backHome;
-
-                                }else if(app.views.auxBackFuc=='producs'){
-                                    
-                                    app.views.backFunction = app.products.returnToProductList;
-
-                                }else if(app.views.auxBackFuc=='search'){
-                                    app.views.backFunction = app.search.init;
-
-                                }
-                                app.home.store_id.push(app.home.oStoreDetail.id);
-                        
-                                app.products.showProductStoreList(store.id,store.stores_count);
-
-                                app.bindEvents();
                             }
                         );
                         app.views.generateMenu2();
@@ -407,6 +313,136 @@ var home = {
                         
                     }
                 );
+            },
+            showStoreTabs: function(categories,store,dadStore){
+                app.home.addCategorie2(categories);
+
+                if (app.views.stores.length == 1) {
+
+                    $('#storeProductList').css('min-height', ($(window).height() - $('.navbar-fixed-top').height() - 20));
+                                    
+                }
+                if (app.views.backStack.length > 1){
+                    var ind = app.views.backStack.length-2;
+                    $('#backStack').html(app.views.backStack[ind]);
+                    $('#backLink').removeClass('hide');
+                }else{
+                    $('#backLink').addClass('hide');
+                }
+                                
+                if (store.corporate) {
+
+                    $('#store_name').addClass('hide');
+                    $('#backLink').addClass('hide');
+                    $('#btFav_0').addClass('hide');
+                }
+                                
+                if (store.register){
+                    $('#registerLink').removeClass('hide');
+                }
+                $('#storeCategorie').change(function () {
+                    app.home.filterByCategory($('#storeCategorie'));
+                });
+                console.log("store.favorite: "+store.favorite);
+                if (store.favorite == true) {
+                    $('#favoriteButton').removeClass('fa-star-o');
+                    $('#favoriteButton').addClass('fa-star');
+                    $('#favoriteButton').attr('data-callback', 'app.home.removeFavorite');
+                    //$('#btFav_' + store.id).html('Clear Favorite');
+                }
+                                
+                if(!aboutStripped || aboutStripped== '<p></p>'){
+                    $('#AboutDetail').addClass('hide');
+                }
+
+                if(!store.featured_product || store.featured_product== '<p></p>' || store.featured_product==''){
+                    $('#featuredDetail').addClass('hide');
+                }
+                if (store.logo.indexOf('medium.png') > -1){
+                    $('#storeImageProductView').addClass('hide');
+                }
+                if (hasCode(store.about,"showMapButton")){
+                    $('#mapButton').removeClass('hide');
+                }
+                if (hasCode(store.about,"hideChatButton")){
+                    $('#chatButton').addClass('hide');
+                }
+                if (hasCode(store.about,"hideContactButton")){
+                    $('#contactButton').addClass('hide');
+                }
+                if (hasCode(store.about,"hideFavoriteButton")){
+                    $('#favoriteButton').addClass('hide');
+                }
+                if (hasCode(store.about,"custombutton")){
+                    $('#customButton').removeClass('hide');
+                    var customLink = getCustomLink(store.about,"custombutton");
+                    var customName = getCustomName(store.about,"custombutton");
+                    var customType = getCustomType(store.about,"custombutton");
+                    $('#customButtonText').html(customName);
+                    $('#customButton').attr('customlink', customLink);
+                    $('#customButton').attr('customtype',customType);
+                    if (customType.indexOf('pdf') == 0){
+                        $('#customButton').attr('class','fa fa-file-pdf-o fa-2x');
+                    } else if (customType.indexOf('video') == 0){
+                        $('#customButton').attr('class','fa fa-video-camera fa-2x');
+                    }
+                } else {
+                    console.log("No custom button: "+store.about);
+                }
+                                
+                if(store.stores_count>0){
+                                    
+                    $('#storeOptions').removeClass('hide');
+                    var storeTabName, productTabName;
+                    if (hasCode(store.about,"storetab"))
+                    {
+                        storeTabName = getTabName(store.about,"storetab");
+                        $('#liOptStoreLink').text(storeTabName);
+                    }
+                    if (hasCode(store.about,"producttab"))
+                    {
+                        productTabName = getTabName(store.about,"producttab");
+                        $('#liOptProductLink').text(productTabName);
+                    }
+                                    
+                    $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
+                    $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
+                                    
+                    app.home.getStoresChild(store.id);
+
+                                    
+                }else{
+                                    
+                    $('#storeOptions').addClass('hide');
+                    $('#productListDiv').removeClass('hide');
+                    //$('#liOptStore').addClass('hide');
+                    $('#storeTabs').addClass('hide');
+                    $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
+                    $('#list-stores').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
+                        
+                }
+                console.log("Back functionality: dadStore:"+dadStore+" app.home.oStoreDetail.id:"+app.home.oStoreDetail.id);
+                if(dadStore=='false' && app.views.auxBackFuc!='search'){
+                    app.views.backFunction = app.products.backStoreDad;
+                    $('#btBack').attr('dad_id', app.home.store_id[app.home.store_id.length-1]);
+
+                }else if(app.views.auxBackFuc=='storesList'){
+                                    
+                    app.views.backFunction = app.products.backHome;
+
+                }else if(app.views.auxBackFuc=='producs'){
+                                    
+                    app.views.backFunction = app.products.returnToProductList;
+
+                }else if(app.views.auxBackFuc=='search'){
+                    app.views.backFunction = app.search.init;
+
+                }
+                app.home.store_id.push(app.home.oStoreDetail.id);
+                       
+                app.products.showProductStoreList(store.id,store.stores_count);
+
+                app.bindEvents();
             },
             getStoresChild: function(store_id){
                 console.log('app.home.getStoresChild');
@@ -848,6 +884,18 @@ var home = {
                                 $('#readMore_'+i).addClass('hide');
                                 $('#storeItem_'+store.id).attr('data-callback', '');
                             }
+                            
+                            //app.purchase.restorePurchases();
+                            storeBought = false;
+                            for (i=0; i<app.clientStores.length; i++){
+                                if (store.id == app.clientStores[i]){
+                                    storeBought = true
+                                    break;
+                                }
+                            }
+                            if (store.paid && store.paid == true && !storeBought){
+                                $('#buyButton_'+store.id).removeClass('hide');
+                            }
                             i++;
                             app.bindEvents();
                         }
@@ -1003,9 +1051,9 @@ var home = {
                                 //console.log(JSON.stringify(e));
                             }
                         );
-                        
+
                         app.bindEvents();
-                }
+                    }
                 );
             },
             customButton: function (e) {
@@ -1067,6 +1115,7 @@ var home = {
                     '#contactView',
                     'contactView',
                     {
+                        contactName : store.contact ? store.contact: '',
                         phone: store.phone ? store.phone : '',
                         email: store.email ? store.email : '',
                         website: store.website ? store.website : '',
@@ -1079,6 +1128,10 @@ var home = {
                 '',
                     function () {
                         $('#modalContact').modal('show');
+
+                        if (!store.contact || store.contact == '') {
+                            $('.contactName').addClass('hide');
+                        }
 
                         if (!store.phone || store.phone == '') {
                             $('.contactPhone').addClass('hide');

@@ -20,6 +20,7 @@ var appCore = {
     logged : true,
     loginRequired: false,
     chatToken : null,
+    clientStores : [],
     userToken : '',
     stores   : {
         id        : '',

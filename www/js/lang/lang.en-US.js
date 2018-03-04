@@ -26,7 +26,8 @@ var lang_enUS = {
             '%Produts%' : 'Produts',
             '%Contact%'  : 'Contact',
             '%Chat%' : 'Chat',
-            '%More%' : 'More'
+            '%More%' : 'More',
+            '%Buy%'  : 'Buy'
         },
         'contactView' : {
             '%Contact%'   : 'Contact',
@@ -126,8 +127,19 @@ var lang_enUS = {
             '%BACK%' : 'Back'
         },
         'loginView':{
-            '%User%'     : 'User name',
-            '%Password%' : 'Password' 
+            '%Email%'     : 'Email (Username)',
+            '%Password%' : 'Password',
+            '%SignIn%' : 'Sign in',
+            '%NoAccount%' : "Don't have an account?",
+            '%Register%' : "Register here"
+        },
+        'registerView':{
+            '%Introduction%' : 'Register account',
+            '%Name%'     : 'Name',
+            '%Email%'     : 'Email (Username)',
+            '%Password%' : 'Password',
+            '%ConfirmPassword%' : 'Confirm Password',
+            '%Register%' : "Register"
         },
         'favoriteView':{
             '%Favorites%' : 'Favorites'

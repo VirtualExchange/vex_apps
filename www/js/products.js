@@ -1,5 +1,6 @@
 var products = {
         products: {
+            categories: [],
             showProductList: function(e){
                 console.log('app.products.showProductList');
                 
@@ -276,7 +277,7 @@ var products = {
                             }else if (prod.feature_level == 1){
                                 $('#productItem_'+prod.id).addClass('list-group-item-success');
                             }
-
+                            /*
                             if (prod.pin != false || prod.store_id == 0) {
 
                                 $('#pin_' + prod.id + ' i').removeClass('fa-pin');
@@ -302,6 +303,7 @@ var products = {
                                         {formatLength: 'short', selector: 'date and time'});
                                 }
                             }
+                            */
 
 
                             if (!prod.regular_price || prod.regular_price == '$0.00') {
@@ -323,6 +325,8 @@ var products = {
                             }
                             if (prod.images[0].medium && prod.images[0].medium.indexOf('/medium.png') > -1){
                                 $('#productImage_'+index).addClass('hide');
+                                $('#productDetail_'+index).removeClass('col-xs-8');
+                                $('#productDetail_'+index).removeClass('col-sm-8');
                                 $('#productDetail_'+index).addClass('col-xs-12 col-sm-12');
                             }
                             if (prod.name.indexOf('**banner**') == 0) {
@@ -335,8 +339,7 @@ var products = {
             },
             pinFavorite: function (e) {
                 console.log('app.products.pinFavorite');
-
-                $('#pin_' + $(e).attr('product_id')).attr('data-callback', '');
+                console.log("product_id: "+$(e).attr('product_id'));
 
                 app.webservice.post(
                     'pins',
@@ -344,19 +347,17 @@ var products = {
                     {
                         publish_id: $(e).attr('product_id')
                     },
-                function (result) {
-                    console.log(JSON.stringify(result));
-                    
-                    $(e).children('i').removeClass('fa-pin');
-                    $(e).children('i').addClass('fa-pinned');
-                                
-                    $(e).attr('pin_id', result.id);
-                    $(e).attr('data-callback', 'app.products.removePinFavorite');
+                    function (result) {
+                        console.log(JSON.stringify(result));
 
-                },
+                        $('#pinButton').removeClass('fa-rotate-90');
+                    
+                        $('#pinButton').attr('pin_id', result.id);
+                        $('#pinButton').attr('data-callback', 'app.products.removePinFavorite');
+
+                    },
                     function (e) {
                         console.log(JSON.stringify(e));
-                        $('#pin_' + $(e).attr('product_id')).attr('data-callback', 'app.products.pinFavorite');
                     }
                 );
             },
@@ -371,19 +372,11 @@ var products = {
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
+                        $('#pinButton').addClass('fa-rotate-90');
+                        $('#pinButton').attr('pin_id', '');
+                        $('#pinButton').attr('data-callback', 'app.products.PinFavorite');
 
-                        $(e).children('i').removeClass('fa-pinned');
-                        $(e).children('i').addClass('fa-pin');
-                    
-                        $(e).attr('data-callback', 'app.products.pinFavorite');
 
-                        if ($(e).attr('remove') == 'true') {
-                            $('#productItem_' + $(e).attr('pin_id')).remove();
-//                            console.log($('#productList').children().length);
-                            if ($('#productList').children().length == 0) {
-                                $('#productList').html('<li><h3 class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</h3></li>');
-                            }
-                        }
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
@@ -515,7 +508,16 @@ var products = {
                         if (!result.payment_option) {
                             $('#paymentOption').addClass('hide');
                         }
+                        console.log("result.pin: "+result.pin);
+                        console.log("result.store_id: "+result.store_id);
+                        if (result.pin != false || result.store_id == 0) {
+                            console.log("Product has been pinned");
+                            $('#pinButton').removeClass('fa-rotate-90');
+                            $('#pinButton').attr('pin_id', result.pin_id);
+                            $('#pinButton').attr('data-callback', 'app.products.removePinFavorite');
+                        }
 
+                        /*
                         if (result.pin != false || data_pin == 'true') {
                             
                             $('#pin_' + result.id + ' i').removeClass('fa-pin');
@@ -540,7 +542,7 @@ var products = {
                                 }
                             }
                         }
-
+                        */
                         if (!result.regular_price || result.regular_price == '$0.00') {
                             $('#regular_price').addClass('hide');
                         }

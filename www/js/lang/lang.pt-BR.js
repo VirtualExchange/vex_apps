@@ -22,7 +22,9 @@ var lang_ptBR = {
         'storeItem':{
             '%Produts%' : 'Produtos',
             '%Contact%'  : 'Contato',
-            '%Chat%' : 'Chat'
+            '%Chat%' : 'Chat',
+            '%More%' : 'More',
+            '%Buy%'  : 'Buy'
         },
         'contactView' : {
             '%Contact%'   : 'Contato',
@@ -117,8 +119,19 @@ var lang_ptBR = {
             '%Categories%' : 'Categorias'
         },
         'loginView':{
-            '%User%'     : 'Usuário',
-            '%Password%' : 'Senha' 
+            '%Email%'     : 'Email (Username)',
+            '%Password%' : 'Senha',
+            '%SignIn%' : 'Sign in',
+            '%NoAccount%' : "Don't have an account?",
+            '%Register%' : "Register here"
+        },
+        'registerView':{
+            '%Introduction%' : 'Register account',
+            '%Name%'     : 'Name',
+            '%Email%'     : 'Email (Username)',
+            '%Password%' : 'Password',
+            '%ConfirmPassword%' : 'Confirm Password',
+            '%Register%' : "Register"
         },
         'favoriteView':{
             '%Favorites%' : 'Favorites'
