@@ -125,6 +125,7 @@ var views = {
                     );
                 }
             });
+            /*
             app.draw(
                 '#vex-navbar2',
                 '#menuItemSearch2',
@@ -138,6 +139,7 @@ var views = {
                     app.bindEvents();
                 }
             );
+            */
             app.draw(
                 '#vex-navbar2',
                 '#menuItemFavorite2',
@@ -280,6 +282,7 @@ var views = {
                             );
                         }
                     });
+                    /*
                     app.draw(
                         '#vex-navbar',
                         '#menuItemSearch',
@@ -293,6 +296,7 @@ var views = {
                             app.bindEvents();
                         }
                     );
+                    */
                     app.draw(
                         '#vex-navbar',
                         '#menuItemFavorite',

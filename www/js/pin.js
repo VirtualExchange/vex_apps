@@ -4,11 +4,7 @@ var pin = {
                 console.log('app.pin.init()');
                 app.views.backStack.push("Pinned");
 
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
 
                 $(window).unbind('scroll');
 

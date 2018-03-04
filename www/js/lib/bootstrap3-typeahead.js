@@ -518,7 +518,8 @@
       e.preventDefault();
       this.skipShowHintOnFocus = true;
       this.select();
-      this.$element.focus();
+      //NCP//this.$element.focus();
+      this.$element.blur();
       this.hide();
     },
 

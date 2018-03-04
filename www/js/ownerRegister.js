@@ -3,11 +3,7 @@ var ownerRegister = {
         init: function(e){
             console.log('app.ownerRegister.init()');
             // Hide landing page/show menu bar
-            $('.carousel').addClass('hide');
-            $('#menubutton').addClass('hide');
-            $('#landingPageMenu').addClass('hide');
-            $('#landingPageMenu').collapse('hide');
-            $('.navbar').removeClass('hide');
+            hideHomeMenu();
             $('#backLink').removeClass('hide');
             
             var instruction = app.lang.getStr('%Instruction%', 'ownerRegisterView');

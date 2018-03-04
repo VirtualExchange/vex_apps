@@ -29,7 +29,7 @@ var home = {
                     $('#optProduct').html(app.lang.getStr('%Products%', 'aplication'));
                     
                     backStack = new Array();
-                    
+                    app.search.typeAhead();
                     app.views.generateMenu();
                     
                 }, 2000);
@@ -65,9 +65,7 @@ var home = {
                 console.log('app.home.showStoreListPre');
                 app.views.backStack = new Array();
                 app.views.setDefaults();
-                $('.carousel').removeClass('hide');
-                $('#menubutton').removeClass('hide');
-                $('.navbar').addClass('hide');
+                showHomeMenu();
                 app.views.generateMenu2();
 
                 $('#storeList').html('<img src="img/load_image.gif" style="width: 48px;">');
@@ -103,9 +101,7 @@ var home = {
                 app.views.setDefaults();
                 var homeDeptId = -1;
                 if (!e){
-                $('.carousel').removeClass('hide');
-                $('#menubutton').removeClass('hide');
-                $('.navbar').addClass('hide');
+                    showHomeMenu();
                 homeDeptId = app.views.generateMenu2();
                     
                 $('.carousel').carousel({
@@ -191,13 +187,8 @@ var home = {
                 var store_id;
 
                 if ($(e).attr('store_id')) {
-                    $('.carousel').addClass('hide');
-                    $('#menubutton').addClass('hide');
                     console.log("Trying to hide menu...");
-                    $('#landingPageMenu').collapse('hide');
-                    $('#landingPageMenu').addClass('hide');
-                    $('#landingPageMenu').collapse('hide');
-                    $('.navbar').removeClass('hide');
+                    hideHomeMenu();
                     
                     store_id = $(e).attr('store_id');
                     app.views.backStack.push("StoreDetail:"+store_id);
@@ -642,9 +633,7 @@ var home = {
             },
             filterByDepartmentFromMenu: function(e){
                 console.log('app.home.filterByDepartmentFromMenu()');
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 app.views.backStack = new Array();
                 if ($(e).attr('dep_id') == '0') {
                     app.views.goHome();
@@ -999,11 +988,7 @@ var home = {
                 app.views.backStack.pop();
 
                 app.views.backStack.push("Favorites");
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 
                 app.draw(
                     '#content',
