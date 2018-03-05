@@ -79,7 +79,7 @@
 }
 
 #menubutton { position: absolute; right: 5px; top: 15px; }
-#searchMenu { position: absolute; left: 5px; top: 5px; width: 80%}
+#searchMenu { position: absolute; left: 5px; top: 20px; width: 100%}
 #menuSearch {width: 75% }
 
 .navbar-brand
