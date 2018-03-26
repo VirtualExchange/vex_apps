@@ -19,11 +19,7 @@ var chat = {
             openChat: function(store){
                 console.log('app.chat.openChat');
                 mixpanel.track("Chat",{"store_id":store.id });
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 $('#backLink').removeClass('hide');
                 
                 app.draw(
@@ -111,11 +107,7 @@ var chat = {
                 console.log('app.chat.list()');
                 mixpanel.track("Chats");
                 app.views.backStack.push("Chats");
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
 
                 app.draw(
                     '#content',

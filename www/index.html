@@ -311,11 +311,11 @@
 							</div>
 					    </div>
                         <div class="row" id="buttonRow">
-    						<a id="contactButton" store_index="{{index}}" data-callback="app.home.showContact" dadStore="true" class="fa fa-address-card-o fa-2x"></a>&nbsp;
-    						<a id="chatButton" store_index="{{index}}" data-callback="app.chat.init" dadStore="true" class="fa fa-comment-o fa-2x"></a>&nbsp;
-    						<a id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" class="hide fa fa-map-marker fa-2x"></a>&nbsp;
-    						<a id="customButton" store_index="{{index}}"data-callback="app.home.customButton" class="hide fa fa-video-camera fa-2x"></a>&nbsp;
-							<a id="favoriteButton" store_index="{{index}}"data-callback="app.home.saveFavorite" class="fa fa-star-o fa-2x"></a>
+    						<a id="contactButton" store_index="{{index}}" data-callback="app.home.showContact" dadStore="true" class="storeButton fa fa-address-card-o fa-2x"></a>
+    						<a id="chatButton" store_index="{{index}}" data-callback="app.chat.init" dadStore="true" class="storeButton fa fa-comment-o fa-2x"></a>
+    						<a id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" class="storeButton hide fa fa-map-marker fa-2x"></a>
+    						<a id="customButton" store_index="{{index}}"data-callback="app.home.customButton" class="storeButton hide fa fa-video-camera fa-2x"></a>
+							<a id="favoriteButton" store_index="{{index}}"data-callback="app.home.saveFavorite" class="storeButton fa fa-star-o fa-2x"></a>
                             <!--<button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br></button>-->
                             <!--<button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>-->
                             <!--<button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>-->
@@ -977,7 +977,14 @@
 							<span id='backbutton-icon' class='fa fa-2x fa-chevron-left'></span>
                             <span id='backbutton-text'>Back</span>
                         </a>
-						<span id="appTile" class="navbar-brand" href="#">Title</span>
+						<!--<span id="appTile" class="navbar-brand" href="#">Title</span>-->
+                        <div class="col-sm-3 col-md-3 pull-right" id="menuSearch">
+                            <form role="search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
+                                </div>
+                            </form>
+                        </div>          
                     </div>                
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -1002,6 +1009,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="dropdown hide" id="menubutton">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#landingPageMenu">
                     <span class="icon-bar"></span>
@@ -1009,6 +1017,13 @@
                     <span class="icon-bar"></span><span id="msgcount2" class="badge badge-notify"></span>
                 </button>            
             </div>            
+            <div class="col-sm-3 col-md-3 pull-right hide" id="searchMenu">
+                <form role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="srch-term2" id="srch-term2">
+                    </div>
+                </form>
+            </div>
             <div class="collapse" id="landingPageMenu">
                 <ul class="list-group" id="vex-navbar2">
                 </ul>

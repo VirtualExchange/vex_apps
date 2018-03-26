@@ -247,7 +247,7 @@ function showHideBackButton(name){
     }
 }
 function stripAbout(about){
-    // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon**
+    // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon,hideFavoriteButton**
     aboutStripped = about;
     var strArray = about.split("**");
     if (strArray.length > 0){
@@ -507,3 +507,20 @@ function findContact(text) {
 
     return text;
 }
+function hideHomeMenu() {
+    $('.carousel').addClass('hide');
+    $('#menubutton').addClass('hide');
+    $('#landingPageMenu').addClass('hide');
+    $('#landingPageMenu').collapse('hide');
+    $('#searchMenu').addClass('hide');
+    $('.navbar').removeClass('hide');
+}
+function showHomeMenu() {
+    $('.carousel').removeClass('hide');
+    $('#menubutton').removeClass('hide');
+    $('#landingPageMenu').removeClass('hide');
+    $('#landingPageMenu').collapse('hide');
+    $('#searchMenu').removeClass('hide');
+    $('.navbar').addClass('hide');
+}
+    

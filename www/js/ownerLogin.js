@@ -3,11 +3,7 @@ var ownerLogin = {
         init: function(){
             console.log('app.ownerLogin.init()');
             // Hide landing page/show menu bar
-            $('.carousel').addClass('hide');
-            $('#menubutton').addClass('hide');
-            $('#landingPageMenu').addClass('hide');
-            $('#landingPageMenu').collapse('hide');
-            $('.navbar').removeClass('hide');
+            hideHomeMenu();
             $('#backLink').removeClass('hide');
             
             var ownerEmail = window.localStorage.getItem("ownerEmail");

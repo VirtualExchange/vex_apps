@@ -388,9 +388,7 @@ var products = {
             productDetail: function (e) {
                 console.log('app.products.productDetail()');
                 //app.views.loadView.show();
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
 
                 var store_id = $(e).attr('store_id');
                 var prod_id = $(e).attr('prod_id');

@@ -43,11 +43,7 @@ var leaflet = {
                 );
             },
             showMap: function(latitude, longitude, branchOnly) {
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 $('#backLink').addClass('hide');
                 app.views.backStack.push("MapView:"+latitude+":"+longitude+":"+branchOnly);
                 

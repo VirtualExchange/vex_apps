@@ -2,12 +2,7 @@ var account = {
         account: {
             init: function(){
                 console.log("app.account.init()");
-        
-                $('.carousel').addClass('hide');
-                $('#menubutton').addClass('hide');
-                $('#landingPageMenu').addClass('hide');
-                $('#landingPageMenu').collapse('hide');
-                $('.navbar').removeClass('hide');
+                hideHomeMenu();
                 $('#backLink').addClass('hide');
                 app.views.backStack.push("AccountView");
                 app.webservice.get(
