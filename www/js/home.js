@@ -273,7 +273,12 @@ var home = {
                                 if (store.paid != true || storeBought) {
                                     store.paid = false;
                                     app.products.categories = result.categories;
-                                    app.home.showStoreTabs(result.categories,store,dadStore);
+                                    if (store.logo.indexOf('medium.png') == -1){
+                                        app.home.showStoreTabs(result.categories,store,dadStore);
+                                    } else {
+                                        $('#list-stores').html('');
+                                        $('#productList').html('');
+                                    }
                                 } else {
                                     cordova.getAppVersion.getPackageName().then(function (packageName) {
                                         console.log("packageName: "+packageName);

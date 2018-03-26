@@ -247,7 +247,7 @@ function showHideBackButton(name){
     }
 }
 function stripAbout(about){
-    // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon**
+    // **hideAddress,showMapButton,hideChatButton,showOnMap,hideContactButton,fuelIcon,foodIcon,exitIcon,hotelIcon,hideFavoriteButton**
     aboutStripped = about;
     var strArray = about.split("**");
     if (strArray.length > 0){
