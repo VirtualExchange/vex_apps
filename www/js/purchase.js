@@ -69,7 +69,7 @@ var purchase = {
                 'session',
                 'PUT',
                 {
-                    client: {store_ids: store_ids}
+                    client: {store_ids: store_ids,buy_store_id: store_id}
                 },
                 function (result) {
                     console.log(JSON.stringify(result));
