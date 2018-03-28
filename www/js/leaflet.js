@@ -3,45 +3,6 @@ var leaflet = {
             test: function(e){
                 app.leaflet.hierarchy();
             },
-            hierarchy: function(mymap,store_id,page){
-                console.log("Store start: "+store_id+" page: "+page);
-                
-                var req = "";
-                if (!store_id) req = 'stores';
-                else req = 'stores/' + store_id+'/stores';
-                
-                var options = {};
-                if (!page) options['page'] = 1;
-                else options['page'] = page;
-                
-                app.webservice.get(
-                    req,
-                    options,
-                    function (result) {
-                        console.log(JSON.stringify(result));
-                        $.each(result.stores, function (i, store) {
-                            var parent_id = store_id;
-                            if (store.stores_count > 0){
-                                app.leaflet.hierarchy(mymap,store.id);
-                            }
-                            console.log("parent_id: "+parent_id+" ,store.name: "+store.name+" ,store.id: "+store.id);
-                            $.each(app.home.displayOnMap, function(j,mapStore){
-                                if (mapStore.id == store.id){
-                                    app.leaflet.showStore(mymap,mapStore);
-                                }
-                            });
-                        });
-                        if (result.pages > 1 && options['page'] < result.pages){
-                            console.log("Next store_id: "+store_id+" page: "+options['page']);
-                            app.leaflet.hierarchy(mymap,store_id, options['page']+1);
-                        } 
-                        console.log("Store finish: "+store_id);
-                    },
-                    function (err){
-                        console.log(JSON.stringify(err));
-                    }
-                );
-            },
             showMap: function(latitude, longitude, branchOnly) {
                 hideHomeMenu();
                 $('#backLink').addClass('hide');
@@ -76,23 +37,24 @@ var leaflet = {
                             longitude: longitude,
                             radius: 50
                         };
+                        if (branchOnly){
+                            req = 'stores/'+app.home.mapStore.id+'/maps';
+                        }else{
+                            req = 'maps';
+                        }
+                        
+                            
                         app.webservice.get(
-                            'maps',
+                            req,
                             option,
                             function (result) {
                                 console.log(JSON.stringify(result));
-                                if (branchOnly){
-                                    app.home.displayOnMap = result.stores;
-                                    app.leaflet.showStore(mymap,app.home.mapStore);
-                                    app.leaflet.hierarchy(mymap,app.home.mapStore.id);
-                                } else {
-                                    $.each(result.stores, function (i, store) {
-                                        app.leaflet.showStore(mymap,store);
-                                    });
-                                    
-                                }
+                                $.each(result.stores, function (i, store) {
+                                    app.leaflet.showStore(mymap,store);
+                                });
                             }
                         );
+                        
                     },
                     function (err) {
                         console.log(JSON.stringify(err));
