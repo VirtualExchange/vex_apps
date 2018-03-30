@@ -3,7 +3,9 @@ var login = {
         init: function(){
             console.log("app.login.init");
             $('.navbar-toggle').hide();
-            showHomeMenu();
+            hideHomeMenu();
+            $('.navbar').addClass('hide');
+
             app.homeInitCalled = 0;
             app.draw(
                 '#content',
@@ -64,7 +66,8 @@ var login = {
         register: function(){
             console.log("app.login.register");
             $('.navbar-toggle').hide();
-            showHomeMenu();
+            hideHomeMenu();
+            $('.navbar').addClass('hide');
             app.homeInitCalled = 0;
             app.draw(
                 '#content',
