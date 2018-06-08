@@ -182,6 +182,14 @@ var home = {
                 );
                 }
             },
+            openWaze: function(e){
+                console.log("store_index: "+$(e).attr('store_index'));
+                var store = app.home.oStoreDetail;
+                console.log("store: "+JSON.stringify(store));
+                url = "https://waze.com/ul?ll="+store.latitude+","+store.longitude+"&navigate=yes";
+                console.log("url: "+url);
+                cordova.InAppBrowser.open(url, '_system', 'clearcache=yes,clearsessioncache=yes');
+            },
             storeDetail: function (e) {
                 console.log('app.home.storeDetail()');
                 var store_id;
@@ -251,7 +259,7 @@ var home = {
                             'ProductView',
                             {
                                 index: store.id,
-                                name: stripLeadingTag(store.name),
+                                name: stripLeadingTag(store.formatted_name),
                                 city: store.city,
                                 uf: store.state,
                                 logo: store.logo,
@@ -263,6 +271,25 @@ var home = {
                             },
                             '',
                             function () {
+                                
+                                var hasImage = false;
+                                if (store.logo.indexOf('medium.png') == -1){
+                                    hasImage = true;
+                                }
+                                if (!hasImage){
+                                    $('#storeImageProductView').addClass('hide');
+                                    $('#buttonRow').addClass('hide');
+                                }
+                                if (hasCode(store.about,"hideChatButton") || !hasImage){
+                                    $('#chatButton').addClass('hide');
+                                }
+                                if (hasCode(store.about,"hideContactButton") || !hasImage){
+                                    $('#contactButton').addClass('hide');
+                                }
+                                if (hasCode(store.about,"hideFavoriteButton") || !hasImage){
+                                    $('#favoriteButton').addClass('hide');
+                                }
+                                
                                 storeBought = false;
                                 for (i=0; i<app.clientStores.length; i++){
                                     if (app.clientStores[i] == store.id){
@@ -311,6 +338,7 @@ var home = {
                 );
             },
             showStoreTabs: function(categories,store,dadStore){
+                console.log("app.home.showStoreTabs()");
                 app.home.addCategorie2(categories);
 
                 if (app.views.stores.length == 1) {
@@ -346,11 +374,15 @@ var home = {
                     $('#favoriteButton').attr('data-callback', 'app.home.removeFavorite');
                     //$('#btFav_' + store.id).html('Clear Favorite');
                 }
-                                
+                
+                var hasImage = false;
+                if (store.logo.indexOf('medium.png') == -1){
+                    hasImage = true;
+                }
                 if(!aboutStripped || aboutStripped== '<p></p>'){
                     $('#AboutDetail').addClass('hide');
                 }
-
+                
                 if(!store.featured_product || store.featured_product== '<p></p>' || store.featured_product==''){
                     $('#featuredDetail').addClass('hide');
                 }
@@ -360,13 +392,13 @@ var home = {
                 if (hasCode(store.about,"showMapButton")){
                     $('#mapButton').removeClass('hide');
                 }
-                if (hasCode(store.about,"hideChatButton")){
+                if (hasCode(store.about,"hideChatButton") || !hasImage){
                     $('#chatButton').addClass('hide');
                 }
-                if (hasCode(store.about,"hideContactButton")){
+                if (hasCode(store.about,"hideContactButton") || !hasImage){
                     $('#contactButton').addClass('hide');
                 }
-                if (hasCode(store.about,"hideFavoriteButton")){
+                if (hasCode(store.about,"hideFavoriteButton") || !hasImage){
                     $('#favoriteButton').addClass('hide');
                 }
                 if (hasCode(store.about,"custombutton")){
@@ -414,7 +446,7 @@ var home = {
                     //$('#liOptStore').addClass('hide');
                     $('#storeTabs').addClass('hide');
                     $('#productList').html('<img src="img/load_image.gif" style="width: 48px;">');
-                    $('#list-stores').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
+                    $('#list-stores').html('');
                         
                 }
                 console.log("Back functionality: dadStore:"+dadStore+" app.home.oStoreDetail.id:"+app.home.oStoreDetail.id);
@@ -826,7 +858,7 @@ var home = {
                         '#storeItem',
                         'storeItem',
                         {
-                            name: stripLeadingTag(store.name),
+                            formattedName: stripLeadingTag(store.formatted_name),
                             city: store.city,
                             uf: store.state,
                             logo: store.logo,
@@ -910,7 +942,7 @@ var home = {
                         '#favoriteItem',
                         'favoriteItem',
                         {
-                            name: stripLeadingTag(store.name),
+                            name: stripLeadingTag(store.formatted_name),
                             city: store.city,
                             uf: store.state,
                             id : store.id,
