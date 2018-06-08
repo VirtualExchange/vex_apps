@@ -58,7 +58,8 @@ var search = {
                 {name: 'car'}, 
                 {name: 'cast'},
                 {name: 'carp'}]
-                var url = app.url + 'stores/search';
+                var url = app.url + 'maps/search';
+                console.log("url: "+url);
                 var bloodhoundSuggestions = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -76,6 +77,7 @@ var search = {
                             return settings;
                         },
                         filter: function(response) {
+                            console.log("response: "+JSON.stringify(response));
                             result = response.stores.concat(response.products);
                             return result;
                         }                        
@@ -133,6 +135,9 @@ var search = {
                         },                          
                     }
                 );
+                $("#srch-term2").change(function() {
+                    console.log("change");
+                });
             },
             byName: function (e) {
                 console.log('app.search.byName()');

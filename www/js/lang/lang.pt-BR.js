@@ -137,7 +137,7 @@ var lang_ptBR = {
             '%Favorites%' : 'Favorites'
         },
         'chatListView':{
-            '%Chats%' : 'Chats'
+            '%Chats%' : 'Previous Chats'
         },
         'ownerLoginView':{
             '%E-mail%' : 'E-mail',

@@ -749,11 +749,11 @@ var appCore = {
     showKeyboard : function(e){
     },
     hideKeyboard : function(e){
-        
+        console.log("Hide keyboard begin");
         $('.chatContent').css('height', ($(window).height() - ($('#menuNavBar').outerHeight(true)+$('#navChatFooter').outerHeight(true))));
         $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
         $("#chatList").scrollTop($('#chatList').prop("scrollHeight")); 
-        
+        console.log("Hide keyboard end");
     }
 };
 
