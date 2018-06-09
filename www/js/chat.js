@@ -49,7 +49,7 @@ var chat = {
                                 $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
 
                                 $.each(result.messages, function (index, item) {
-                                    app.chat.addMessage(item,stripLeadingTag(store.name));
+                                    app.chat.addMessage(item,stripLeadingTag(store.short_name));
                                 });
                                 setTimeout(function(){ 
                                     $("#chatList").animate({ scrollTop: $('#chatList').prop("scrollHeight")}, 1000);
@@ -76,7 +76,7 @@ var chat = {
                     else name = $('#chatUserName').val();
                 }else {
                     if (storeName) name=storeName;
-                    else name=app.home.oStoreDetail.name;
+                    else name=app.home.oStoreDetail.short_name;
                 }
                 var dt = new Date(item.created_at);
                 navigator.globalization.dateToString(
@@ -163,7 +163,8 @@ var chat = {
                         index          : index,
                         id             : storeChat.id,
                         img            : storeChat.logo,
-                        storeName      : storeChat.name,
+                        storeName      : storeChat.formatted_name,
+                        FormattedName  : storeChat.formatted_name,
                         messages_count : storeChat.messages_count
                     },
                     'append',

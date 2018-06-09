@@ -118,37 +118,21 @@ var app = {
 
         if (!window.localStorage.getItem("token")) {
             console.log('Token does not exist');
-            app.webservice.registerDevice(
-                {
-                    device: {
-                        kind: (device && device.platform === 'Android') ? '2' : '1',
-                        latitude: '111',
-                        longitude: '111',
-                        radius: '111'
-                    }
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    console.log('GPS RESULT');
+                    console.log('latitude: '+position.coords.latitude);
+                    console.log('longitude: '+position.coords.longitude);
+                    app.registerDevice(position.coords.latitude, position.coords.longitude);
                 },
-            function (r) {
-                console.log('Register device success');
-                console.log(JSON.stringify(r));
-                window.localStorage.setItem("token", r.token);
-                mixpanel.identify(r.id);
-                mixpanel.people.set({
-                    "device_type": device.platform
-                });
-                mixpanel.register({
-                    "app_id": app.token
-                });                
-                app.lang.config(function () {
-                    if (app.loginRequired == true) {
-                        app.login.init();
-                    } else {
-                        app.home.init();
-                    }
-                });
-            }, function (e) {
-                console.log('Register device error');
-                console.log(JSON.stringify(e));
-            });
+                function (error) {
+                    console.log('GPS ERROR');
+                    console.log(JSON.stringify(error));
+                    app.registerDevice(40.7128, -74.0059);
+                },
+                {timeout: 3000, enableHighAccuracy: true}
+            );
 
         } else {
             console.log('Token exists');
@@ -200,6 +184,41 @@ var app = {
     },
     onBackKeyDown: function(e){
         e.preventDefault();
+    },
+    registerDevice: function (latitude, longitude) {
+        app.webservice.registerDevice(
+           {
+                device: {
+                    kind: (device && device.platform === 'Android') ? '2' : '1',
+                    latitude: latitude,
+                    longitude: longitude,
+                    radius: '10000'
+                }
+            },
+            function (r) {
+                console.log('Register device success');
+                console.log(JSON.stringify(r));
+                window.localStorage.setItem("token", r.token);
+                mixpanel.identify(r.id);
+                mixpanel.people.set({
+                    "device_type": device.platform
+                });
+                mixpanel.register({
+                    "app_id": app.token
+                });                
+                app.lang.config(function () {
+                    if (app.loginRequired == true) {
+                        app.login.init();
+                    } else {
+                        app.home.init();
+                    }
+                });
+            }, 
+            function (e) {
+                console.log('Register device error');
+                console.log(JSON.stringify(e));
+            }
+        );
     },
     showToken: function () {
 

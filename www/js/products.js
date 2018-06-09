@@ -233,7 +233,7 @@ var products = {
             addProducts: function (productList,inStore) {
                 console.log('app.products.addProducts()');
                 if (productList.length == 0) {
-                    $('#productList').html('<li><p class="noProduct">' + app.lang.getStr('%No products posted%', 'aplication') + '</p></li>');
+                    $('#productList').html('');
                     return;
                 }
                 $('#productList').html('');

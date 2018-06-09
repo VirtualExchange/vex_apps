@@ -246,7 +246,7 @@
                         <img src="{{logo}}" class="img-responsive img-rounded" />
                     </div>
                     <div id="storeDetail_{{id}}" class="col-xs-8 col-sm-8" >
-                        <h4>{{name}}</h4>
+                        <h4>{{formattedName}}</h4>
                         <span><button id="buyButton_{{id}}" class="btn btn-success hide">%Buy%</span>
                     </div>
                 </div> 
@@ -316,6 +316,7 @@
     						<a id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" class="storeButton hide fa fa-map-marker fa-2x"></a>
     						<a id="customButton" store_index="{{index}}"data-callback="app.home.customButton" class="storeButton hide fa fa-video-camera fa-2x"></a>
 							<a id="favoriteButton" store_index="{{index}}"data-callback="app.home.saveFavorite" class="storeButton fa fa-star-o fa-2x"></a>
+                            <a id="wazeButton" store_index="{{index}}"data-callback="app.home.openWaze" class="storeButton fa fa-car fa-2x"></a>
                             <!--<button type="button" class="btn btn-primary text-center" id="contactButton" store_index="{{index}}" data-callback="app.home.showContact" dadStore="true"><span class="fa fa-address-card-o"></span><br></button>-->
                             <!--<button type="button" class="btn btn-primary text-center" id="chatButton" store_index="{{index}}" data-callback="app.chat.init" dadStore="true"><span class="fa fa-comment-o"></span><br>Chat</button>-->
                             <!--<button type="button" class="btn btn-primary hide text-center" id="mapButton" store_index="{{index}}" data-callback="app.leaflet.getStore" ><span class="fa fa-map-marker"></span><br>Map</button>-->
@@ -510,7 +511,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span id="storeTitleName">%Favorites%</span>
+                            <h4>%Favorites%</h4>
                         </div>
                     </div>
                 </div>
@@ -584,7 +585,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span id="storeTitleName">%Chats%</span>
+                            <h4>%Chats%</h4>
                         </div>
                     </div>
                 </div>
@@ -598,7 +599,7 @@
                         <img src="{{img}}" class="img-responsive img-rounded" />
                     </div>
                     <div id="storeDetail_{{index}}" class="col-xs-8 col-sm-8" >
-                        <h4>{{storeName}}<span id="storeBadge_{{id}}" class="badge vex-badge pull-right">{{messages_count}}</span></h4>
+                        <h4>{{formattedName}}<span id="storeBadge_{{id}}" class="badge vex-badge pull-right">{{messages_count}}</span></h4>
                     </div>
                 </div> 
             </a>
@@ -873,7 +874,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span ><b>%Chats%</b></span>
+                            <span ><b>%Chats%</b></span><br/><span id="storeName">Store Name2</span>
                             <a href="#" class="btn btn-success pull-right" data-callback="app.ownerLogin.logout">%Logout%</a>
                             <a href="#" class="fa fa-refresh fa-2x pull-right" id="refreshButton" data-callback="app.ownerChat.list">&nbsp;</a>
                         </div>
@@ -901,7 +902,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span ><b>%Chats%</b></span>
+                            <span >%Chats%</span><br/><span id="storeName">Store Name3</span>
                             <a href="#" class="btn btn-success pull-right" data-callback="app.ownerLogin.logout">%Logout%</a>
                             <a href="#" class="fa fa-refresh fa-2x pull-right" id="refreshButton" store_id="{{store_id}} data-callback="app.ownerChat.loadStoreListFromLink">&nbsp;</a>
                         </div>

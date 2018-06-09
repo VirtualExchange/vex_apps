@@ -23,6 +23,7 @@ var ownerLogin = {
                     },
                     '',
                     function () {
+                        
                         app.bindEvents();
                     }
                 );
@@ -78,7 +79,9 @@ var ownerLogin = {
                     app.stores.name = r.name;
                     app.stores.logo = r.logo;
                     app.stores.corporate = r.corporate;
+                    console.log("app.stores.name: "+app.stores.name);
                     $('#appTile').html(stripLeadingTag(app.stores.name));
+                    $('#storeName').html(app.stores.name);
                     app.ownerChat.list();
                     //app.push.register();
                 },

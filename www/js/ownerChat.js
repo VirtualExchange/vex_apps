@@ -112,6 +112,7 @@ var ownerChat = {
                         {},
                         function (result) {
                             console.log(JSON.stringify(result));
+                            $('#storeName').html(app.stores.name);
                             app.ownerChat.stores = result.stores;
 
                             if(result.stores){
