@@ -329,7 +329,7 @@ var products = {
                                 $('#productDetail_'+index).removeClass('col-sm-8');
                                 $('#productDetail_'+index).addClass('col-xs-12 col-sm-12');
                             }
-                            if (prod.name.indexOf('**banner**') == 0) {
+                            if (prod.banner) {
                                 $('#productItem_'+prod.id).attr('data-callback', '');
                             }
                             app.bindEvents();

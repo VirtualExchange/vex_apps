@@ -27,7 +27,7 @@ var leaflet = {
                         var mymap = L.map('mapid').setView([latitude,longitude], 13); // Wyoming
                         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
                             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                            maxZoom: 18,
+                            maxZoom: 12,
                             id: 'mapbox.streets',
                             accessToken: 'pk.eyJ1IjoibmFuY3lwaWVkcmEiLCJhIjoiY2l4ZXA1ejR6MDBnajJ0bnA1M3lzYWtobCJ9.CNGXj48Gw_Gs5moeZqbjyQ'
                         }).addTo(mymap);
@@ -38,16 +38,17 @@ var leaflet = {
                             radius: 50
                         };
                         if (branchOnly){
+                            app.leaflet.showStore(mymap,app.home.mapStore);
                             req = 'stores/'+app.home.mapStore.id+'/maps';
                         }else{
                             req = 'maps';
                         }
                         
-                            
+                        
                         app.webservice.get(
                             req,
                             option,
-                            function (result) {
+                            function (result) { 
                                 console.log(JSON.stringify(result));
                                 $.each(result.stores, function (i, store) {
                                     app.leaflet.showStore(mymap,store);
@@ -63,21 +64,22 @@ var leaflet = {
 
             },
             showStore: function (mymap,store) {
+                console.log("app.leaflet.showStore: "+store.id+" "+store.latitude+" "+store.longitude);
                 var fuelIcon = L.icon({iconUrl: "img/Fuel.png", iconSize: [25,25]})
                 var foodIcon = L.icon({iconUrl: "img/Food.png", iconSize: [25,25]})
                 var hotelIcon = L.icon({iconUrl: "img/Hotel.png", iconSize: [25,25]})
                 var hospitallIcon = L.icon({iconUrl: "img/Hospital.png", iconSize: [25,25]})
                 var exitIcon = L.icon({iconUrl: "img/Exit.png"})
-                if (store.latitude != null && store.longitude != null && hasCode(store.about,"showOnMap")){
-                    if (hasCode(store.about,"fuelIcon"))
+                if (store.latitude != null && store.longitude != null && store.show_on_map){
+                    if (store.map_icon == "fuel")
                         var marker = L.marker([store.latitude,store.longitude],{icon: fuelIcon}).addTo(mymap);
-                    else if (hasCode(store.about,"foodIcon"))
+                    else if (store.map_icon == "food")
                         var marker = L.marker([store.latitude,store.longitude],{icon: foodIcon}).addTo(mymap);
-                    else if (hasCode(store.about,"exitIcon"))
+                    else if (store.map_icon == "exit")
                         var marker = L.marker([store.latitude,store.longitude],{icon: exitIcon}).addTo(mymap);
-                    else if (hasCode(store.about,"hotelIcon"))
+                    else if (store.map_icon == "hotel")
                         var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
-                    else if (hasCode(store.about,"hospitalIcon"))
+                    else if (store.map_icon == "hospital")
                         var marker = L.marker([store.latitude,store.longitude],{icon: hotelIcon}).addTo(mymap);
                     else
                         var marker = L.marker([store.latitude,store.longitude]).addTo(mymap);
@@ -118,17 +120,14 @@ var leaflet = {
                 var store_id = $(e).attr('store_index');
                 mixpanel.track("Map",{"store_id":store_id });
                 app.webservice.get(
-                    'maps?q[store_id_eq]='+store_id,
+                    //'maps?q[store_id_eq]='+store_id,
+                    'stores/'+store_id,
                     {},
                     function (result) {
                         console.log(JSON.stringify(result));
-                        $.each(result.stores, function (i, store) { 
-                            console.log("id: "+store.id+" name: "+store.name+" lat: "+store.latitude+" long: "+store.longitude);
-                            if (i == 0) {
-                                app.home.mapStore = store;
-                                app.leaflet.showMap(store.latitude, store.longitude, true);
-                            }
-                        });
+                        console.log("id: "+result.id+" name: "+result.name+" lat: "+result.latitude+" long: "+result.longitude);
+                        app.home.mapStore = result;
+                        app.leaflet.showMap(result.latitude, result.longitude, true);
                     },
                     function (err){
                         console.log(JSON.stringify(err));    
