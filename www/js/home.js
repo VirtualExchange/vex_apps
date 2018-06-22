@@ -280,14 +280,17 @@ var home = {
                                     $('#storeImageProductView').addClass('hide');
                                     $('#buttonRow').addClass('hide');
                                 }
-                                if (hasCode(store.about,"hideChatButton") || !hasImage){
+                                if (!store.chat_button || !hasImage){
                                     $('#chatButton').addClass('hide');
                                 }
-                                if (hasCode(store.about,"hideContactButton") || !hasImage){
+                                if (!store.contact_button || !hasImage){
                                     $('#contactButton').addClass('hide');
                                 }
-                                if (hasCode(store.about,"hideFavoriteButton") || !hasImage){
+                                if (!store.favorite_button || !hasImage){
                                     $('#favoriteButton').addClass('hide');
+                                }
+                                if (!store.waze_button || !hasImage){
+                                    $('#wazeButton').addClass('hide');
                                 }
                                 
                                 storeBought = false;
@@ -389,48 +392,41 @@ var home = {
                 if (store.logo.indexOf('medium.png') > -1){
                     $('#storeImageProductView').addClass('hide');
                 }
-                if (hasCode(store.about,"showMapButton")){
+                if (store.map_button){
                     $('#mapButton').removeClass('hide');
                 }
-                if (hasCode(store.about,"hideChatButton") || !hasImage){
+                if (!store.chat_button || !hasImage){
                     $('#chatButton').addClass('hide');
                 }
-                if (hasCode(store.about,"hideContactButton") || !hasImage){
+                if (!store.contact_button || !hasImage){
                     $('#contactButton').addClass('hide');
                 }
-                if (hasCode(store.about,"hideFavoriteButton") || !hasImage){
+                if (!store.favorite_button || !hasImage){
                     $('#favoriteButton').addClass('hide');
                 }
-                if (hasCode(store.about,"custombutton")){
-                    $('#customButton').removeClass('hide');
-                    var customLink = getCustomLink(store.about,"custombutton");
-                    var customName = getCustomName(store.about,"custombutton");
-                    var customType = getCustomType(store.about,"custombutton");
-                    $('#customButtonText').html(customName);
-                    $('#customButton').attr('customlink', customLink);
-                    $('#customButton').attr('customtype',customType);
-                    if (customType.indexOf('pdf') == 0){
-                        $('#customButton').attr('class','fa fa-file-pdf-o fa-2x');
-                    } else if (customType.indexOf('video') == 0){
-                        $('#customButton').attr('class','fa fa-video-camera fa-2x');
-                    }
-                } else {
-                    console.log("No custom button: "+store.about);
+                if (!store.waze_button || !hasImage){
+                    $('#wazeButton').addClass('hide');
+                }
+                if (store.pdf_button_link){
+                    $('#pdfButton').removeClass('hide');
+                    $('#pdfButton').attr('customlink', store.pdf_button_link);
+                }
+                if (store.video_button_link){
+                    $('#videoButton').removeClass('hide');
+                    $('#videoButton').attr('customlink', store.video_button_link);
                 }
                                 
                 if(store.stores_count>0){
                                     
                     $('#storeOptions').removeClass('hide');
                     var storeTabName, productTabName;
-                    if (hasCode(store.about,"storetab"))
+                    if (store.store_tab)
                     {
-                        storeTabName = getTabName(store.about,"storetab");
-                        $('#liOptStoreLink').text(storeTabName);
+                        $('#liOptStoreLink').text(store.store_tab);
                     }
-                    if (hasCode(store.about,"producttab"))
+                    if (store.product_tab)
                     {
-                        productTabName = getTabName(store.about,"producttab");
-                        $('#liOptProductLink').text(productTabName);
+                        $('#liOptProductLink').text(store.product_tab);
                     }
                                     
                     $('#list-stores').html('<img src="img/load_image.gif" style="width: 48px;">');
@@ -894,9 +890,8 @@ var home = {
                                 $('#featured_'+i).addClass('hide');
                             }
                             
-                            if (hasCode(store.about,"producttab")){
-                                var productTabName = getTabName(store.about,"producttab");
-                                $('#btnProduct_'+i).html(productTabName);
+                            if (store.product_tab){
+                                $('#btnProduct_'+i).html(store.product_tab);
                             }
                             if(!dadStore){
                                 $('#btnContact_'+i).attr('dadStore','false');
@@ -1078,17 +1073,21 @@ var home = {
                     }
                 );
             },
-            customButton: function (e) {
-                var uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_video.php?link=';
+            pdfButton: function (e) {
+                var uri = app.videoUrl+'index_pdf.php?link=';
                 customLink = $(e).attr('customLink');
-                customType = $(e).attr('customType');
-                if (customType.indexOf("video") === 0){
-                    uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_video.php?link=';
-                } else if (customType.indexOf("pdf") === 0){
-                    uri = 'http://ec2-52-201-251-96.compute-1.amazonaws.com/vex_pages/index_pdf.php?link=';
-                }
+                var url = uri+encodeURIComponent(customLink)
+                app.home.startVideo(url);
+            },
+            videoButton: function (e) {
+                var uri = app.videoUrl+'index_video.php?link=';
+                customLink = $(e).attr('customLink');
+                var url = uri+encodeURIComponent(customLink)
+                app.home.startVideo(url);
+            },
+            startVideo: function (url) {
                     
-                app.views.browserRef = cordova.InAppBrowser.open(uri+encodeURIComponent(customLink), '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
+                app.views.browserRef = cordova.InAppBrowser.open(url, '_blank', 'location=no,clearcache=yes,clearsessioncache=yes'); 
                 
                 var loadingSpinner = false;
                 app.views.browserRef.addEventListener('loadstop', function(event) {
@@ -1165,7 +1164,7 @@ var home = {
                         if (!store.website || store.website == '') {
                             $('.contactWebsite').addClass('hide');
                         }
-                        if (hasCode(store.about,"hideAddress")){
+                        if (!store.show_address){
                             $('.contactAddress').addClass('hide');
                         }
                         app.bindEvents();

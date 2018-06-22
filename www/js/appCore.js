@@ -7,16 +7,14 @@ var appCore = {
         email     : '',
         name      : ''
     },
-    ownerUrl     : 'http://www.virtualopenexchange.com/api/',
+    ownerUrl : 'http://www.virtualopenexchange.com/api/',
     url      : 'http://www.virtualopenexchange.com/mobile/api/',
-//    host     : 'http://ve-api-staging.herokuapp.com/',
-//    url      : 'http://ve-api-staging.herokuapp.com/api/',
+    videoUrl : 'http://www.virtualopenexchange.com/vex_pages/',
     token    : '8EHxF2Th8I5-E4NpToOPSw',
     appName  : 'Juno Beach',
     senderID : "228606620336",
     lastGeoDate : null,
     offLine : false,
-//    logged : false,
     logged : true,
     loginRequired: false,
     chatToken : null,
@@ -293,26 +291,20 @@ var appCore = {
                 } else if (device && device.platform === 'iOS'){
                     kind = '1';
                 }
-                app.webservice.post(
-                    'device',
-                    'PUT',
-                    {
-                        device:{
-                            id: window.localStorage.getItem("token"),
-                            push_token  : data.registrationId,
-                            kind        : kind
-                        }
+                
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        console.log('GPS RESULT');
+                        console.log('latitude: '+position.coords.latitude);
+                        console.log('longitude: '+position.coords.longitude);
+                        app.webservice.updateDeviceRegistration(data.registrationId, kind, position.coords.latitude, position.coords.longitude);
                     },
-                    function(r){
-                        console.log('RESULT DE REGISTRO');
-                        console.log(JSON.stringify(r));
-                        app.device.email = r.email;
-                        app.device.name = r.name;
-                        //window.localStorage.setItem("token", r.id);
-                    }, function(e){
-                        console.log('RESULT ERROR DE REGISTRO');
-                        console.log(JSON.stringify(e));
-                    }
+                    function (error) {
+                        console.log('GPS ERROR');
+                        console.log(JSON.stringify(error));
+                        app.webservice.updateDeviceRegistration(data.registrationId, kind, 40.7128, -74.0059);
+                    },
+                    {timeout: 3000, enableHighAccuracy: true}
                 );
             });
 
@@ -348,114 +340,6 @@ var appCore = {
                 console.log("app.push.init.error");
                 // e.message
             });            
-        },
-        callback: function(){},
-        register: function() {
-            console.log('app.push.register');
-            var pushNotification = window.plugins.pushNotification;
-
-            if (device && device.platform === 'Android') {
-                console.log('app==android');
-                pushNotification.register(
-                    app.push.successHandler,
-                    app.push.errorHandler,
-                    {
-                        "senderID": app.senderID,
-                        "ecb": "app.push.onNotificationGCM"
-                    }
-                );
-
-            } else {
-                console.log('app==ios');
-                pushNotification.register(
-                    app.push.successHandler,
-                    app.push.errorHandler,
-                    {
-                        "badge": "true",
-                        "sound": "true",
-                        "alert": "true",
-                        "ecb": "app.push.onNotificationAPN"
-                    }
-                );
-            }
-        },
-        successHandler: function(result) {
-            console.log('successHandler: ' + result);
-			
-            if (!device || device.platform != 'Android') {
-				
-                app.webservice.post(
-                    '',
-                    'PUT',
-                    {
-                        device:{
-                            id		: window.localStorage.getItem("token"),
-                            push_token  : result,
-                            kind        : '1'
-                        }
-                    },
-                    function(r){
-                        console.log('RESULT DE REGISTRO');
-                        console.log(JSON.stringify(r));
-                        //window.localStorage.setItem("token", r.id);
-                        //app.push.callback();
-                    }, function(e){
-                        console.log('RESULT ERROR DE REGISTRO');
-                        console.log(JSON.stringify(e));
-                        app.push.callback();
-                    }
-                );
-            }
-        },
-        errorHandler: function(error) {
-            console.log('errorHandler: ' + error);
-        },
-        onNotificationGCM: function(e) {
-            console.log('onNotificationGCM: ' + e.event);
-            //pushNotification.setApplicationIconBadgeNumber(this.successHandler, e.msgcnt);
-            switch (e.event)
-            {
-                case 'registered':
-
-                    if (e.regid.length > 0)
-                    {
-//                        console.log('registration id = '+e.regid);
-                        app.webservice.registerDevice(
-                            {
-                                device:{
-                                    push_token  : e.regid,
-                                    kind        : '2'
-                                }
-                            }, 
-                            function(r){
-//                                console.log('RESULT DE REGISTRO');
-//                                console.log(JSON.stringify(r));
-                                window.localStorage.setItem("token", r.id);
-                                app.push.callback();
-                            }, function(e){
-                                console.log('RESULT ERROR DE REGISTRO');
-                                console.log(JSON.stringify(e));
-                                app.push.callback();
-                            }
-                        );
-                    }
-                    break;
-
-                case 'message':
-                    // this is the actual push notification. its format depends on the data model from the push server
-                    console.log('message = ' + e.message + ' msgcnt = ' + e.msgcnt);
-
-                    navigator.notification.vibrate(1500);
-                    break;
-
-                case 'error':
-                    console.log('GCM error = ' + e.msg);
-                    break;
-
-                default:
-                    console.log('An unknown GCM event has occurred');
-                    break;
-            }
         }
     },
     /*! WEBSERVICE */
@@ -599,6 +483,31 @@ var appCore = {
                     errorCB(err);
                 }
             });
+        },
+        updateDeviceRegistration: function(pushRegistration, kind, latitude, longitude){
+            console.log("app.webservice.updateDeviceRegistration");
+            app.webservice.post(
+                'device',
+                'PUT',
+                {
+                    device:{
+                        id: window.localStorage.getItem("token"),
+                        push_token  : pushRegistration,
+                        kind        : kind,
+                        latitude    : latitude,
+                        longitude   : longitude,
+                        radius      : 10000
+                    }
+                },
+                function(r){
+                    console.log(JSON.stringify(r));
+                    app.device.email = r.email;
+                    app.device.name = r.name;
+                    //window.localStorage.setItem("token", r.id);
+                }, function(e){
+                    console.log(JSON.stringify(e));
+                }
+            );
         },
         registerDevice: function(args,successCB,errorCB){
             console.log('app.webservice.registerDevice(): ' + app.url +' > ' + app.token);
