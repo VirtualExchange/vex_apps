@@ -106,7 +106,7 @@ var lang_enUS = {
             '%Exit%': 'Exit',
             '%Logout%': 'Logout',
             '%Account%': 'Account',
-            '%Owner%': "Owner's Corner"
+            '%Owner%': "Store Owner Login"
         },
         'chatView':{
             '%SEND%' : 'SEND',
