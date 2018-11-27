@@ -82,6 +82,16 @@
     <plugin name="phonegap-plugin-push" spec="^1.10.5">
         <variable name="SENDER_ID" value="228606620336" />
     </plugin>
+    <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+        <string>This app will access your location to find nearby businesses</string>
+    </edit-config>
+    <edit-config> file="*-Info.plist" mode="merge" target="UIStatusBarHidden"&gt;
+                                      <true />
+</edit-config>
+    <edit-config file="*-Info.plist" mode="merge" target="UIViewControllerBasedStatusBarAppearance">
+        <false />
+    </edit-config>
+    <plugin name="cordova-plugin-statusbar" spec="https://github.com/apache/cordova-plugin-statusbar.git" />
+    <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.5.5" />
-    <engine name="android" spec="^7.1.1" />
 </widget>
