@@ -112,7 +112,7 @@ var ownerChat = {
                         {},
                         function (result) {
                             console.log(JSON.stringify(result));
-                            $('#storeName').html(app.stores.name);
+                            $('#storeName').html(stripLeadingTag(app.stores.name));
                             app.ownerChat.stores = result.stores;
 
                             if(result.stores){
@@ -148,17 +148,19 @@ var ownerChat = {
         loadStoreListFromLink: function(e){
             console.log("app.ownerChat.loadStoreListFromLink");
             var store_id = $(e).attr('store_id');
+			var store_name = $(e).attr('store_name');
             console.log("store_id: "+store_id);
-            app.ownerChat.loadStoreList(store_id);
+            app.ownerChat.loadStoreList(store_id,store_name);
         },
-        loadStoreList: function(store_id){
+        loadStoreList: function(store_id,store_name){
             console.log('app.ownerChat.loadStoreList()');
             app.draw(
                 '#content',
                 '#ownerChatCustomerView',
                 'ownerChatView',
                 {
-                    store_id: store_id
+                    store_id: store_id,
+					store_name: store_name
                 },
                 '',
                 function () {
