@@ -875,7 +875,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span ><b>%Chats%</b></span><br/><span id="storeName">Store Name2</span>
+                            <span ><b>%Chats%</b></span><br/><span id="storeName"></span>
                             <a href="#" class="btn btn-success pull-right" data-callback="app.ownerLogin.logout">%Logout%</a>
                             <a href="#" class="fa fa-refresh fa-2x pull-right" id="refreshButton" data-callback="app.ownerChat.list">&nbsp;</a>
                         </div>
@@ -886,7 +886,7 @@
         </script>
 
         <script id="ownerChatStoreItem" type="text/html">
-            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.ownerChat.loadStoreListFromLink" store_id="{{id}}" >
+            <a class="list-group-item" id="storeItem_{{id}}" store_index="{{index}}" href="#" data-callback="app.ownerChat.loadStoreListFromLink" store_id="{{id}}" store_name="{{storeName}}">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 logoStoreDiv" id="storeImage_{{index}}">
                         <img src="{{img}}" class="img-responsive img-rounded" />
@@ -903,7 +903,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <span >%Chats%</span><br/><span id="storeName">Store Name3</span>
+                            <span >%Chats%</span><br/><span id="storeName">{{store_name}}</span>
                             <a href="#" class="btn btn-success pull-right" data-callback="app.ownerLogin.logout">%Logout%</a>
                             <a href="#" class="fa fa-refresh fa-2x pull-right" id="refreshButton" store_id="{{store_id}} data-callback="app.ownerChat.loadStoreListFromLink">&nbsp;</a>
                         </div>

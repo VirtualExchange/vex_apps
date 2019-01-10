@@ -53,7 +53,7 @@ var ownerLogin = {
                     navigator.notification.alert(
                         app.lang.getStr(result.message, 'loginView'), 
                         function () {}, 
-                        app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'aplication')
+                        app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'ownerLoginView')
                     );
                 }
             },
@@ -63,7 +63,7 @@ var ownerLogin = {
                 navigator.notification.alert(
                     app.lang.getStr(err.a.responseJSON.message, 'loginView'), 
                     function () {}, 
-                    app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'owernLoginView')
+                    app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'ownerLoginView')
                 );
             });
         },

@@ -153,11 +153,10 @@ var lang_enUS = {
             '%Forgot%' : 'Forgot',
             '%Login%' : 'Login',
             '%Log into your account.%' : 'Log into your account.',
-            '%Error%'                  : 'Erro',
-            '%Close%'                  : 'Fechar',
+            '%Error%'                  : 'Error',
+            '%Close%'                  : 'Close',
             '%NoAccount%' : "Don't have an account?",
-            '%Register%' : 'Register your business',
-            '%Error%' : 'Error'
+            '%Register%' : 'Register your business'
         },
         'ownerChatView':{
             '%Chats%' : "Owner's Corner",

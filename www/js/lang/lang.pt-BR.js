@@ -145,11 +145,10 @@ var lang_ptBR = {
             '%Forgot%' : 'Forgot',
             '%Login%' : 'Login',
             '%Log into your account.%' : 'Log into your account.',
-            '%Error%'                  : 'Erro',
+            '%Error%'                  : 'Error',
             '%Close%'                  : 'Fechar',
             '%NoAccount%' : "Don't have an account?",
-            '%Register%' : 'Register your business',
-            '%Error%' : 'Error'
+            '%Register%' : 'Register your business'
         },
         'ownerChatView':{
             '%Chats%' : "Chats",

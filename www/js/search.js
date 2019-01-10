@@ -86,6 +86,7 @@ var search = {
                 $("#srch-term").typeahead(
                     {
                         items: 7,
+                        autoSelect: false,
                         source: bloodhoundSuggestions.ttAdapter(),
                         displayText: function(item) {
                             console.log("suggestion:item.display: "+item.display);
@@ -112,6 +113,7 @@ var search = {
                 $("#srch-term2").typeahead(
                     {
                         items: 7,
+                        autoSelect: false,
                         source: bloodhoundSuggestions.ttAdapter(),
                         displayText: function(item) {
                             console.log("suggestion:item.display: "+item.display);
