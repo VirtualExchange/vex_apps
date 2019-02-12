@@ -36,7 +36,8 @@ var ownerRegister = {
                         email: $('#user_email').val(),
                         password: $('#user_password').val(),
                         password_confirmation: $('#user_confirm_password').val(),
-                        name: $('#user_name').val()
+                        name: $('#user_name').val(),
+						store_id: app.home.oStoreDetail.id
                     }
                 },
                 function(result){
