@@ -34,10 +34,12 @@ var ownerRegister = {
                 {   
                     user:{
                         email: $('#user_email').val(),
-                        password: $('#user_password').val(),
-                        password_confirmation: $('#user_confirm_password').val(),
+                        password: "12345678",
+                        password_confirmation: "12345678",
                         name: $('#user_name').val(),
-						store_id: app.home.oStoreDetail.id
+						store_id: app.home.oStoreDetail.id,
+						phone: $('#user_phone').val(),
+						zip: $('#user_zip').val()
                     }
                 },
                 function(result){

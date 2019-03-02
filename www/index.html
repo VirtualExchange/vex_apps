@@ -23,7 +23,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
-        <meta http-equiv="Content-Security-Policy" content="default-src * gap: file:; style-src 'self' 'unsafe-inline' https://unpkg.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://maps.google.com http://maps.googleapis.com http://fonts.googleapis.com http://google-maps-utility-library-v3.googlecode.com https://unpkg.com">
+        <meta http-equiv="Content-Security-Policy" content="default-src * gap: file: vextestapp:; style-src 'self' 'unsafe-inline' https://unpkg.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://maps.google.com http://maps.googleapis.com http://fonts.googleapis.com http://google-maps-utility-library-v3.googlecode.com https://unpkg.com">
        
         
         <meta name="msapplication-tap-highlight" content="no" />
@@ -291,7 +291,7 @@
                     </a>
                 </div>
             </div>
-            <div class="panel panel-default">
+            <div class="panel panel-default storeDetail">
                 <div class="panel-body">
                     <div class="storeItem">
                         <div class="row">
@@ -716,20 +716,16 @@
                             <input autofocus="autofocus" class="string email form-control form-control input-lg" id="user_email" placeholder="%email%" type="email" value="" name="user_email">
                         </div>
                     </div>
-                    <div class="control-group password user_password">
-                        <div class="form-group">
-                            <div class="form-group signin-password">
-                                <input class="form-control input-lg" id="user_password" label="false" placeholder="%password%" type="password" name="user_password">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group password user_confirm_password">
-                        <div class="form-group">
-                            <div class="form-group signin-password">
-                                <input class="form-control input-lg" id="user_confirm_password" label="false" placeholder="%confirm password%" type="password" name="user_confirm_password">
-                            </div>
-                        </div>
-                    </div>
+                 					<div class="control-group user_phone">
+					    <div class="form-group">
+						    <input autofocus="autofocus" class="string form-control input-lg" id="user_phone" placeholder="%Phone%" value="" name="user_phone">
+						</div>
+					</div>
+					<div class="control-group user_zip">
+					    <div class="form-group">
+						    <input autofocus="autofocus" class="string form-control input-lg" id="user_zip" placeholder="%Zip%" type="number" value="" name="user_zip">
+						</div>
+					</div>
                 </div>
                 <div class="form-actions">
                     <a href="#" class="btn btn-primary btn-block btn-lg" data-callback="app.ownerRegister.submit">%register%</a>
