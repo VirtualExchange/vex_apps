@@ -15,6 +15,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-intent href="vextestapp:*" />
     <icon src="www/icon.png" />
     <platform name="android">
         <icon density="ldpi" src="www/res/android/36x36.png" />
@@ -85,6 +86,12 @@
         <false />
     </edit-config>
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+    <plugin name="cordova-plugin-customurlscheme" spec="4.3.0">
+        <variable name="URL_SCHEME" value="vextestapp" />
+        <variable name="ANDROID_SCHEME" value=" " />
+        <variable name="ANDROID_HOST" value=" " />
+        <variable name="ANDROID_PATHPREFIX" value="/" />
+    </plugin>
     <engine name="ios" spec="^4.5.5" />
     <engine name="android" spec="~7.1.4" />
 </widget>

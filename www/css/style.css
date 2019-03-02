@@ -221,3 +221,13 @@ a{text-decoration: none !important}
 .storeButton {
     padding-right: 5px;
 }
+
+body{
+	background: #00c3ff !important;
+}
+.list-group-item {
+	background-color: #00c3ff !important;
+}
+.storeDetail{
+	background-color: #00c3ff !important;
+}
