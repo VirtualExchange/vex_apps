@@ -131,7 +131,10 @@ var lang_ptBR = {
             '%Email%'     : 'Email (Username)',
             '%Password%' : 'Password',
             '%ConfirmPassword%' : 'Confirm Password',
-            '%Register%' : "Register"
+            '%Register%' : "Register",
+			'%Phone%' : "Phone",
+			'%Zip%' : "Zip code"
+			
         },
         'favoriteView':{
             '%Favorites%' : 'Favorites'
@@ -171,7 +174,9 @@ var lang_ptBR = {
             '%confirm password%': "Confirm Password",
             '%register%' : "Register",
             '%name%' : "Name",
-            '%submitMessage%' : 'You will be contacted by a Virtual Open Exchange representative to complete the process of registering a business'
+            '%submitMessage%' : 'You will be contacted by a Virtual Open Exchange representative to complete the process of registering a business',
+			'%Phone%' : "Phone",
+			'%Zip%' : "Zip code"
            
         }
     }
