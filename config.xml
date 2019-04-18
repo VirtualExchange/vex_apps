@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="200002" id="com.vexservices.fljunobeach" version="2.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Juno Beach</name>
+<widget android-versionCode="200100" id="com.vexservices.fljunobeach" version="2.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Palm Beaches</name>
     <description>
-        Juno Beach Shopping
+        Murban Palm Beaches Florida
     </description>
     <author email="support@vexservices.com" href="http://www.vexservices.com">
         Virtual Exchange support

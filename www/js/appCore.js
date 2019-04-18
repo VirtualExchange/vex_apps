@@ -11,7 +11,7 @@ var appCore = {
     url      : 'http://www.virtualopenexchange.com/mobile/api/',
     videoUrl : 'http://www.virtualopenexchange.com/vex_pages/',
     token    : '8EHxF2Th8I5-E4NpToOPSw',
-    appName  : 'Juno Beach',
+    appName  : 'Palm Beaches',
     senderID : "228606620336",
     lastGeoDate : null,
     offLine : false,
