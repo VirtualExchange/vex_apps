@@ -16,6 +16,20 @@ var chat = {
                 app.chat.openChat(store);
                 
             },
+            goToChat: function(store_id){
+                app.webservice.get(
+                    'stores/' + store_id,
+                    {},
+                    function (result) {
+                        console.log("store detail: "+JSON.stringify(result));
+                        app.home.oStoreDetail = result;
+						app.chat.openChat(result);
+                    },
+                    function (e) {
+                        console.log(JSON.stringify(e));
+                    }
+				);
+			},
             openChat: function(store){
                 console.log('app.chat.openChat');
                 mixpanel.track("Chat",{"store_id":store.id });
