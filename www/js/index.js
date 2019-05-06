@@ -573,6 +573,10 @@ function getJsonFromUrl(url) {
   console.log("received url: " + url);
   params = getJsonFromUrl(url);
   console.log("params['id']: "+params['id']);
-  app.home.getStoreDetail(params['id'], true, 'true');
+  if (params['chat'] == 'true'){
+	app.chat.goToChat(params['id']);
+  } else {	  
+    app.home.getStoreDetail(params['id'], true, 'true');
+  }
 }
     
