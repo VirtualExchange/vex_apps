@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="100000" id="com.vexervices.testapp2" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>testapp2</name>
+<widget android-versionCode="100000" id="com.vexervices.vex" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>vex_apps</name>
     <description>
         A sample Virtual Exchange App
     </description>
@@ -92,6 +92,12 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
+    <plugin name="branch-cordova-sdk" spec="^3.1.6" />
+    <branch-config>
+        <branch-key value="key_live_lnPDhG7aY9zRi0SZot9PeholswmNeHq5" />
+        <uri-scheme value="vextestapp" />
+        <link-domain value="vexapp.app.link" />
+    </branch-config>
     <engine name="ios" spec="^4.5.5" />
     <engine name="android" spec="~7.1.4" />
 </widget>
