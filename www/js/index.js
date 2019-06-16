@@ -590,13 +590,17 @@ function handleOpenURL(url) {
     console.log("received url: " + url);
     params = getJsonFromUrl(url);
     console.log("params['store']: "+params['store']);
+    var store;
+    if (params['store']) store = params['store'];
+    else if (params['id']) store = params['id'];
+        
     if (params['chat'] == 'true'){
         hideHomeMenu();
         app.chat.goToChat(params['store']);
     } else {	  
         hideHomeMenu();
         app.views.backStack.push("StoreDetail:"+app.views.storeDirect);
-        app.home.getStoreDetail(params['store'], true, 'true');
+        app.home.getStoreDetail(store, true, 'true');
     }
 }
     
