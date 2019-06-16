@@ -56,6 +56,7 @@ var app = {
     },
     onDeviceReady: function () {
         console.log('app.onDeviceReady');
+        app.handleBranch();
 
         window.open = cordova.InAppBrowser.open;
         app.deviceReady = true;
@@ -182,8 +183,23 @@ var app = {
             });
         }
     },
+    onDeviceResume: function(){
+        console.log("onDeviceResume");
+        app.handleBranch();
+    },
     onBackKeyDown: function(e){
         e.preventDefault();
+    },
+    handleBranch: function(){
+        Branch.initSession().then(function(data){
+            console.log('Deep link Data: '+JSON.stringify(data));
+            if (data['+clicked_branch_link']){
+                console.log("refferring_link: "+data["~referring_link"]);
+                params = getJsonFromUrl(data["~referring_link"]);
+                console.log("params['store']: "+params['store']);
+                app.views.storeDirect = params['store'];
+            }
+        });
     },
     registerDevice: function (latitude, longitude) {
         app.webservice.registerDevice(
@@ -569,14 +585,18 @@ function getJsonFromUrl(url) {
     }
   });
   return result;
-}function handleOpenURL(url) {
-  console.log("received url: " + url);
-  params = getJsonFromUrl(url);
-  console.log("params['id']: "+params['id']);
-  if (params['chat'] == 'true'){
-	app.chat.goToChat(params['id']);
-  } else {	  
-    app.home.getStoreDetail(params['id'], true, 'true');
-  }
+}
+function handleOpenURL(url) {
+    console.log("received url: " + url);
+    params = getJsonFromUrl(url);
+    console.log("params['store']: "+params['store']);
+    if (params['chat'] == 'true'){
+        hideHomeMenu();
+        app.chat.goToChat(params['store']);
+    } else {	  
+        hideHomeMenu();
+        app.views.backStack.push("StoreDetail:"+app.views.storeDirect);
+        app.home.getStoreDetail(params['store'], true, 'true');
+    }
 }
     

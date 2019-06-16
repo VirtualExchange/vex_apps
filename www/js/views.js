@@ -12,6 +12,7 @@ var views = {
         scrollPending: 0,
         browserRef: null,
         mapStore: [],
+        storeDirect: 0,
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -33,12 +34,21 @@ var views = {
             app.geolocation.close();
         },
         goHome: function(e){
-            $('#landingPageMenu').removeClass('hide');
-            $('#loginSpinner').addClass('hide');
-            app.chat.checkUnreadMessage();
-            //app.products.showProductList(e);
-            app.home.showStoreList();
-            //app.home.showStoreListPre();
+            if (app.views.storeDirect){
+                hideHomeMenu();
+                app.views.backStack.push("StoreDetail:"+app.views.storeDirect);
+                var store = app.views.storeDirect;
+                app.views.storeDirect = 0;
+                app.home.getStoreDetail(store, true, 'true');
+            } else {			
+                console.log("app.views.goHome");
+                $('#landingPageMenu').removeClass('hide');
+                $('#loginSpinner').addClass('hide');
+                app.chat.checkUnreadMessage();
+                //app.products.showProductList(e);
+                app.home.showStoreList();
+                //app.home.showStoreListPre();
+            }
         },
         goBack: function(e){
             console.log('app.views.goBack');
