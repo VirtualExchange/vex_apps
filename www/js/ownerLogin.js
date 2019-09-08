@@ -57,14 +57,19 @@ var ownerLogin = {
                     );
                 }
             },
-            function(err){
+            function(e){
                 console.log('ERROR LOGIN');
-                console.log(JSON.stringify(err));
-                navigator.notification.alert(
-                    app.lang.getStr(err.a.responseJSON.message, 'loginView'), 
-                    function () {}, 
-                    app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'ownerLoginView')
-                );
+                console.log(JSON.stringify(e));
+                if (e.a == null){
+                    navigator.notification.alert(e.message, function(){
+                    });
+                 } else {
+                    navigator.notification.alert(
+                        app.lang.getStr(e.a.responseJSON.message, 'loginView'), 
+                        function () {}, 
+                        app.lang.getStr('%Error%', 'ownerLoginView'), app.lang.getStr('%Close%', 'ownerLoginView')
+                    );
+                }
             });
         },
         title: function(store_id){

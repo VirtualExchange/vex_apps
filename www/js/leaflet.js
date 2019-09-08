@@ -53,7 +53,11 @@ var leaflet = {
                                 $.each(result.stores, function (i, store) {
                                     app.leaflet.showStore(mymap,store);
                                 });
-                            }
+                            },
+                            function (e) {
+                                 navigator.notification.alert(e.message, function(){
+                                });
+                           }
                         );
                         
                     },

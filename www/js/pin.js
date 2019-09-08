@@ -27,8 +27,10 @@ var pin = {
                             }
                         );
                     },
-                    function (err) {
-                        console.log(err);
+                    function (e) {
+                        console.log(JSON.stringify(e));
+                         navigator.notification.alert(e.message, function(){
+                        });
                         app.views.loadView.hide();
                     }
                 );

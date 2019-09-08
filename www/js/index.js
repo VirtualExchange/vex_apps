@@ -65,23 +65,25 @@ var app = {
         }, false);    
         
         document.addEventListener("offline", function () {
+            console.log("offline");
             if(!app.offLine){
                 app.offLine = true;
-                navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
-                }, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
+                //navigator.notification.alert(app.lang.getStr('%Lost connection to the server.\r\nCheck your internet connection and try again.%', 'aplication'), function () {
+                //}, app.lang.getStr('%Connection Error%', 'aplication'), app.lang.getStr('%Try again%', 'aplication'));
             }
         }, false);
         
         document.addEventListener("online", function () {
+            console.log("online");
             app.offLine = false;
 
-            if(app.logged){
-                app.home.init();
+            //if(app.logged){
+            //    app.home.init();
 
-            } else{
-                //app.login.init();
-                app.home.init();
-            }
+            //} else{
+            //    //app.login.init();
+            //    app.home.init();
+            //}
         }, false);
 
         if (device && device.platform === 'Android') {
@@ -176,8 +178,12 @@ var app = {
                             app.login.init();
                         }
                     }, function (e) {
-                    console.log('Get Device error');
-                    console.log(JSON.stringify(e));
+                        navigator.notification.alert(e.message, function(){
+                            navigator.app.exitApp();
+                        });
+                        $('#loadImage').addClass('hide');
+                        console.log('Get Device error');
+                        console.log(JSON.stringify(e));
                     }
                 );
             });

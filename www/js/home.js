@@ -171,6 +171,8 @@ var home = {
                             function (e) {
                                 console.log('error');
                                 console.log(JSON.stringify(e));
+                                navigator.notification.alert(e.message, function(){
+                                });
 
                                 app.views.loadView.hide();
                         
@@ -232,7 +234,8 @@ var home = {
                         app.views.loadView.hide();
                     },
                     function (e) {
-                        console.log(JSON.stringify(e));
+                        navigator.notification.alert(e.message, function(){
+                        });
                         app.views.loadView.hide();
                         
                     }
@@ -1065,8 +1068,11 @@ var home = {
 
                             },
                             function (e) {
-                                //console.log(JSON.stringify(e));
-                            }
+                                console.log(JSON.stringify(e));
+                                navigator.notification.alert(e.message, function(){
+                                });
+                                app.views.loadView.hide();
+                           }
                         );
 
                         app.bindEvents();

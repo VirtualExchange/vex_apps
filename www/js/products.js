@@ -415,7 +415,9 @@ var products = {
                     },
                     function (e) {
                         console.log(JSON.stringify(e));
-                        //app.views.loadView.hide();
+                        navigator.notification.alert(e.message, function(){
+                        });
+                       //app.views.loadView.hide();
                     }
                 );
             },
