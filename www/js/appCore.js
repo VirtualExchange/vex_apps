@@ -348,6 +348,12 @@ var appCore = {
             console.log('app.webservice.get(): ' + app.url + path, JSON.stringify(args));
 
             if(!app.checkConnection()){
+                var err = {
+                    a: null,
+                    msg: "you do not currently have access to the internet",
+                    message: "You do not currently have access to the internet"
+                }
+                errorCB(err);
                 return;
             }
             
@@ -544,6 +550,12 @@ var appCore = {
         ownerLogin: function(args,successCB,errorCB){
             console.log('app.owner.ownerLogin(): ' + app.ownerUrl+' args: '+JSON.stringify(args));
             if(!app.checkConnection()){
+               var err = {
+                    a: null,
+                    msg: "you do not currently have access to the internet",
+                    message: "You do not currently have access to the internet"
+                }
+                errorCB(err);
                 return;
             }
 
@@ -571,14 +583,19 @@ var appCore = {
         }
     },
     checkConnection: function(){
-
-        if(!app.offLine)
-
+        if (navigator.connection.type == Connection.NONE){
+            console.log("Connection.NONE");
+            return false;
+        } else {
             return true;
+        }
+        //if(!app.offLine)
 
-        else return false;
+        //    return true;
+
+        //else return false;
         
-        return true;
+        //return true;
         
     },
     geolocation: {

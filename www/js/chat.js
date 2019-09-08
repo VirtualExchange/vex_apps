@@ -150,8 +150,10 @@ var chat = {
                                     $('#chatStoreList').html(app.lang.getStr('%No chat is initialized%', 'chatView'));
                                 }
                             },
-                            function (err) {
-                                console.log(err);
+                            function (e) {
+                                console.log(JSON.stringify(e));
+                                navigator.notification.alert(e.message, function(){
+                                });
                                 app.views.loadView.hide();
                             }
                         );
