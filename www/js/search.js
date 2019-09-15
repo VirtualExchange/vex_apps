@@ -78,7 +78,9 @@ var search = {
                         },
                         filter: function(response) {
                             console.log("response: "+JSON.stringify(response));
-                            result = response.stores.concat(response.products);
+                            //result = response.stores.concat(response.products);
+                            //return result;
+                            result = response.stores;
                             return result;
                         }                        
                     }
