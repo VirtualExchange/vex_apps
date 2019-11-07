@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="201050" id="com.vexservices.fljunobeach" version="2.1.5" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="201060" id="com.vexservices.fljunobeach" version="2.1.6" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Palm Beaches</name>
     <description>
         Murban Palm Beaches Florida
@@ -76,7 +76,7 @@
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.2.0" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="phonegap-plugin-push" spec="^1.10.5">
+    <plugin name="phonegap-plugin-push" spec="^2.3.0">
         <variable name="SENDER_ID" value="228606620336" />
     </plugin>
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />

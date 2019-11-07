@@ -137,7 +137,7 @@ var chat = {
                             'messages',
                             {},
                             function (result) {
-                                console.log(result);
+                                console.log(JSON.stringify(result));
                                 app.views.loadView.hide();
                                 
                                 app.chat.stores = result.stores;
@@ -180,7 +180,7 @@ var chat = {
                         id             : storeChat.id,
                         img            : storeChat.logo,
                         storeName      : storeChat.formatted_name,
-                        FormattedName  : storeChat.formatted_name,
+                        formattedName  : storeChat.formatted_name,
                         messages_count : storeChat.messages_count
                     },
                     'append',
