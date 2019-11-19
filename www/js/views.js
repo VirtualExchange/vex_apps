@@ -13,6 +13,7 @@ var views = {
         browserRef: null,
         mapStore: [],
         storeDirect: 0,
+        storeDirectChat: 0,
         loadView: {
             show: function(){
                 $('#loadView').removeClass('hide');
@@ -34,12 +35,17 @@ var views = {
             app.geolocation.close();
         },
         goHome: function(e){
-            if (app.views.storeDirect){
+            if (app.views.storeDirectChat){
+                hideHomeMenu();
+                app.chat.goToChat(app.views.storeDirectChat);
+                app.views.storeDirectChat = 0;
+            }else if (app.views.storeDirect){
                 hideHomeMenu();
                 app.views.backStack.push("StoreDetail:"+app.views.storeDirect);
                 var store = app.views.storeDirect;
                 app.views.storeDirect = 0;
                 app.home.getStoreDetail(store, true, 'true');
+                
             } else {			
                 console.log("app.views.goHome");
                 $('#landingPageMenu').removeClass('hide');
