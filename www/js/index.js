@@ -203,7 +203,14 @@ var app = {
                 console.log("refferring_link: "+data["~referring_link"]);
                 params = getJsonFromUrl(data["~referring_link"]);
                 console.log("params['store']: "+params['store']);
-                app.views.storeDirect = params['store'];
+                console.log("params['chat']: "+params['chat']);
+                if (params['chat'] == 'true'){
+                    app.views.storeDirectChat = params['store'];
+                } else {
+                    hideHomeMenu();
+                    app.views.storeDirect = params['store'];
+                }
+
             }
         });
     },
@@ -592,6 +599,7 @@ function getJsonFromUrl(url) {
   });
   return result;
 }
+/*
 function handleOpenURL(url) {
     console.log("received url: " + url);
     params = getJsonFromUrl(url);
@@ -609,4 +617,5 @@ function handleOpenURL(url) {
         app.home.getStoreDetail(store, true, 'true');
     }
 }
+*/
     
