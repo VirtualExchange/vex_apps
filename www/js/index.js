@@ -599,8 +599,8 @@ function getJsonFromUrl(url) {
   });
   return result;
 }
-/*
 function handleOpenURL(url) {
+    if (!app.homeInitCalled) return;
     console.log("received url: " + url);
     params = getJsonFromUrl(url);
     console.log("params['store']: "+params['store']);
@@ -613,9 +613,8 @@ function handleOpenURL(url) {
         app.chat.goToChat(params['store']);
     } else {	  
         hideHomeMenu();
-        app.views.backStack.push("StoreDetail:"+app.views.storeDirect);
+        app.views.backStack.push("StoreDetail:"+store);
         app.home.getStoreDetail(store, true, 'true');
     }
 }
-*/
     
