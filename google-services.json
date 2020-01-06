@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "984406067375",
+    "firebase_url": "https://vex-testapp2.firebaseio.com",
+    "project_id": "vex-testapp2",
+    "storage_bucket": "vex-testapp2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984406067375:android:287e5ec0daa9adc263ec5a",
+        "android_client_info": {
+          "package_name": "com.vexservices.vex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984406067375-jb3tkp2l14ss3q8tgm25ucvkmq7h1pgv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGRYEf716rWTm-fDcW00tYylx18neon1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984406067375-jb3tkp2l14ss3q8tgm25ucvkmq7h1pgv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

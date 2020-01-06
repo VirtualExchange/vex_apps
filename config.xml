@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="300000" id="com.vexervices.vex" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="300000" id="com.vexservices.vex" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>vex_apps</name>
     <description>
         A sample Virtual Exchange App
@@ -27,6 +27,9 @@
     </platform>
     <platform name="android">
         <allow-intent href="market:*" />
+    </platform>
+    <platform name="android">
+        <resource-file src="google-services.json" target="app/google-services.json" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -96,12 +99,12 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
-    <plugin name="branch-cordova-sdk" spec="^3.1.6" />
+    <plugin name="branch-cordova-sdk" spec="^4.0.0" />
     <branch-config>
         <branch-key value="key_live_lnPDhG7aY9zRi0SZot9PeholswmNeHq5" />
         <uri-scheme value="vextestapp" />
         <link-domain value="vexapp.app.link" />
     </branch-config>
     <engine name="ios" spec="^4.5.5" />
-    <engine name="android" spec="^8.0.0" />
+    <engine name="android" spec="^8.1.0" />
 </widget>
