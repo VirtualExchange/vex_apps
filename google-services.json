@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "228606620336",
+    "firebase_url": "https://l1st-fl-juno-beach.firebaseio.com",
+    "project_id": "l1st-fl-juno-beach",
+    "storage_bucket": "l1st-fl-juno-beach.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228606620336:android:8c70672fd79e37b8658175",
+        "android_client_info": {
+          "package_name": "com.vexservices.fljunobeach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228606620336-gmkrklscf3impe63n8eonld3h71p5c9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsNJdapnds3mXzTePVJY9EK3i2tfqFmCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228606620336-gmkrklscf3impe63n8eonld3h71p5c9n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

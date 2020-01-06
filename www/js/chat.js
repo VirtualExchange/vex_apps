@@ -54,7 +54,7 @@ var chat = {
                             function (result) {
                                 //console.log(JSON.stringify(result));
                                 app.views.backStack.push("ChatView");
-                                if(!app.device.email){
+                                if(!app.device.name){
                                     $('#newChatForm').removeClass('hide');
                                     app.chat.start = false;
                                 }
@@ -200,7 +200,7 @@ var chat = {
                 console.log('app.chat.sendMessage()');
                 
                 if(!app.chat.start){
-                    
+                    console.log("app.device.name: "+app.device.name);
                     if($('#chatUserName').val()=='' && !app.device.name){
                         $('.alert-danger').html(app.lang.getStr('%The field <b>Name</b> is mandatory%','chatView'));
                         $('.alert-danger').removeClass('hide');
@@ -212,7 +212,7 @@ var chat = {
 
                         return;
                     }
-                    
+                    /*
                     if($('#chatUserEmail').val()==''&& !app.device.email){
                         $('.alert-danger').html(app.lang.getStr('%The field <b>Email</b> is mandatory%','chatView'));
                         $('.alert-danger').removeClass('hide');
@@ -223,6 +223,7 @@ var chat = {
 
                         return;
                     }
+                    */
                 }
                 
                 if($('#chatUserMessage').val()==''){
@@ -253,8 +254,7 @@ var chat = {
                         $('#chatList').css('height',($('.chatContent').height()-$('#storeTitle').outerHeight(true)));
                         
                         $('#chatUserMessage').val('');
-                        
-                        if(!app.device.email){
+                        if(!app.device.name){
                             app.webservice.post(
                                 'device',
                                 'PUT',
