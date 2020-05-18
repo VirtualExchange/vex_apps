@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="300000" id="com.vexservices.vex" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>vex_apps</name>
+<widget android-versionCode="100020" id="com.vexservices.murban" version="1.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Murban Meeting</name>
     <description>
-        A sample Virtual Exchange App
+        Murban Meeting
     </description>
-    <author email="support@vexapps.com" href="http://www.vexapps.com">
+    <author email="support@vexervices.com" href="http://www.vexservices.com">
         Virtual Exchange support
     </author>
     <content src="index.html" />
@@ -15,7 +15,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <allow-intent href="vextestapp:*" />
+    <allow-intent href="murban:*" />
     <icon src="www/icon.png" />
     <platform name="android">
         <icon density="ldpi" src="www/res/android/36x36.png" />
@@ -31,6 +31,7 @@
     <platform name="android">
         <resource-file src="google-services.json" target="app/google-services.json" />
     </platform>
+
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
@@ -80,7 +81,7 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.2.0" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="phonegap-plugin-push" spec="^2.3.0">
-        <variable name="SENDER_ID" value="984406067375" />
+        <variable name="SENDER_ID" value="190394031489" />
     </plugin>
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
@@ -94,16 +95,16 @@
     </edit-config>
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-customurlscheme" spec="4.3.0">
-        <variable name="URL_SCHEME" value="vextestapp" />
+        <variable name="URL_SCHEME" value="murban" />
         <variable name="ANDROID_SCHEME" value=" " />
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
     <plugin name="branch-cordova-sdk" spec="^4.0.0" />
     <branch-config>
-        <branch-key value="key_live_lnPDhG7aY9zRi0SZot9PeholswmNeHq5" />
-        <uri-scheme value="vextestapp" />
-        <link-domain value="vexapp.app.link" />
+        <branch-key value="key_live_kdHOXnhGXFsdvsHok2QaWodoFqb0CdMh" />
+        <uri-scheme value="murban" />
+        <link-domain value="murban.app.link" />
     </branch-config>
     <engine name="ios" spec="^4.5.5" />
     <engine name="android" spec="^8.1.0" />
