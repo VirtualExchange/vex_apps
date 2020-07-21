@@ -11,7 +11,7 @@ var appCore = {
     url      : 'http://www.virtualopenexchange.com/mobile/api/',
     videoUrl : 'http://www.virtualopenexchange.com/vex_pages/',
     token    : '6w0S70wi5TNhpVyZbW-vsw',
-    appName  : 'Murban Meeting Forum',
+    appName  : 'Murban',
     senderID : "190394031489",
     lastGeoDate : null,
     offLine : false,
